@@ -3,7 +3,7 @@ project "Sandbox"
 	kind "ConsoleApp"
 
 	language "C++"
-	cppdialect "C++20"
+	cppdialect "C++2a"
 	buildoptions { }
 
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
@@ -20,14 +20,12 @@ project "Sandbox"
 
 	includedirs
 	{
- 		"src",
+ 		"%{prj.name}/src",
+        "%{wks.location}/Sage/src/"
  		--"vendor/cppargs/src",
 	}
 
-
-
-	links { }
-
+	links { "Sage" }
 
 	filter "configurations:Debug"
 		symbols "On"

@@ -3,7 +3,7 @@ project "Sage"
 	kind "StaticLib"
 
 	language "C++"
-	cppdialect "C++20"
+	cppdialect "C++2a"
 	buildoptions { }
 
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
