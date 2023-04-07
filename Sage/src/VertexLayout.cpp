@@ -3,8 +3,7 @@
 
 namespace Sage {
 
-size_t getVertexTypeSize(VertexType type)
-{
+size_t VertexLayoutElement::getSize() {
     switch (type)
     {
         case VertexType::POSITION:
@@ -17,10 +16,6 @@ size_t getVertexTypeSize(VertexType type)
         default:
             return 0;
     }
-}
-
-size_t VertexLayoutElement::getSize() {
-    return getVertexTypeSize(type);
 }
 
 

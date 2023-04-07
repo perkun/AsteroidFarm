@@ -3,6 +3,7 @@
 #include "VertexLayout.h"
 
 #include <vector>
+#include <filesystem>
 
 namespace Sage {
 
@@ -14,5 +15,7 @@ struct Mesh
 
     VertexLayout layout;
 };
+
+Mesh LoadObj(const std::filesystem::path &filename);
 
 }  // namespace Sage

@@ -1,6 +1,11 @@
+.idea/**
+.clangd/**
+.vs/**
+
+compile_commands.json
+
 bin/**
 build/**
 tests/bin/**
 tests/build/**
-.idea/**
 Makefile

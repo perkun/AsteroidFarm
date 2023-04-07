@@ -12,8 +12,6 @@ enum class VertexType
     COLOR
 };
 
-size_t getVertexTypeSize(VertexType);
-
 struct VertexLayoutElement
 {
     VertexType type;

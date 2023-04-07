@@ -15,6 +15,5 @@ int main()
     pa_choice = 1;
     seed = 0;
 
-
     return 0;
 }
