@@ -52,12 +52,74 @@ Mesh LoadObj(const std::filesystem::path &filename)
     mesh.indices = indices;
 
     // TODO do it while parsing, and recognize other elements
-    mesh.layout.elements.push_back({VertexLayoutElement{.type= VertexType::POSITION}});
-
-    // TODO do it after evety push back in VertexLayout?
-    mesh.layout.calculateStrideAndOffsets();
+    mesh.layout.pushElement(VertexElementType::POSITION);
 
     return mesh;
 }
 
+void Mesh::iterateVertexElements(
+    VertexElementType type, const std::function<void(std::span<float> &)> &func)
+{
+    const auto layoutElementIt = layout.getElement(type);
+    if (!layoutElementIt)
+    {
+        // TODO introduce proper logging
+        fmt::print("Vertex Layout Element Not found in Mesh");
+        return;
+    }
+
+
+    for (int vertexBegin = 0; vertexBegin < vertices.size(); vertexBegin += layout.stride)
+    {
+        std::span<float> vertexElement{vertices.begin() + vertexBegin + layoutElementIt->offset,
+                                       layoutElementIt->getSize()};
+        func(vertexElement);
+    }
+
+}
+void Mesh::iterateFaces(
+    const std::function<void(const std::vector<std::span<float>> &)> &func)
+{
+    for (int faceBegin = 0; faceBegin < indices.size(); faceBegin += numFaceVertices)
+    {
+        std::vector<std::span<float>> faceVertices;
+        faceVertices.reserve(numFaceVertices);
+
+        for (int i = 0; i < numFaceVertices; i++)
+        {
+            auto &vertexIndex = *(indices.begin() + faceBegin + i);
+            faceVertices.emplace_back(vertices.begin() + (vertexIndex * layout.stride), layout.stride);
+        }
+
+        func(faceVertices);
+    }
+}
+void Mesh::iterateFacesElements(
+    VertexElementType type,
+    const std::function<void(const std::vector<std::span<float>> &)> &func)
+{
+    const auto layoutElement = layout.getElement(type);
+    if (!layoutElement)
+    {
+        // TODO introduce proper logging
+        fmt::print("Vertex Layout Element Not found in Mesh");
+        return;
+    }
+
+    for (int faceBegin = 0; faceBegin < indices.size(); faceBegin += numFaceVertices)
+    {
+        std::vector<std::span<float>> faceVertices;
+        faceVertices.reserve(numFaceVertices);
+
+        for (int i = 0; i < numFaceVertices; i++)
+        {
+            auto &vertexIndex = *(indices.begin() + faceBegin + i);
+            faceVertices.emplace_back(vertices.begin() + (vertexIndex * layout.stride) +
+                                          layoutElement->offset,
+                                      layoutElement->getSize());
+        }
+
+        func(faceVertices);
+    }
+}
 }  // namespace Sage
