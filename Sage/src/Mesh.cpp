@@ -57,7 +57,7 @@ Mesh LoadObj(const std::filesystem::path &filename)
     return mesh;
 }
 
-void Mesh::iterateVertexElements(
+void Mesh::applyToVertexElements(
     VertexElementType type, const std::function<void(std::span<float> &)> &func)
 {
     const auto layoutElementIt = layout.getElement(type);
@@ -77,7 +77,7 @@ void Mesh::iterateVertexElements(
     }
 
 }
-void Mesh::iterateFaces(
+void Mesh::applyToFaces(
     const std::function<void(const std::vector<std::span<float>> &)> &func)
 {
     for (int faceBegin = 0; faceBegin < indices.size(); faceBegin += numFaceVertices)
@@ -94,7 +94,7 @@ void Mesh::iterateFaces(
         func(faceVertices);
     }
 }
-void Mesh::iterateFacesElements(
+void Mesh::applyToFacesElements(
     VertexElementType type,
     const std::function<void(const std::vector<std::span<float>> &)> &func)
 {

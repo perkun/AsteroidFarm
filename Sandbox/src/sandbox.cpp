@@ -26,19 +26,19 @@ int main()
                                VertexElementType::TEXTURE,
                                VertexElementType::NORMAL);
 
-    mesh.iterateVertexElements(VertexElementType::TEXTURE,
+    mesh.applyToVertexElements(VertexElementType::TEXTURE,
         [](auto &textureCoords) {
             for (auto &vn : textureCoords) {
                 vn += 10;
             }
         });
 
-    mesh.iterateFaces([](const auto &vertices){
+    mesh.applyToFaces([](const auto &vertices){
         vertices[2][6] += 20;
     });
 
 
-    mesh.iterateFacesElements(VertexElementType::NORMAL, [](const auto &elements){
+    mesh.applyToFacesElements(VertexElementType::NORMAL, [](const auto &elements){
         elements[0][1] += 30;
     });
 
