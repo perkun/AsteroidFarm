@@ -1,6 +1,7 @@
 .idea/**
 .clangd/**
 .vs/**
+.cache/**
 
 compile_commands.json
 

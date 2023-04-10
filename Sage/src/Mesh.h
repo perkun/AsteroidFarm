@@ -16,7 +16,8 @@ struct Mesh
 {
     void iterateVertexElements(VertexElementType type, const std::function<void(std::span<float>&)> &func);
     void iterateFaces(const std::function<void(const std::vector<std::span<float>>&)> &func);
-    void iterateFacesElements(VertexElementType type, const std::function<void(const std::vector<std::span<float>>&)> &func);
+    void iterateFacesElements(VertexElementType type,
+                              const std::function<void(const std::vector<std::span<float>>&)> &func);
 
     std::vector<float> vertices;
     std::vector<unsigned int> indices;

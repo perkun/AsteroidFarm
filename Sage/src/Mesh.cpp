@@ -72,7 +72,7 @@ void Mesh::iterateVertexElements(
     for (int vertexBegin = 0; vertexBegin < vertices.size(); vertexBegin += layout.stride)
     {
         std::span<float> vertexElement{vertices.begin() + vertexBegin + layoutElementIt->offset,
-                                       layoutElementIt->getSize()};
+                                       layoutElementIt->size};
         func(vertexElement);
     }
 
@@ -116,7 +116,7 @@ void Mesh::iterateFacesElements(
             auto &vertexIndex = *(indices.begin() + faceBegin + i);
             faceVertices.emplace_back(vertices.begin() + (vertexIndex * layout.stride) +
                                           layoutElement->offset,
-                                      layoutElement->getSize());
+                                      layoutElement->size);
         }
 
         func(faceVertices);
