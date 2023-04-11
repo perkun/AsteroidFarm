@@ -4,9 +4,14 @@
 
 #include "Mesh.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <string>
 #include <fmt/format.h>
 #include <fstream>
+#include "VertexLayout.h"
+
 
 namespace Sage {
 
@@ -43,9 +48,9 @@ Mesh LoadObj(const std::filesystem::path &filename)
         {
             int a, b, c;
             sscanf(line.c_str(), "%*s %d %d %d", &a, &b, &c);
-            indices.emplace_back(a);
-            indices.emplace_back(b);
-            indices.emplace_back(c);
+            indices.emplace_back(a - 1);
+            indices.emplace_back(b - 1);
+            indices.emplace_back(c - 1);
         }
     }
     mesh.vertices = positions;
@@ -122,4 +127,21 @@ void Mesh::applyToFacesElements(
         func(faceVertices);
     }
 }
+
+double Mesh::computeVolume()
+{
+    double volume = 0.0;
+
+    applyToFacesElements(VertexElementType::POSITION, [&volume](auto &faces) 
+    {
+        glm::vec3 v1 = glm::make_vec3(faces[0].data());
+        glm::vec3 v2 = glm::make_vec3(faces[1].data());
+        glm::vec3 v3 = glm::make_vec3(faces[2].data());
+        
+		volume += 1./6. * glm::dot( glm::cross(v1, v2), v3);
+    }); 
+
+    return volume;
+}
+
 }  // namespace Sage

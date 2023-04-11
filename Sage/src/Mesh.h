@@ -26,6 +26,8 @@ struct Mesh
                                       void(const std::vector<std::span<float>>&)
                                   > &func);
 
+    double computeVolume();
+
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
 

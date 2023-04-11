@@ -9,6 +9,7 @@ workspace "Sage"
 	}
 
 outputdir = "%{cfg.buildcfg}"
+includedirs { "%{wks.location}/vendor/glm" }
 
 --libdirs { "%{wks.location}/libs" }
 

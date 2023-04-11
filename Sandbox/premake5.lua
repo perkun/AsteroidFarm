@@ -21,7 +21,7 @@ project "Sandbox"
 	includedirs
 	{
  		"%{prj.name}/src",
-        "%{wks.location}/Sage/src/"
+        "%{wks.location}/Sage/src/",
  		--"vendor/cppargs/src",
 	}
 
