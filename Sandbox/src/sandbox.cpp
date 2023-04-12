@@ -13,9 +13,9 @@ using namespace Sage;
 int main()
 {
     auto mesh = LoadObj("data/model_shifted.obj");
-    fmt::print("Voulume: {}\n", mesh.computeVolume());
+    fmt::print("Voulume: {}\n", mesh.getVolume());
 
-    auto centerOfMass = mesh.computeCenterOfMass();
+    auto centerOfMass = mesh.getCenterOfMass();
     fmt::print("Centre of mass: {}, {}, {}\n", centerOfMass.x, centerOfMass.y, centerOfMass.z);
 
     return 0;

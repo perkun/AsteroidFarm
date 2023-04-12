@@ -2,16 +2,17 @@
 
 #include "VertexLayout.h"
 
-#include <filesystem>
-#include <ranges>
-#include <vector>
-#include <span>
-#include <functional>
-#include <algorithm>
-#include <fmt/format.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include <algorithm>
+#include <filesystem>
+#include <fmt/format.h>
+#include <functional>
+#include <optional>
+#include <ranges>
+#include <span>
+#include <vector>
 
 
 namespace Sage {
@@ -31,8 +32,12 @@ public:
                                       void(const std::vector<std::span<float>>&)
                                   > &func);
 
-    double computeVolume();
-    glm::vec3 computeCenterOfMass();
+    float getVolume();
+    glm::vec3 getCenterOfMass();
+
+    void translateToCenterOfMass();
+
+    void resetMoments();
 
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
@@ -42,8 +47,12 @@ public:
     VertexLayout layout;
 
 private:
-    double computeTetrahedronVolume(const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3);
+    float computeTetrahedronVolume(const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3);
+    float computeVolume();
+    glm::vec3 computeCenterOfMass();
 
+    std::optional<double> _volume{std::nullopt};
+    std::optional<glm::vec3> _centerOfMass{std::nullopt};
 };
 
 Mesh LoadObj(const std::filesystem::path &filename);

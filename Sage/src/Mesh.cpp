@@ -121,13 +121,52 @@ void Mesh::applyToFacesElements(
     }
 }
 
+float Mesh::getVolume()
+{
+    return computeVolume();
+//     if (not _volume.has_value())
+//     {
+//         _volume = computeVolume();
+//     }
+//     return _volume.value();
+}
 
-double Mesh::computeTetrahedronVolume(const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3)
+glm::vec3 Mesh::getCenterOfMass()
+{
+    return computeCenterOfMass();
+//     if (not _centerOfMass.has_value())
+//     {
+//         _centerOfMass = computeCenterOfMass();
+//     }
+//     return _centerOfMass.value();
+}
+
+void Mesh::translateToCenterOfMass()
+{
+    auto centerOfMass = getCenterOfMass();
+    applyToVertexElements(VertexElementType::POSITION, [&centerOfMass](auto &vertex)
+    {
+        glm::vec3 v = glm::make_vec3(vertex.data());
+
+        v -= centerOfMass;
+    });
+    resetMoments();
+}
+
+// TODO think about when and who should reset those, or event if cashing should
+// be done at all (it might introduce bugs...).
+void Mesh::resetMoments()
+{
+    _volume = std::nullopt;
+    _centerOfMass = std::nullopt;
+}
+
+float Mesh::computeTetrahedronVolume(const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3)
 {
     return 1./6. * glm::dot( glm::cross(v1, v2), v3);
 }
 
-double Mesh::computeVolume()
+float Mesh::computeVolume()
 {
     double volume{0.f};
 

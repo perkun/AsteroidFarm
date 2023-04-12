@@ -131,15 +131,26 @@ TEST(Mesh, ApplyToVertices)
 TEST(Mesh, Volume)
 {
     auto mesh = LoadObj("data/model_shifted.obj");
-    EXPECT_DOUBLE_EQ(1.410554138012394, mesh.computeVolume());
+    EXPECT_FLOAT_EQ(1.410554138012394, mesh.getVolume());
 }
 
 TEST(Mesh, CenterOfMass)
 {
     auto mesh = LoadObj("data/model_shifted.obj");
-    auto centerOfMass = mesh.computeCenterOfMass();
+    auto centerOfMass = mesh.getCenterOfMass();
 
     EXPECT_FLOAT_EQ(0.23722456, centerOfMass.x);
     EXPECT_FLOAT_EQ(-0.19607261, centerOfMass.y);
     EXPECT_FLOAT_EQ(0.14658417, centerOfMass.z);
+}
+
+TEST(Mesh, TranslateToCenterOfMass)
+{
+    auto mesh = LoadObj("data/model_shifted.obj");
+    mesh.translateToCenterOfMass();
+    auto centerOfMass = mesh.getCenterOfMass();
+
+    EXPECT_FLOAT_EQ(0., centerOfMass.x);
+    EXPECT_FLOAT_EQ(0., centerOfMass.y);
+    EXPECT_FLOAT_EQ(0., centerOfMass.z);
 }
