@@ -12,12 +12,22 @@ using namespace Sage;
 
 int main()
 {
-    std::vector<float> vec{1,2,3,4,5,6,7,8,9};
-    std::span<float> s{vec.begin() + 2, 3}; // 3,4,5
+    auto mesh = LoadObj("data/model_shifted.obj");
+    mesh.translateToCenterOfMass();
+    auto inertia = mesh.getInertia();
 
-    // glm::vec3 *v = (glm::vec3*)(s.data());
-    glm::vec3 v = *(reinterpret_cast<glm::vec3*>(s.data()));
-
+    float x = 1.0;
+    for (int i = 0; i < 3; i++)
+    {
+        fmt::print("{} {} {}\n", inertia[i][0]/x, inertia[i][1]/x, inertia[i][2]/x);
+    }
+    
+    x = inertia[2][2];
+    fmt::print("Reduction by I_zz = {}\n", x);
+    for (int i = 0; i < 3; i++)
+    {
+        fmt::print("{} {} {}\n", inertia[i][0]/x, inertia[i][1]/x, inertia[i][2]/x);
+    }
 
     return 0;
 }

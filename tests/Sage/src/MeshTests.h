@@ -156,3 +156,20 @@ TEST(Mesh, TranslateToCenterOfMass)
     EXPECT_LT(centerOfMass.y, precision);
     EXPECT_LT(centerOfMass.z, precision);
 }
+
+TEST(Mesh, InertiaTensor)
+{
+    auto mesh = LoadObj("data/model_shifted.obj");
+    mesh.translateToCenterOfMass();
+
+    auto inertia = mesh.getInertia();
+
+    EXPECT_FLOAT_EQ(0.31154084, inertia[0][0]);
+    EXPECT_FLOAT_EQ(-0.05167585, inertia[0][1]);
+    EXPECT_FLOAT_EQ(-0.06256327, inertia[0][2]);
+    
+    EXPECT_FLOAT_EQ(.3325195, inertia[1][1]);
+    EXPECT_FLOAT_EQ(-0.035295036, inertia[1][2]);
+
+    EXPECT_FLOAT_EQ(0.34198096, inertia[2][2]);
+}

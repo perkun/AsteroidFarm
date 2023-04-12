@@ -1,10 +1,12 @@
 #include "Mesh.h"
 
-#include <string>
 #include <fmt/format.h>
-#include <fstream>
-#include "VertexLayout.h"
+#include <math.h>
 
+#include <fstream>
+#include <string>
+
+#include "VertexLayout.h"
 
 namespace Sage {
 
@@ -12,34 +14,33 @@ void Mesh::applyToVertexElements(
     VertexElementType type, const std::function<void(std::span<float> &)> &func)
 {
     const auto layoutElementIt = layout.getElement(type);
-    if (!layoutElementIt)
-    {
+    if (!layoutElementIt) {
         // TODO introduce proper logging
         fmt::print("Vertex Layout Element Not found in Mesh");
         return;
     }
 
-
-    for (int vertexBegin = 0; vertexBegin < vertices.size(); vertexBegin += layout.stride)
-    {
-        std::span<float> vertexElement{vertices.begin() + vertexBegin + layoutElementIt->offset,
-                                       layoutElementIt->size};
+    for (int vertexBegin = 0; vertexBegin < vertices.size();
+         vertexBegin += layout.stride) {
+        std::span<float> vertexElement{
+            vertices.begin() + vertexBegin + layoutElementIt->offset,
+            layoutElementIt->size};
         func(vertexElement);
     }
-
 }
 void Mesh::applyToFaces(
     const std::function<void(const std::vector<std::span<float>> &)> &func)
 {
-    for (int faceBegin = 0; faceBegin < indices.size(); faceBegin += numFaceVertices)
-    {
+    for (int faceBegin = 0; faceBegin < indices.size();
+         faceBegin += numFaceVertices) {
         std::vector<std::span<float>> faceVertices;
         faceVertices.reserve(numFaceVertices);
 
-        for (int i = 0; i < numFaceVertices; i++)
-        {
+        for (int i = 0; i < numFaceVertices; i++) {
             auto &vertexIndex = *(indices.begin() + faceBegin + i);
-            faceVertices.emplace_back(vertices.begin() + (vertexIndex * layout.stride), layout.stride);
+            faceVertices.emplace_back(
+                vertices.begin() + (vertexIndex * layout.stride),
+                layout.stride);
         }
 
         func(faceVertices);
@@ -50,22 +51,21 @@ void Mesh::applyToFacesElements(
     const std::function<void(const std::vector<std::span<float>> &)> &func)
 {
     const auto layoutElement = layout.getElement(type);
-    if (!layoutElement)
-    {
+    if (!layoutElement) {
         // TODO introduce proper logging
         fmt::print("Vertex Layout Element Not found in Mesh");
         return;
     }
 
-    for (int faceBegin = 0; faceBegin < indices.size(); faceBegin += numFaceVertices)
-    {
+    for (int faceBegin = 0; faceBegin < indices.size();
+         faceBegin += numFaceVertices) {
         std::vector<std::span<float>> faceVertices;
         faceVertices.reserve(numFaceVertices);
 
-        for (int i = 0; i < numFaceVertices; i++)
-        {
+        for (int i = 0; i < numFaceVertices; i++) {
             auto &vertexIndex = *(indices.begin() + faceBegin + i);
-            faceVertices.emplace_back(vertices.begin() + (vertexIndex * layout.stride) +
+            faceVertices.emplace_back(vertices.begin() +
+                                          (vertexIndex * layout.stride) +
                                           layoutElement->offset,
                                       layoutElement->size);
         }
@@ -76,58 +76,61 @@ void Mesh::applyToFacesElements(
 
 float Mesh::getVolume()
 {
-    if (not _volume.has_value())
-    {
-        _volume = computeVolume();
+    if (not _moments.volume.has_value()) {
+        _moments.volume = computeVolume();
     }
-    return _volume.value();
+    return _moments.volume.value();
 }
 
 glm::vec3 Mesh::getCenterOfMass()
 {
-    if (not _centerOfMass.has_value())
-    {
-        _centerOfMass = computeCenterOfMass();
+    if (not _moments.centerOfMass.has_value()) {
+        _moments.centerOfMass = computeCenterOfMass();
     }
-    return _centerOfMass.value();
+    return _moments.centerOfMass.value();
+}
+
+glm::mat3 Mesh::getInertia()
+{
+    if (not _moments.inertia.has_value()) {
+        _moments.inertia = computeInertia();
+    }
+    return _moments.inertia.value();
 }
 
 void Mesh::translateToCenterOfMass()
 {
     auto centerOfMass = getCenterOfMass();
-    applyToVertexElements(VertexElementType::POSITION, [&centerOfMass](auto &vertex)
-    {
-        auto &v = makeVec3Ref(vertex);
-        v -= centerOfMass;
-    });
+    applyToVertexElements(VertexElementType::POSITION,
+                          [&centerOfMass](auto &vertex) {
+                              auto &v = makeVec3Ref(vertex);
+                              v -= centerOfMass;
+                          });
     resetMoments();
 }
 
 // TODO think about when and who should reset those, or event if cashing should
 // be done at all (it might introduce bugs...).
-void Mesh::resetMoments()
-{
-    _volume = std::nullopt;
-    _centerOfMass = std::nullopt;
-}
+void Mesh::resetMoments() { _moments = Moments{}; }
 
-float Mesh::computeTetrahedronVolume(const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3)
+float Mesh::computeTetrahedronVolume(const glm::vec3 &v1, const glm::vec3 &v2,
+                                     const glm::vec3 &v3)
 {
-    return 1./6. * glm::dot( glm::cross(v1, v2), v3);
+    return 1. / 6. * glm::dot(glm::cross(v1, v2), v3);
 }
 
 float Mesh::computeVolume()
 {
     double volume{0.f};
 
-    applyToFacesElements(VertexElementType::POSITION, [&volume, this](auto &faces)
-    {
-        glm::vec3 v1 = glm::make_vec3(faces[0].data());
-        glm::vec3 v2 = glm::make_vec3(faces[1].data());
-        glm::vec3 v3 = glm::make_vec3(faces[2].data());
+    applyToFacesElements(VertexElementType::POSITION,
+                         [&volume, this](auto &faces) {
+                             glm::vec3 v1 = glm::make_vec3(faces[0].data());
+                             glm::vec3 v2 = glm::make_vec3(faces[1].data());
+                             glm::vec3 v3 = glm::make_vec3(faces[2].data());
 
-		volume += computeTetrahedronVolume(v1, v2, v3);
-    });
+                             volume += computeTetrahedronVolume(v1, v2, v3);
+                         });
 
     return volume;
 }
@@ -137,8 +140,8 @@ glm::vec3 Mesh::computeCenterOfMass()
     glm::vec3 centerOfMass(0.f);
     float volume{0.f};
 
-    applyToFacesElements(VertexElementType::POSITION, [&centerOfMass, &volume, this](auto &faces)
-    {
+    applyToFacesElements(VertexElementType::POSITION, [&centerOfMass, &volume,
+                                                       this](auto &faces) {
         glm::vec3 v1 = glm::make_vec3(faces[0].data());
         glm::vec3 v2 = glm::make_vec3(faces[1].data());
         glm::vec3 v3 = glm::make_vec3(faces[2].data());
@@ -150,7 +153,55 @@ glm::vec3 Mesh::computeCenterOfMass()
         volume += tetrahedronVolume;
     });
 
-    return centerOfMass/volume;
+    return centerOfMass / volume;
+}
+
+glm::mat3 Mesh::computeInertia()
+{
+    glm::mat3 products{0};
+
+    applyToFacesElements(VertexElementType::POSITION, [&products, this](auto &faces) 
+    {
+        const auto &v1 = makeVec3Ref(faces[0]);
+        const auto &v2 = makeVec3Ref(faces[1]);
+        const auto &v3 = makeVec3Ref(faces[2]);
+
+        auto volume = computeTetrahedronVolume(v1, v2, v3);
+
+
+        // 00 01 02
+        // 10 11 12
+        // 20 21 22
+        for (int j = 0; j < 3; j++)
+        {
+            for (int k = j; k < 3; k++)
+            {
+                products[j][k] += volume/20. * (
+                    2*v1[j]*v1[k] + 2*v2[j]*v2[k] + 2*v3[j]*v3[k]
+                    + v1[j]*v2[k] + v1[k]*v2[j] 
+                    + v1[j]*v3[k] + v1[k]*v3[j]
+                    + v2[j]*v3[k] + v2[k]*v3[j]
+                );
+            }
+        }
+
+
+    });
+
+    glm::mat3 inertia;
+    inertia[0][0] = products[1][1] + products[2][2];
+    inertia[1][1] = products[0][0] + products[2][2];
+    inertia[2][2] = products[0][0] + products[1][1];
+
+    inertia[1][2] = -products[1][2];
+    inertia[0][2] = -products[0][2];
+    inertia[0][1] = -products[0][1];
+
+    inertia[2][1] = inertia[1][2];
+    inertia[2][0] = inertia[0][2];
+    inertia[1][0] = inertia[0][1];
+
+    return inertia;
 }
 
 glm::vec3 &makeVec3Ref(const std::span<float> &span)
@@ -165,8 +216,7 @@ Mesh LoadObj(const std::filesystem::path &filename)
     // for now only v and f will be supported
 
     std::ifstream objFile(filename);
-    if (!objFile.is_open())
-    {
+    if (!objFile.is_open()) {
         fmt::print("Could not open file.\n");
         return {};
     }
@@ -177,18 +227,15 @@ Mesh LoadObj(const std::filesystem::path &filename)
     indices.reserve(100000);
 
     std::string line;
-    while (std::getline(objFile, line))
-    {
-        if (line[0] == 'v' && (line[1] == ' ' || line[1] == '\t'))
-        {
+    while (std::getline(objFile, line)) {
+        if (line[0] == 'v' && (line[1] == ' ' || line[1] == '\t')) {
             float x, y, z;
             sscanf(line.c_str(), "%*s %f %f %f", &x, &y, &z);
             positions.emplace_back(x);
             positions.emplace_back(y);
             positions.emplace_back(z);
         }
-        if (line[0] == 'f' && (line[1] == ' ' || line[1] == '\t'))
-        {
+        if (line[0] == 'f' && (line[1] == ' ' || line[1] == '\t')) {
             int a, b, c;
             sscanf(line.c_str(), "%*s %d %d %d", &a, &b, &c);
             indices.emplace_back(a - 1);
@@ -204,6 +251,5 @@ Mesh LoadObj(const std::filesystem::path &filename)
 
     return mesh;
 }
-
 
 }  // namespace Sage
