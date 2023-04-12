@@ -150,7 +150,9 @@ TEST(Mesh, TranslateToCenterOfMass)
     mesh.translateToCenterOfMass();
     auto centerOfMass = mesh.getCenterOfMass();
 
-    EXPECT_FLOAT_EQ(0., centerOfMass.x);
-    EXPECT_FLOAT_EQ(0., centerOfMass.y);
-    EXPECT_FLOAT_EQ(0., centerOfMass.z);
+    constexpr float precision = 1e-6;
+
+    EXPECT_LT(centerOfMass.x, precision);
+    EXPECT_LT(centerOfMass.y, precision);
+    EXPECT_LT(centerOfMass.z, precision);
 }

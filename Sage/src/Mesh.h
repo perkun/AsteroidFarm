@@ -55,6 +55,7 @@ private:
     std::optional<glm::vec3> _centerOfMass{std::nullopt};
 };
 
+glm::vec3 &makeVec3Ref(const std::span<float> &span);
 Mesh LoadObj(const std::filesystem::path &filename);
 
 }  // namespace Sage

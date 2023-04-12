@@ -12,11 +12,12 @@ using namespace Sage;
 
 int main()
 {
-    auto mesh = LoadObj("data/model_shifted.obj");
-    fmt::print("Voulume: {}\n", mesh.getVolume());
+    std::vector<float> vec{1,2,3,4,5,6,7,8,9};
+    std::span<float> s{vec.begin() + 2, 3}; // 3,4,5
 
-    auto centerOfMass = mesh.getCenterOfMass();
-    fmt::print("Centre of mass: {}, {}, {}\n", centerOfMass.x, centerOfMass.y, centerOfMass.z);
+    // glm::vec3 *v = (glm::vec3*)(s.data());
+    glm::vec3 v = *(reinterpret_cast<glm::vec3*>(s.data()));
+
 
     return 0;
 }

@@ -8,53 +8,6 @@
 
 namespace Sage {
 
-Mesh LoadObj(const std::filesystem::path &filename)
-{
-    Mesh mesh;
-
-    // for now only v and f will be supported
-
-    std::ifstream objFile(filename);
-    if (!objFile.is_open())
-    {
-        fmt::print("Could not open file.\n");
-        return {};
-    }
-
-    std::vector<float> positions;
-    positions.reserve(50000);
-    std::vector<unsigned int> indices;
-    indices.reserve(100000);
-
-    std::string line;
-    while (std::getline(objFile, line))
-    {
-        if (line[0] == 'v' && (line[1] == ' ' || line[1] == '\t'))
-        {
-            float x, y, z;
-            sscanf(line.c_str(), "%*s %f %f %f", &x, &y, &z);
-            positions.emplace_back(x);
-            positions.emplace_back(y);
-            positions.emplace_back(z);
-        }
-        if (line[0] == 'f' && (line[1] == ' ' || line[1] == '\t'))
-        {
-            int a, b, c;
-            sscanf(line.c_str(), "%*s %d %d %d", &a, &b, &c);
-            indices.emplace_back(a - 1);
-            indices.emplace_back(b - 1);
-            indices.emplace_back(c - 1);
-        }
-    }
-    mesh.vertices = positions;
-    mesh.indices = indices;
-
-    // TODO do it while parsing, and recognize other elements
-    mesh.layout.pushElement(VertexElementType::POSITION);
-
-    return mesh;
-}
-
 void Mesh::applyToVertexElements(
     VertexElementType type, const std::function<void(std::span<float> &)> &func)
 {
@@ -123,22 +76,20 @@ void Mesh::applyToFacesElements(
 
 float Mesh::getVolume()
 {
-    return computeVolume();
-//     if (not _volume.has_value())
-//     {
-//         _volume = computeVolume();
-//     }
-//     return _volume.value();
+    if (not _volume.has_value())
+    {
+        _volume = computeVolume();
+    }
+    return _volume.value();
 }
 
 glm::vec3 Mesh::getCenterOfMass()
 {
-    return computeCenterOfMass();
-//     if (not _centerOfMass.has_value())
-//     {
-//         _centerOfMass = computeCenterOfMass();
-//     }
-//     return _centerOfMass.value();
+    if (not _centerOfMass.has_value())
+    {
+        _centerOfMass = computeCenterOfMass();
+    }
+    return _centerOfMass.value();
 }
 
 void Mesh::translateToCenterOfMass()
@@ -146,8 +97,7 @@ void Mesh::translateToCenterOfMass()
     auto centerOfMass = getCenterOfMass();
     applyToVertexElements(VertexElementType::POSITION, [&centerOfMass](auto &vertex)
     {
-        glm::vec3 v = glm::make_vec3(vertex.data());
-
+        auto &v = makeVec3Ref(vertex);
         v -= centerOfMass;
     });
     resetMoments();
@@ -202,5 +152,58 @@ glm::vec3 Mesh::computeCenterOfMass()
 
     return centerOfMass/volume;
 }
+
+glm::vec3 &makeVec3Ref(const std::span<float> &span)
+{
+    return *(reinterpret_cast<glm::vec3 *>(span.data()));
+}
+
+Mesh LoadObj(const std::filesystem::path &filename)
+{
+    Mesh mesh;
+
+    // for now only v and f will be supported
+
+    std::ifstream objFile(filename);
+    if (!objFile.is_open())
+    {
+        fmt::print("Could not open file.\n");
+        return {};
+    }
+
+    std::vector<float> positions;
+    positions.reserve(50000);
+    std::vector<unsigned int> indices;
+    indices.reserve(100000);
+
+    std::string line;
+    while (std::getline(objFile, line))
+    {
+        if (line[0] == 'v' && (line[1] == ' ' || line[1] == '\t'))
+        {
+            float x, y, z;
+            sscanf(line.c_str(), "%*s %f %f %f", &x, &y, &z);
+            positions.emplace_back(x);
+            positions.emplace_back(y);
+            positions.emplace_back(z);
+        }
+        if (line[0] == 'f' && (line[1] == ' ' || line[1] == '\t'))
+        {
+            int a, b, c;
+            sscanf(line.c_str(), "%*s %d %d %d", &a, &b, &c);
+            indices.emplace_back(a - 1);
+            indices.emplace_back(b - 1);
+            indices.emplace_back(c - 1);
+        }
+    }
+    mesh.vertices = positions;
+    mesh.indices = indices;
+
+    // TODO do it while parsing, and recognize other elements
+    mesh.layout.pushElement(VertexElementType::POSITION);
+
+    return mesh;
+}
+
 
 }  // namespace Sage
