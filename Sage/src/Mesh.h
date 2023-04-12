@@ -1,5 +1,7 @@
 #pragma once
 
+#include "VertexLayout.h"
+
 #include <filesystem>
 #include <ranges>
 #include <vector>
@@ -8,12 +10,15 @@
 #include <algorithm>
 #include <fmt/format.h>
 
-#include "VertexLayout.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 namespace Sage {
 
-struct Mesh
+class Mesh
 {
+public:
     void applyToVertexElements(VertexElementType type,
                                const std::function<
                                        void(std::span<float>&)
@@ -27,6 +32,7 @@ struct Mesh
                                   > &func);
 
     double computeVolume();
+    glm::vec3 computeCenterOfMass();
 
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
@@ -34,6 +40,10 @@ struct Mesh
     const int numFaceVertices{3};
 
     VertexLayout layout;
+
+private:
+    double computeTetrahedronVolume(const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3);
+
 };
 
 Mesh LoadObj(const std::filesystem::path &filename);

@@ -133,3 +133,13 @@ TEST(Mesh, Volume)
     auto mesh = LoadObj("data/model_shifted.obj");
     EXPECT_DOUBLE_EQ(1.410554138012394, mesh.computeVolume());
 }
+
+TEST(Mesh, CenterOfMass)
+{
+    auto mesh = LoadObj("data/model_shifted.obj");
+    auto centerOfMass = mesh.computeCenterOfMass();
+
+    EXPECT_FLOAT_EQ(0.23722456, centerOfMass.x);
+    EXPECT_FLOAT_EQ(-0.19607261, centerOfMass.y);
+    EXPECT_FLOAT_EQ(0.14658417, centerOfMass.z);
+}

@@ -15,5 +15,8 @@ int main()
     auto mesh = LoadObj("data/model_shifted.obj");
     fmt::print("Voulume: {}\n", mesh.computeVolume());
 
+    auto centerOfMass = mesh.computeCenterOfMass();
+    fmt::print("Centre of mass: {}, {}, {}\n", centerOfMass.x, centerOfMass.y, centerOfMass.z);
+
     return 0;
 }

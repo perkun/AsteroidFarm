@@ -1,11 +1,4 @@
-//
-// Created by perkun on 04.04.23.
-//
-
 #include "Mesh.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include <string>
 #include <fmt/format.h>
@@ -128,20 +121,47 @@ void Mesh::applyToFacesElements(
     }
 }
 
+
+double Mesh::computeTetrahedronVolume(const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3)
+{
+    return 1./6. * glm::dot( glm::cross(v1, v2), v3);
+}
+
 double Mesh::computeVolume()
 {
-    double volume = 0.0;
+    double volume{0.f};
 
-    applyToFacesElements(VertexElementType::POSITION, [&volume](auto &faces) 
+    applyToFacesElements(VertexElementType::POSITION, [&volume, this](auto &faces)
     {
         glm::vec3 v1 = glm::make_vec3(faces[0].data());
         glm::vec3 v2 = glm::make_vec3(faces[1].data());
         glm::vec3 v3 = glm::make_vec3(faces[2].data());
-        
-		volume += 1./6. * glm::dot( glm::cross(v1, v2), v3);
-    }); 
+
+		volume += computeTetrahedronVolume(v1, v2, v3);
+    });
 
     return volume;
+}
+
+glm::vec3 Mesh::computeCenterOfMass()
+{
+    glm::vec3 centerOfMass(0.f);
+    float volume{0.f};
+
+    applyToFacesElements(VertexElementType::POSITION, [&centerOfMass, &volume, this](auto &faces)
+    {
+        glm::vec3 v1 = glm::make_vec3(faces[0].data());
+        glm::vec3 v2 = glm::make_vec3(faces[1].data());
+        glm::vec3 v3 = glm::make_vec3(faces[2].data());
+
+        glm::vec3 centroid = (v1 + v2 + v3) / 4.0f;
+        float tetrahedronVolume = computeTetrahedronVolume(v1, v2, v3);
+
+        centerOfMass += centroid * tetrahedronVolume;
+        volume += tetrahedronVolume;
+    });
+
+    return centerOfMass/volume;
 }
 
 }  // namespace Sage
