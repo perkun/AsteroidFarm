@@ -1,5 +1,4 @@
 #pragma once
-
 #include <fmt/format.h>
 
 #include <algorithm>
@@ -7,6 +6,7 @@
 #include <functional>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/pca.hpp>
 #include <optional>
 #include <ranges>
 #include <span>
@@ -33,6 +33,7 @@ public:
     glm::mat3 getInertia();
 
     void translateToCenterOfMass();
+    void rotateToPrincipalAxes();
 
     void resetMoments();
 
@@ -61,5 +62,6 @@ private:
 
 glm::vec3 &makeVec3Ref(const std::span<float> &span);
 Mesh LoadObj(const std::filesystem::path &filename);
+void SaveObj(Mesh &mesh, const std::filesystem::path &filename);
 
 }  // namespace Sage

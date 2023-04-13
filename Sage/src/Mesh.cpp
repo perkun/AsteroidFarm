@@ -10,6 +10,9 @@
 
 namespace Sage {
 
+// TODO deal with row-major - column-major confusion...
+
+
 void Mesh::applyToVertexElements(
     VertexElementType type, const std::function<void(std::span<float> &)> &func)
 {
@@ -109,6 +112,67 @@ void Mesh::translateToCenterOfMass()
     resetMoments();
 }
 
+void Mesh::rotateToPrincipalAxes()
+{
+    translateToCenterOfMass();
+    auto inertia = getInertia();
+
+    glm::vec3 eigenValues;
+    glm::mat3 eigenVectors;
+
+    glm::findEigenvaluesSymReal(inertia, eigenValues, eigenVectors);
+    glm::sortEigenvalues(eigenValues, eigenVectors);
+
+    // for (int i = 0; i < 3; i++) {
+    //     fmt::print("{} {} {}\n", eigenVectors[i][0], eigenVectors[i][1],
+    //     eigenVectors[i][2]);
+    // }
+    // fmt::print("---\n");
+
+    // flip the matrix, because of reverse sorting
+    glm::mat3 rotMatrixTmp;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            rotMatrixTmp[i][j] = eigenVectors[2 - i][j];
+        }
+    }
+    // See if the Z axis has not been twisted by more than 90 deg
+    // (0,0,1)*Q*(0,0,1)^T must be > 0 (i.e. Q[2][2] > 0 )
+    // if not - change the sign of the last row
+    if (rotMatrixTmp[2][2] < 0) {
+        rotMatrixTmp[2] *= -1.0;
+    }
+    // Moderate the rotation of X axis to less than 90 deg
+    // (1,0,0)*Q*(1,0,0)^T must be > 0
+    if (rotMatrixTmp[0][0] < 0) {
+        rotMatrixTmp[0] *= -1.0;
+    }
+
+    // vcs matrix is O(3) by definition, but we need it to be SO(3).
+    // Multiply the second row by (-1) if it is not (adjust Y axis)
+    auto dz = glm::determinant(rotMatrixTmp);
+    if (dz < 0.0) {
+        rotMatrixTmp[1] *= -1.0;
+    }
+
+    // row-major to column-major transformation
+    glm::mat3 rotMatrix;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            rotMatrix[i][j] = rotMatrixTmp[j][i];
+        }
+    }
+
+
+    applyToVertexElements(VertexElementType::POSITION,
+                          [&rotMatrix](auto &vertex) {
+                              auto &v = makeVec3Ref(vertex);
+                              v = rotMatrix * v;
+                          });
+
+    resetMoments();
+}
+
 // TODO think about when and who should reset those, or event if cashing should
 // be done at all (it might introduce bugs...).
 void Mesh::resetMoments() { _moments = Moments{}; }
@@ -160,32 +224,26 @@ glm::mat3 Mesh::computeInertia()
 {
     glm::mat3 products{0};
 
-    applyToFacesElements(VertexElementType::POSITION, [&products, this](auto &faces) 
-    {
+    applyToFacesElements(VertexElementType::POSITION, [&products,
+                                                       this](auto &faces) {
         const auto &v1 = makeVec3Ref(faces[0]);
         const auto &v2 = makeVec3Ref(faces[1]);
         const auto &v3 = makeVec3Ref(faces[2]);
 
         auto volume = computeTetrahedronVolume(v1, v2, v3);
 
-
         // 00 01 02
         // 10 11 12
         // 20 21 22
-        for (int j = 0; j < 3; j++)
-        {
-            for (int k = j; k < 3; k++)
-            {
-                products[j][k] += volume/20. * (
-                    2*v1[j]*v1[k] + 2*v2[j]*v2[k] + 2*v3[j]*v3[k]
-                    + v1[j]*v2[k] + v1[k]*v2[j] 
-                    + v1[j]*v3[k] + v1[k]*v3[j]
-                    + v2[j]*v3[k] + v2[k]*v3[j]
-                );
+        for (int j = 0; j < 3; j++) {
+            for (int k = j; k < 3; k++) {
+                products[j][k] +=
+                    volume / 20. *
+                    (2 * v1[j] * v1[k] + 2 * v2[j] * v2[k] + 2 * v3[j] * v3[k] +
+                     v1[j] * v2[k] + v1[k] * v2[j] + v1[j] * v3[k] +
+                     v1[k] * v3[j] + v2[j] * v3[k] + v2[k] * v3[j]);
             }
         }
-
-
     });
 
     glm::mat3 inertia;
@@ -216,7 +274,7 @@ Mesh LoadObj(const std::filesystem::path &filename)
     // for now only v and f will be supported
 
     std::ifstream objFile(filename);
-    if (!objFile.is_open()) {
+    if (not objFile.is_open()) {
         fmt::print("Could not open file.\n");
         return {};
     }
@@ -250,6 +308,29 @@ Mesh LoadObj(const std::filesystem::path &filename)
     mesh.layout.pushElement(VertexElementType::POSITION);
 
     return mesh;
+}
+
+void SaveObj(Mesh &mesh, const std::filesystem::path &filename)
+{
+    std::ofstream objFile(filename);
+    if (not objFile.is_open()) {
+        fmt::print("Could not open file.\n");
+        return;
+    }
+
+    mesh.applyToVertexElements(
+        VertexElementType::POSITION, [&objFile](const auto &vertex) {
+            objFile << "v " << vertex[0] << " " << vertex[1] << " " << vertex[2]
+                    << "\n";
+        });
+
+    for (int i = 0; i < mesh.indices.size(); i += mesh.numFaceVertices) {
+        objFile << "f";
+        for (int j = 0; j < mesh.numFaceVertices; j++) {
+            objFile << " " << mesh.indices[i + j] + 1;
+        }
+        objFile << "\n";
+    }
 }
 
 }  // namespace Sage

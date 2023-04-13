@@ -1,33 +1,21 @@
-#include <iostream>
-
-#include "Mesh.h"
+#include <fmt/format.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/pca.hpp>
+#include <iostream>
 
-#include <fmt/format.h>
-
+#include "Mesh.h"
 
 using namespace Sage;
 
 int main()
 {
     auto mesh = LoadObj("data/model_shifted.obj");
-    mesh.translateToCenterOfMass();
-    auto inertia = mesh.getInertia();
 
-    float x = 1.0;
-    for (int i = 0; i < 3; i++)
-    {
-        fmt::print("{} {} {}\n", inertia[i][0]/x, inertia[i][1]/x, inertia[i][2]/x);
-    }
-    
-    x = inertia[2][2];
-    fmt::print("Reduction by I_zz = {}\n", x);
-    for (int i = 0; i < 3; i++)
-    {
-        fmt::print("{} {} {}\n", inertia[i][0]/x, inertia[i][1]/x, inertia[i][2]/x);
-    }
+    mesh.rotateToPrincipalAxes();
+
+    SaveObj(mesh, "data/model_pa.obj");
 
     return 0;
 }
