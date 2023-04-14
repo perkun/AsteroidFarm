@@ -35,6 +35,7 @@ public:
     void translateToCenterOfMass();
     void rotateToPrincipalAxes();
 
+
     void resetMoments();
 
     std::vector<float> vertices;
@@ -50,6 +51,8 @@ private:
     float computeVolume();
     glm::vec3 computeCenterOfMass();
     glm::mat3 computeInertia();
+
+    void computeNormals();
 
     struct Moments
     {

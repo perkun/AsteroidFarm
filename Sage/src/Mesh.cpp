@@ -31,8 +31,7 @@ void Mesh::applyToVertexElements(
 void Mesh::applyToFaces(
     const std::function<void(const std::vector<std::span<float>> &)> &func)
 {
-    for (int faceBegin = 0; faceBegin < indices.size();
-         faceBegin += numFaceVertices) {
+    for (int faceBegin = 0; faceBegin < indices.size(); faceBegin += numFaceVertices) {
         std::vector<std::span<float>> faceVertices;
         faceVertices.reserve(numFaceVertices);
 
@@ -162,6 +161,41 @@ void Mesh::rotateToPrincipalAxes()
 
     resetMoments();
 }
+
+// TODO finish this...
+// need to add face indices as parameters to lambdas in applyToFaces*
+// this could be done in sharer during rendering anyways...
+void Mesh::computeNormals()
+{
+    std::vector<float> normals;
+    normals.reserve(vertices.size());
+
+    std::vector<float> positions;
+    positions.reserve(vertices.size());
+
+    std::vector<float> newVertices;
+    newVertices.reserve(vertices.size());
+
+    applyToFacesElements(VertexElementType::POSITION, [&normals](const auto &face)
+    {
+        glm::vec3 v1 = makeVec3Ref(face[0]);
+        glm::vec3 v2 = makeVec3Ref(face[1]);
+        glm::vec3 v3 = makeVec3Ref(face[2]);
+
+        glm::vec3 v12 = v2 - v1;
+        glm::vec3 v13 = v3 - v1;
+
+        glm::vec3 normal = glm::normalize(glm::cross(v12, v13));
+
+        normals.push_back(normal.x);
+        normals.push_back(normal.y);
+        normals.push_back(normal.z);
+    });
+
+
+}
+
+
 
 // TODO think about when and who should reset those, or event if cashing should
 // be done at all (it might introduce bugs...).
