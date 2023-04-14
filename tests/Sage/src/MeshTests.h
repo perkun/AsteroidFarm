@@ -167,9 +167,46 @@ TEST(Mesh, InertiaTensor)
     EXPECT_FLOAT_EQ(0.31154084, inertia[0][0]);
     EXPECT_FLOAT_EQ(-0.05167585, inertia[0][1]);
     EXPECT_FLOAT_EQ(-0.06256327, inertia[0][2]);
-    
+
     EXPECT_FLOAT_EQ(.3325195, inertia[1][1]);
     EXPECT_FLOAT_EQ(-0.035295036, inertia[1][2]);
 
     EXPECT_FLOAT_EQ(0.34198096, inertia[2][2]);
+}
+
+
+TEST(Mesh, PrincipalAxes)
+{
+    constexpr float precision = 1e-6;
+
+    auto mesh = LoadObj("data/model_shifted.obj");
+    mesh.rotateToPrincipalAxes();
+
+    int counter{0};
+    mesh.applyToVertexElements(VertexElementType::POSITION, [&counter, &precision](auto &vertex)
+    {
+        if (counter == 0)
+        {
+            EXPECT_LT(abs(-0.126412 - vertex[0]), precision);
+            EXPECT_LT(abs(0.0472851 - vertex[1]), precision);
+            EXPECT_LT(abs(0.542489 - vertex[2]), precision);
+        }
+
+        if (counter == 1000)
+        {
+            EXPECT_LT(abs(-0.524463 - vertex[0]), precision);
+            EXPECT_LT(abs(-0.425167 - vertex[1]), precision);
+            EXPECT_LT(abs(0.0424607 - vertex[2]), precision);
+        }
+
+        if (counter == 11933)
+        {
+            EXPECT_LT(abs(0.701174 - vertex[0]), precision);
+            EXPECT_LT(abs(-0.499872 - vertex[1]), precision);
+            EXPECT_LT(abs(0.150963 - vertex[2]), precision);
+        }
+
+        counter++;
+    });
+
 }

@@ -10,9 +10,6 @@
 
 namespace Sage {
 
-// TODO deal with row-major - column-major confusion...
-
-
 void Mesh::applyToVertexElements(
     VertexElementType type, const std::function<void(std::span<float> &)> &func)
 {
@@ -123,12 +120,6 @@ void Mesh::rotateToPrincipalAxes()
     glm::findEigenvaluesSymReal(inertia, eigenValues, eigenVectors);
     glm::sortEigenvalues(eigenValues, eigenVectors);
 
-    // for (int i = 0; i < 3; i++) {
-    //     fmt::print("{} {} {}\n", eigenVectors[i][0], eigenVectors[i][1],
-    //     eigenVectors[i][2]);
-    // }
-    // fmt::print("---\n");
-
     // flip the matrix, because of reverse sorting
     glm::mat3 rotMatrixTmp;
     for (int i = 0; i < 3; i++) {
@@ -163,12 +154,11 @@ void Mesh::rotateToPrincipalAxes()
         }
     }
 
-
-    applyToVertexElements(VertexElementType::POSITION,
-                          [&rotMatrix](auto &vertex) {
+    applyToVertexElements(VertexElementType::POSITION, [&rotMatrix](auto &vertex)
+    {
                               auto &v = makeVec3Ref(vertex);
                               v = rotMatrix * v;
-                          });
+    });
 
     resetMoments();
 }
@@ -232,16 +222,13 @@ glm::mat3 Mesh::computeInertia()
 
         auto volume = computeTetrahedronVolume(v1, v2, v3);
 
-        // 00 01 02
-        // 10 11 12
-        // 20 21 22
-        for (int j = 0; j < 3; j++) {
-            for (int k = j; k < 3; k++) {
-                products[j][k] +=
-                    volume / 20. *
-                    (2 * v1[j] * v1[k] + 2 * v2[j] * v2[k] + 2 * v3[j] * v3[k] +
-                     v1[j] * v2[k] + v1[k] * v2[j] + v1[j] * v3[k] +
-                     v1[k] * v3[j] + v2[j] * v3[k] + v2[k] * v3[j]);
+        for (int k = 0; k < 3; k++) {
+            for (int j = k; j < 3; j++) {
+                products[k][j] +=
+                volume / 20. *
+                (2 * v1[k] * v1[j] + 2 * v2[k] * v2[j] + 2 * v3[k] * v3[j] +
+                 v1[k] * v2[j] + v1[j] * v2[k] + v1[k] * v3[j] +
+                 v1[j] * v3[k] + v2[k] * v3[j] + v2[j] * v3[k]);
             }
         }
     });
