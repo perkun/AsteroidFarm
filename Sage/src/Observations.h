@@ -17,12 +17,12 @@ struct ObsPoint
 
 using Lightcurve = std::vector<ObsPoint>;
 
-struct LightcurveSeries
+struct LightcurveStorage
 {
+    static LightcurveStorage loadFromJson(const std::filesystem::path &filePath);
+
     std::string targetName;
     std::vector<Lightcurve> lightcurves;
 };
-
-LightcurveSeries LoadLightcurveSeries(const std::filesystem::path &filePath);
 
 }  // namespace Sage

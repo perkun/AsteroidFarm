@@ -7,7 +7,7 @@
 namespace Sage {
 
 
-LightcurveSeries LoadLightcurveSeries(const std::filesystem::path &filePath)
+LightcurveStorage LightcurveStorage::loadFromJson(const std::filesystem::path &filePath)
 {
     // TODO check if file exists, etc
     std::ifstream file(filePath);

@@ -10,7 +10,7 @@ void from_json(const json& j, ObsPoint& p)
     p.targetPosition = j.at("targetPosition").get<glm::vec3>();
 }
 
-void from_json(const json& j, LightcurveSeries& obs)
+void from_json(const json& j, LightcurveStorage& obs)
 {
     obs.targetName = j.at("targetName").get<std::string>();
     obs.lightcurves = j.at("lightcurves").get<std::vector<Lightcurve>>();

@@ -12,8 +12,7 @@ using namespace Sage;
 
 int main()
 {
-    LightcurveSeries obs = LoadLightcurveSeries("data/obs.json");    
-
+    auto obs = LightcurveStorage::loadFromJson("data/obs.json");    
 
     return 0;
 }
