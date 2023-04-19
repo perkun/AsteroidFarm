@@ -9,4 +9,5 @@ bin/**
 build/**
 tests/bin/**
 tests/build/**
+docs/build/**
 Makefile
