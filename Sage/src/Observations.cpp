@@ -1,6 +1,5 @@
 #include "Observations.h"
 #include "ObservationsParser.h"
-#include <nlohmann/json.hpp>
 
 #include <fstream>
 
@@ -12,6 +11,13 @@ LightcurveStorage LightcurveStorage::loadFromJson(const std::filesystem::path &f
     // TODO check if file exists, etc
     std::ifstream file(filePath);
     return nlohmann::json::parse(file);
+}
+
+void LightcurveStorage::saveToJson(const LightcurveStorage &storage, const std::filesystem::path &filePath)
+{
+    std::ofstream file(filePath);
+    nlohmann::json j = storage;
+    file << j;
 }
 
 } // namespace Sage

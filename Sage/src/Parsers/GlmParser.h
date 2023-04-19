@@ -13,6 +13,11 @@ struct adl_serializer<glm::vec3>
         vec.y = j.at(1);
         vec.z = j.at(2);
     }
+
+    static void to_json(json& j, const glm::vec3& vec)
+    {
+        j = json::array({vec.x, vec.y, vec.z});
+    }
 };
 }  // namespace nlohmann
 

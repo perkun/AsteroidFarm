@@ -1,6 +1,8 @@
 #pragma once
 
 #include <glm/vec3.hpp>
+#include <nlohmann/json.hpp>
+
 #include <string>
 #include <vector>
 #include <filesystem>
@@ -20,6 +22,7 @@ using Lightcurve = std::vector<ObsPoint>;
 struct LightcurveStorage
 {
     static LightcurveStorage loadFromJson(const std::filesystem::path &filePath);
+    static void saveToJson(const LightcurveStorage &storage, const std::filesystem::path &filePath);
 
     std::string targetName;
     std::vector<Lightcurve> lightcurves;

@@ -19,4 +19,4 @@ include "Sandbox"
 include "tests/Sage"
 
 -- DOCS --
-include "docs"
+--include "docs"
