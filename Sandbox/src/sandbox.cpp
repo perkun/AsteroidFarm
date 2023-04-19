@@ -6,27 +6,14 @@
 #include <iostream>
 
 #include "Mesh.h"
+#include "Observations.h"
 
 using namespace Sage;
 
 int main()
 {
-    auto mesh = LoadObj("data/model_shifted.obj");
+    Observations obs;    
 
-//     mesh.translateToCenterOfMass();
-//     auto inertia = mesh.getInertia();
-//
-//     for (int i = 0; i < 3; i++)
-//     {
-//         for (int j = 0; j < 3; j++)
-//         {
-//             fmt::print("{}\t", inertia[i][j]);
-//         }
-//         fmt::print("\n");
-//     }
-
-    mesh.rotateToPrincipalAxes();
-    SaveObj(mesh, "data/model_pa.obj");
 
     return 0;
 }
