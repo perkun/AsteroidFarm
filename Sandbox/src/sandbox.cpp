@@ -12,7 +12,7 @@ using namespace Sage;
 
 int main()
 {
-    Observations obs;    
+    LightcurveSeries obs = LoadLightcurveSeries("data/obs.json");    
 
 
     return 0;

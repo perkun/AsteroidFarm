@@ -21,7 +21,7 @@ project "Sage"
 	includedirs
 	{
  		"src",
- 		--"vendor/cppargs/src",
+		"src/Parsers"
 	}
 
 
