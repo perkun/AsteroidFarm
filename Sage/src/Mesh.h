@@ -19,6 +19,9 @@ namespace Sage {
 class Mesh
 {
 public:
+    static Mesh loadFromObj(const std::filesystem::path &filename);
+    static void saveToObj(Mesh &mesh, const std::filesystem::path &filename);
+
     void applyToVertexElements(
         VertexElementType type,
         const std::function<void(std::span<float> &)> &func);
@@ -64,7 +67,5 @@ private:
 };
 
 glm::vec3 &makeVec3Ref(const std::span<float> &span);
-Mesh LoadObj(const std::filesystem::path &filename);
-void SaveObj(Mesh &mesh, const std::filesystem::path &filename);
 
 }  // namespace Sage

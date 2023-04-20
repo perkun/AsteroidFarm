@@ -288,7 +288,7 @@ glm::vec3 &makeVec3Ref(const std::span<float> &span)
     return *(reinterpret_cast<glm::vec3 *>(span.data()));
 }
 
-Mesh LoadObj(const std::filesystem::path &filename)
+Mesh Mesh::loadFromObj(const std::filesystem::path &filename)
 {
     Mesh mesh;
 
@@ -331,7 +331,7 @@ Mesh LoadObj(const std::filesystem::path &filename)
     return mesh;
 }
 
-void SaveObj(Mesh &mesh, const std::filesystem::path &filename)
+void Mesh::saveToObj(Mesh &mesh, const std::filesystem::path &filename)
 {
     std::ofstream objFile(filename);
     if (not objFile.is_open()) {
