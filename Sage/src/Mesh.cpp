@@ -20,57 +20,81 @@ void Mesh::applyToVertexElements(
         return;
     }
 
-    for (int vertexBegin = 0; vertexBegin < vertices.size();
-         vertexBegin += layout.stride) {
+    for (int vertexBegin = 0; vertexBegin < vertices.size(); vertexBegin += layout.stride) 
+    {
         std::span<float> vertexElement{
             vertices.begin() + vertexBegin + layoutElementIt->offset,
             layoutElementIt->size};
         func(vertexElement);
     }
 }
+
 void Mesh::applyToFaces(
     const std::function<void(const std::vector<std::span<float>> &)> &func)
 {
-    for (int faceBegin = 0; faceBegin < indices.size(); faceBegin += numFaceVertices) {
+    for (int faceBegin = 0; faceBegin < indices.size(); faceBegin += verticesPerFace) {
         std::vector<std::span<float>> faceVertices;
-        faceVertices.reserve(numFaceVertices);
+        faceVertices.reserve(verticesPerFace);
 
-        for (int i = 0; i < numFaceVertices; i++) {
+        for (int i = 0; i < verticesPerFace; i++) {
             auto &vertexIndex = *(indices.begin() + faceBegin + i);
-            faceVertices.emplace_back(
-                vertices.begin() + (vertexIndex * layout.stride),
-                layout.stride);
+            faceVertices.emplace_back(getVertex(vertexIndex));
         }
 
         func(faceVertices);
     }
 }
+
 void Mesh::applyToFacesElements(
     VertexElementType type,
     const std::function<void(const std::vector<std::span<float>> &)> &func)
 {
-    const auto layoutElement = layout.getElement(type);
-    if (!layoutElement) {
-        // TODO introduce proper logging
-        fmt::print("Vertex Layout Element Not found in Mesh");
-        return;
-    }
-
-    for (int faceBegin = 0; faceBegin < indices.size();
-         faceBegin += numFaceVertices) {
+    for (int faceBegin = 0; faceBegin < indices.size(); faceBegin += verticesPerFace) 
+    {
         std::vector<std::span<float>> faceVertices;
-        faceVertices.reserve(numFaceVertices);
+        faceVertices.reserve(verticesPerFace);
 
-        for (int i = 0; i < numFaceVertices; i++) {
+        for (int i = 0; i < verticesPerFace; i++) 
+        {
             auto &vertexIndex = *(indices.begin() + faceBegin + i);
-            faceVertices.emplace_back(vertices.begin() +
-                                          (vertexIndex * layout.stride) +
-                                          layoutElement->offset,
-                                      layoutElement->size);
+            faceVertices.emplace_back(getVertexElement(type, vertexIndex));
         }
 
         func(faceVertices);
     }
+}
+
+void Mesh::applyToFacesIndices(std::function<void(const std::span<unsigned int> &)> func)
+{
+    for (int i = 0; i < indices.size(); i += verticesPerFace)
+    {
+        func({indices.begin() + i, verticesPerFace});
+    }
+}
+
+std::span<float> Mesh::getVertex(int index)
+{
+    if (index >= vertices.size() / layout.stride)
+    {
+        // TODO introduce proper logging. Throw exeption here
+        fmt::print("Index out of bounds");
+        return {};
+    }
+
+    return {vertices.begin() + (index * layout.stride), layout.stride};
+}
+
+std::span<float> Mesh::getVertexElement(VertexElementType type, int index)
+{
+    const auto layoutElementIt = layout.getElement(type);
+    if (!layoutElementIt) {
+        // TODO introduce proper logging
+        fmt::print("Vertex Layout Element Not found in Mesh");
+        return {};
+    }
+
+    auto vertex = getVertex(index);
+    return {vertex.begin() + layoutElementIt->offset, layoutElementIt->size};
 }
 
 float Mesh::getVolume()
@@ -160,39 +184,57 @@ void Mesh::rotateToPrincipalAxes()
     });
 
     resetMoments();
+    computeNormals();
 }
 
 // TODO finish this...
 // need to add face indices as parameters to lambdas in applyToFaces*
-// this could be done in sharer during rendering anyways...
+// this could be done in sharder during rendering anyways...
 void Mesh::computeNormals()
 {
-    std::vector<float> normals;
-    normals.reserve(vertices.size());
+    std::vector<float> newVertices(vertices.size() * 2, 0.0f);
+    VertexLayout newLayout{VertexElementType::POSITION, VertexElementType::NORMAL};
 
-    std::vector<float> positions;
-    positions.reserve(vertices.size());
+    auto positionElementIt = newLayout.getElement(VertexElementType::POSITION);
+    auto normalElementIt = newLayout.getElement(VertexElementType::NORMAL);
 
-    std::vector<float> newVertices;
-    newVertices.reserve(vertices.size());
-
-    applyToFacesElements(VertexElementType::POSITION, [&normals](const auto &face)
+    applyToFacesIndices([&](auto &faceIndices)
     {
-        glm::vec3 v1 = makeVec3Ref(face[0]);
-        glm::vec3 v2 = makeVec3Ref(face[1]);
-        glm::vec3 v3 = makeVec3Ref(face[2]);
+        auto &v1 = makeVec3Ref(getVertexElement(VertexElementType::POSITION, faceIndices[0]));
+        auto &v2 = makeVec3Ref(getVertexElement(VertexElementType::POSITION, faceIndices[1]));
+        auto &v3 = makeVec3Ref(getVertexElement(VertexElementType::POSITION, faceIndices[2]));
 
         glm::vec3 v12 = v2 - v1;
         glm::vec3 v13 = v3 - v1;
-
         glm::vec3 normal = glm::normalize(glm::cross(v12, v13));
 
-        normals.push_back(normal.x);
-        normals.push_back(normal.y);
-        normals.push_back(normal.z);
+        size_t vertexBegin1 = faceIndices[0] * newLayout.stride;
+        size_t vertexBegin2 = faceIndices[1] * newLayout.stride;
+        size_t vertexBegin3 = faceIndices[2] * newLayout.stride;
+
+        for (int i = 0; i < positionElementIt->size; i++)
+        {
+            newVertices.at(vertexBegin1 + positionElementIt->offset + i) = v1[i];
+            newVertices.at(vertexBegin2 + positionElementIt->offset + i) = v2[i];
+            newVertices.at(vertexBegin3 + positionElementIt->offset + i) = v3[i];
+        }
+
+        for (int i = 0; i < normalElementIt->size; i++)
+        {
+            newVertices.at(vertexBegin1 + normalElementIt->offset + i) += normal[i];
+            newVertices.at(vertexBegin2 + normalElementIt->offset + i) += normal[i];
+            newVertices.at(vertexBegin3 + normalElementIt->offset + i) += normal[i];
+        }
     });
 
+    vertices = newVertices;
+    layout = std::move(newLayout);
 
+    applyToVertexElements(VertexElementType::NORMAL, [](auto &normal) 
+    {
+        auto &n = makeVec3Ref(normal);
+        n = glm::normalize(n);
+    });
 }
 
 
@@ -292,7 +334,7 @@ Mesh Mesh::loadFromObj(const std::filesystem::path &filename)
 {
     Mesh mesh;
 
-    // for now only v and f will be supported
+    // NOTE for now only v and f will be supported
 
     std::ifstream objFile(filename);
     if (not objFile.is_open()) {
@@ -339,15 +381,19 @@ void Mesh::saveToObj(Mesh &mesh, const std::filesystem::path &filename)
         return;
     }
 
-    mesh.applyToVertexElements(
-        VertexElementType::POSITION, [&objFile](const auto &vertex) {
-            objFile << "v " << vertex[0] << " " << vertex[1] << " " << vertex[2]
-                    << "\n";
-        });
+    mesh.applyToVertexElements(VertexElementType::POSITION, [&objFile](const auto &position) 
+    {
+        objFile << "v " << position[0] << " " << position[1] << " " << position[2] << "\n";
+    });
 
-    for (int i = 0; i < mesh.indices.size(); i += mesh.numFaceVertices) {
+    mesh.applyToVertexElements(VertexElementType::NORMAL, [&objFile](const auto &normal) 
+    {
+        objFile << "vn " << normal[0] << " " << normal[1] << " " << normal[2] << "\n";
+    });
+
+    for (int i = 0; i < mesh.indices.size(); i += mesh.verticesPerFace) {
         objFile << "f";
-        for (int j = 0; j < mesh.numFaceVertices; j++) {
+        for (int j = 0; j < mesh.verticesPerFace; j++) {
             objFile << " " << mesh.indices[i + j] + 1;
         }
         objFile << "\n";

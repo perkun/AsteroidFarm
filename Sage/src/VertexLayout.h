@@ -45,7 +45,7 @@ struct VertexLayout {
         calculateStrideAndOffsets();
     }
 
-    VertexLayoutElement* getElement(VertexElementType type)
+    const VertexLayoutElement* getElement(VertexElementType type) const
     {
         auto element = std::find_if(elements.begin(), elements.end(),
                             [&type](const auto &elem){

@@ -9,7 +9,7 @@ using namespace Sage;
 
 TEST(Mesh, LoadObjFile)
 {
-    auto mesh = LoadObj("data/model_shifted.obj");
+    auto mesh = Mesh::loadFromObj("data/model_shifted.obj");
 
     EXPECT_EQ(mesh.vertices.size(), 49158);
     EXPECT_EQ(mesh.indices.size(), 98304);
@@ -130,13 +130,13 @@ TEST(Mesh, ApplyToVertices)
 
 TEST(Mesh, Volume)
 {
-    auto mesh = LoadObj("data/model_shifted.obj");
+    auto mesh = Mesh::loadFromObj("data/model_shifted.obj");
     EXPECT_FLOAT_EQ(1.410554138012394, mesh.getVolume());
 }
 
 TEST(Mesh, CenterOfMass)
 {
-    auto mesh = LoadObj("data/model_shifted.obj");
+    auto mesh = Mesh::loadFromObj("data/model_shifted.obj");
     auto centerOfMass = mesh.getCenterOfMass();
 
     EXPECT_FLOAT_EQ(0.23722456, centerOfMass.x);
@@ -146,7 +146,7 @@ TEST(Mesh, CenterOfMass)
 
 TEST(Mesh, TranslateToCenterOfMass)
 {
-    auto mesh = LoadObj("data/model_shifted.obj");
+    auto mesh = Mesh::loadFromObj("data/model_shifted.obj");
     mesh.translateToCenterOfMass();
     auto centerOfMass = mesh.getCenterOfMass();
 
@@ -159,7 +159,7 @@ TEST(Mesh, TranslateToCenterOfMass)
 
 TEST(Mesh, InertiaTensor)
 {
-    auto mesh = LoadObj("data/model_shifted.obj");
+    auto mesh = Mesh::loadFromObj("data/model_shifted.obj");
     mesh.translateToCenterOfMass();
 
     auto inertia = mesh.getInertia();
@@ -179,34 +179,47 @@ TEST(Mesh, PrincipalAxes)
 {
     constexpr float precision = 1e-6;
 
-    auto mesh = LoadObj("data/model_shifted.obj");
+    auto mesh = Mesh::loadFromObj("data/model_shifted.obj");
     mesh.rotateToPrincipalAxes();
 
-    int counter{0};
-    mesh.applyToVertexElements(VertexElementType::POSITION, [&counter, &precision](auto &vertex)
-    {
-        if (counter == 0)
-        {
-            EXPECT_LT(abs(-0.126412 - vertex[0]), precision);
-            EXPECT_LT(abs(0.0472851 - vertex[1]), precision);
-            EXPECT_LT(abs(0.542489 - vertex[2]), precision);
-        }
+    auto vertex = mesh.getVertexElement(VertexElementType::POSITION, 0);
+    EXPECT_LT(abs(-0.126412 - vertex[0]), precision);
+    EXPECT_LT(abs(0.0472851 - vertex[1]), precision);
+    EXPECT_LT(abs(0.542489 - vertex[2]), precision);
+    
+    vertex = mesh.getVertexElement(VertexElementType::POSITION, 1000);
+    EXPECT_LT(abs(-0.524463 - vertex[0]), precision);
+    EXPECT_LT(abs(-0.425167 - vertex[1]), precision);
+    EXPECT_LT(abs(0.0424607 - vertex[2]), precision);
 
-        if (counter == 1000)
-        {
-            EXPECT_LT(abs(-0.524463 - vertex[0]), precision);
-            EXPECT_LT(abs(-0.425167 - vertex[1]), precision);
-            EXPECT_LT(abs(0.0424607 - vertex[2]), precision);
-        }
+    vertex = mesh.getVertexElement(VertexElementType::POSITION, 11933);
+    EXPECT_LT(abs(0.701174 - vertex[0]), precision);
+    EXPECT_LT(abs(-0.499872 - vertex[1]), precision);
+    EXPECT_LT(abs(0.150963 - vertex[2]), precision);
 
-        if (counter == 11933)
-        {
-            EXPECT_LT(abs(0.701174 - vertex[0]), precision);
-            EXPECT_LT(abs(-0.499872 - vertex[1]), precision);
-            EXPECT_LT(abs(0.150963 - vertex[2]), precision);
-        }
+}
 
-        counter++;
-    });
+TEST(Mesh, Normals)
+{
+    constexpr float precision = 1e-6;
+
+    auto mesh = Mesh::loadFromObj("data/model_shifted.obj");
+    // NOTE it calculates normals too
+    mesh.rotateToPrincipalAxes();
+
+    auto vertex = mesh.getVertexElement(VertexElementType::NORMAL, 0);
+    EXPECT_LT(abs(0.498685 - vertex[0]), precision);
+    EXPECT_LT(abs(-0.257999 - vertex[1]), precision);
+    EXPECT_LT(abs(0.827496 - vertex[2]), precision);
+    
+    vertex = mesh.getVertexElement(VertexElementType::NORMAL, 1000);
+    EXPECT_LT(abs(-0.267745 - vertex[0]), precision);
+    EXPECT_LT(abs(-0.950802 - vertex[1]), precision);
+    EXPECT_LT(abs(0.155844 - vertex[2]), precision);
+
+    vertex = mesh.getVertexElement(VertexElementType::NORMAL, 11933);
+    EXPECT_LT(abs(0.628625 - vertex[0]), precision);
+    EXPECT_LT(abs(-0.777697 - vertex[1]), precision);
+    EXPECT_LT(abs(0.00419329 - vertex[2]), precision);
 
 }

@@ -31,6 +31,12 @@ public:
         VertexElementType type,
         const std::function<void(const std::vector<std::span<float>> &)> &func);
 
+    void applyToFacesIndices(
+        std::function<void(const std::span<unsigned int> &)> func);
+
+    std::span<float> getVertex(int index);
+    std::span<float> getVertexElement(VertexElementType type, int index);
+
     float getVolume();
     glm::vec3 getCenterOfMass();
     glm::mat3 getInertia();
@@ -44,7 +50,7 @@ public:
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
 
-    const int numFaceVertices{3};
+    const size_t verticesPerFace{3};
 
     VertexLayout layout;
 
