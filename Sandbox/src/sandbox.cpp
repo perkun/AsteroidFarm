@@ -7,6 +7,7 @@
 
 #include "Mesh.h"
 #include "Observations.h"
+#include "AsteroidParams.h"
 
 using namespace Sage;
 
@@ -16,9 +17,13 @@ int main()
     // auto obs = LightcurveStorage::loadFromJson("data/obs.json");    
     // LightcurveStorage::saveToJson(obs, "data/obs_out.json");
 
-    auto mesh = Mesh::loadFromObj("data/model_shifted.obj");
-    mesh.rotateToPrincipalAxes();
-    Mesh::saveToObj(mesh, "data/model_normals.obj");
+    // auto mesh = Mesh::loadFromObj("data/model_shifted.obj");
+    // mesh.rotateToPrincipalAxes();
+    // Mesh::saveToObj(mesh, "data/model_normals.obj");
+
+
+    auto params = 
+
 
     return 0;
 }

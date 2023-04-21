@@ -1,6 +1,8 @@
 #include "Observations.h"
 #include "ObservationsParser.h"
 
+#include <nlohmann/json.hpp>
+
 #include <fstream>
 
 namespace Sage {
