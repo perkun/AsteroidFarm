@@ -187,16 +187,14 @@ void Mesh::rotateToPrincipalAxes()
     computeNormals();
 }
 
-// TODO finish this...
-// need to add face indices as parameters to lambdas in applyToFaces*
-// this could be done in sharder during rendering anyways...
 void Mesh::computeNormals()
 {
-    std::vector<float> newVertices(vertices.size() * 2, 0.0f);
     VertexLayout newLayout{VertexElementType::POSITION, VertexElementType::NORMAL};
-
     auto positionElementIt = newLayout.getElement(VertexElementType::POSITION);
     auto normalElementIt = newLayout.getElement(VertexElementType::NORMAL);
+
+    auto newVerticesSize = vertices.size() / layout.stride * newLayout.stride;
+    std::vector<float> newVertices(newVerticesSize, 0.0f);
 
     applyToFacesIndices([&](auto &faceIndices)
     {
