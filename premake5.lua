@@ -9,9 +9,14 @@ workspace "Sage"
 	}
 
 outputdir = "%{cfg.buildcfg}"
-includedirs { "%{wks.location}/vendor" }
+includedirs { "%{wks.location}/vendor/glm",
+              "%{wks.location}/vendor/nlohmann",
+              "%{wks.location}/vendor/glad/include",
+              "%{wks.location}/vendor/glfw/include",
+            }
 
---include "vendor"
+include "vendor/glad"
+include "vendor/glfw"
 include "Sage"
 include "Sandbox"
 

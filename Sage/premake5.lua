@@ -21,12 +21,13 @@ project "Sage"
 	includedirs
 	{
  		"src",
-		"src/Parsers"
+		"src/Parsers",
+        "src/Rendering"
 	}
 
 
 
-	links { }
+	links { "glfw", "glad"}
 
 
 	filter "configurations:Debug"
