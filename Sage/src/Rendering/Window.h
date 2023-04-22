@@ -1,25 +1,28 @@
-#ifndef WINDOW_H_
-#define WINDOW_H_
+#pragma once
 
-#include <GLFW/glfw3.h>
 #include <string>
 
-using namespace std;
-
 class GLFWwindow;
+
+struct WindowConfig
+{
+    int width;
+    int height;
+    std::string title;
+    bool fullscreen;
+    bool visible;
+};
 
 class Window
 {
 public:
-	Window(int, int, string, bool, bool);
-	~Window();
+    Window(WindowConfig config);
+    ~Window();
 
-	void destroy();
-	void close();
+private:
+    void destroy();
+    void close();
 
-	GLFWwindow* winptr;
-	int width, height;
-	string title;
+    GLFWwindow* _winptr;
+    WindowConfig _config;
 };
-
-#endif /* WINDOW_H_ */

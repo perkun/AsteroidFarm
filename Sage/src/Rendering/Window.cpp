@@ -1,54 +1,43 @@
 #include "Window.h"
+#include <GLFW/glfw3.h>
 
-Window::Window(int w, int h, string title, bool fullscreen, bool visible)
+Window::Window(WindowConfig config) : _config(config)
 {
-	if (!glfwInit())
-	{
-		fprintf (stderr, "ERROR: could not start GLFW3\n");
-		exit(0);
-	}
-	width = w;
-	height = h;
-	this->title = title;
+    if (! glfwInit())
+    {
+        fprintf(stderr, "ERROR: could not start GLFW3\n");
+        exit(0);
+    }
 
+    glfwWindowHint(GLFW_SAMPLES, 4);
 
-	glfwWindowHint(GLFW_SAMPLES, 4);
+    // create window
+    glfwWindowHint(GLFW_VISIBLE, _config.visible ? GLFW_TRUE : GLFW_FALSE);
 
-	// create window
-	if (visible)
-		glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
-	else
-		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+    _winptr = glfwCreateWindow(_config.width,
+                               _config.height,
+                               _config.title.c_str(),
+                               _config.fullscreen ? glfwGetPrimaryMonitor() : NULL,
+                               NULL);
 
-	if (fullscreen)
-		winptr = glfwCreateWindow(w, h, title.c_str(), glfwGetPrimaryMonitor(), NULL);
-	else
-		winptr = glfwCreateWindow(w, h, title.c_str(), NULL, NULL);
+    glfwMakeContextCurrent(_winptr);
 
-	glfwMakeContextCurrent(winptr);
-
-	// user pointer
-	glfwSetWindowUserPointer(winptr, this);
+    // user pointer
+    glfwSetWindowUserPointer(_winptr, this);
 }
-
-
 
 Window::~Window()
 {
-	destroy();
-	glfwTerminate();
+    destroy();
+    glfwTerminate();
 }
-
-
-
 
 void Window::close()
 {
-	glfwSetWindowShouldClose(winptr, GLFW_TRUE);
+    glfwSetWindowShouldClose(_winptr, GLFW_TRUE);
 }
 
 void Window::destroy()
 {
-	glfwDestroyWindow(winptr);
+    glfwDestroyWindow(_winptr);
 }
-
