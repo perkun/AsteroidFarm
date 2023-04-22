@@ -1,25 +1,37 @@
 #include "Observations.h"
-#include "ObservationsParser.h"
-
-#include <nlohmann/json.hpp>
 
 #include <fstream>
 
+using namespace nlohmann;
+
 namespace Sage {
 
-
-LightcurveStorage LightcurveStorage::loadFromJson(const std::filesystem::path &filePath)
+void from_json(const json& j, ObsPoint& p)
 {
-    // TODO check if file exists, etc
-    std::ifstream file(filePath);
-    return nlohmann::json::parse(file);
+    p.julianDay = j.at("julianDay").get<double>();
+    p.magnitude = j.at("magnitude").get<double>();
+    p.observerPosition = j.at("observerPosition").get<glm::vec3>();
+    p.targetPosition = j.at("targetPosition").get<glm::vec3>();
 }
 
-void LightcurveStorage::saveToJson(const LightcurveStorage &storage, const std::filesystem::path &filePath)
+void from_json(const json& j, LightcurveStorage& obs)
 {
-    std::ofstream file(filePath);
-    nlohmann::json j = storage;
-    file << j;
+    obs.targetName = j.at("targetName").get<std::string>();
+    obs.lightcurves = j.at("lightcurves").get<std::vector<Lightcurve>>();
+}
+
+void to_json(json& j, const ObsPoint& p)
+{
+    j = {{"julianDay", p.julianDay},
+         {"magnitude", p.magnitude},
+         {"observerPosition", p.observerPosition},
+         {"targetPosition", p.targetPosition}};
+}
+
+void to_json(json& j, const LightcurveStorage& obs)
+{
+    j = {{"targetName", obs.targetName},
+         {"lightcurves", obs.lightcurves}};
 }
 
 } // namespace Sage
