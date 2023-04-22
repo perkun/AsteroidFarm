@@ -27,6 +27,7 @@ BraceWrapping:
   AfterExternBlock: true
   BeforeCatch: true
   BeforeElse: true
+  BeforeLambdaBody: true
   SplitEmptyNamespace: true
   SplitEmptyFunction: false
 
@@ -37,6 +38,7 @@ IncludeBlocks: Preserve
 IndentCaseLabels: false
 IndentWidth: 4
 Language: Cpp
+DerivePointerAlignment: false
 PointerAlignment: Right
 SortIncludes: false
 SpaceAfterCStyleCast: false

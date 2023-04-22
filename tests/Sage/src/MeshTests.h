@@ -49,6 +49,7 @@ TEST(Mesh, ApplyToVertices)
 {
     Mesh mesh;
 
+    // clang-format off
     mesh.vertices = {
         1101, 1102, 1103,   1201, 1202,    1301, 1302, 1303, 1304,
         2101, 2102, 2103,   2201, 2202,    2301, 2302, 2303, 2304,
@@ -58,23 +59,20 @@ TEST(Mesh, ApplyToVertices)
         6101, 6102, 6103,   6201, 6202,    6301, 6302, 6303, 6304,
         7101, 7102, 7103,   7201, 7202,    7301, 7302, 7303, 7304,
     };
+    // clang-format on
 
-    mesh.indices = {
-        0,1,2,
-        2,3,4,
-        4,5,6
-    };
+    mesh.indices = {0, 1, 2, 2, 3, 4, 4, 5, 6};
 
-    mesh.layout = VertexLayout(VertexElementType::POSITION,
-                               VertexElementType::TEXTURE,
-                               VertexElementType::COLOR);
+    mesh.layout = VertexLayout(VertexElementType::POSITION, VertexElementType::TEXTURE, VertexElementType::COLOR);
 
     mesh.applyToVertexElements(VertexElementType::TEXTURE,
-                               [](auto &textureCoords) {
+                               [](auto &textureCoords)
+                               {
                                    textureCoords[0] += 10;
                                    textureCoords[1] += 10;
                                });
 
+    // clang-format off
     std::vector<float> expectedVertices{
         1101, 1102, 1103,   1211, 1212,    1301, 1302, 1303, 1304,
         2101, 2102, 2103,   2211, 2212,    2301, 2302, 2303, 2304,
@@ -85,14 +83,13 @@ TEST(Mesh, ApplyToVertices)
         7101, 7102, 7103,   7211, 7212,    7301, 7302, 7303, 7304,
     };
     EXPECT_EQ(expectedVertices, mesh.vertices);
-
+    // clang-format on
 
     // going through every 2nd vertex, i.e.: idx = 1, 3, 5
     // and changing 6th element - 1st element of color
-    mesh.applyToFaces([](auto &vertices){
-        vertices[1][5] += 10;
-    });
+    mesh.applyToFaces([](auto &vertices) { vertices[1][5] += 10; });
 
+    // clang-format off
     expectedVertices = {
         1101, 1102, 1103,   1211, 1212,    1301, 1302, 1303, 1304,
         2101, 2102, 2103,   2211, 2212,    2311, 2302, 2303, 2304,
@@ -102,19 +99,23 @@ TEST(Mesh, ApplyToVertices)
         6101, 6102, 6103,   6211, 6212,    6311, 6302, 6303, 6304,
         7101, 7102, 7103,   7211, 7212,    7301, 7302, 7303, 7304,
     };
+    // clang-format on
 
     EXPECT_EQ(expectedVertices, mesh.vertices);
 
-    mesh.applyToFacesElements(VertexElementType::COLOR, [](auto &colors){
-        for (auto &color : colors)
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                color[i] += 10;
-            }
-        }
-    });
+    mesh.applyToFacesElements(VertexElementType::COLOR,
+                              [](auto &colors)
+                              {
+                                  for (auto &color : colors)
+                                  {
+                                      for (int i = 0; i < 4; i++)
+                                      {
+                                          color[i] += 10;
+                                      }
+                                  }
+                              });
 
+    // clang-format off
     expectedVertices = {
         1101, 1102, 1103,   1211, 1212,    1311, 1312, 1313, 1314,
         2101, 2102, 2103,   2211, 2212,    2321, 2312, 2313, 2314,
@@ -124,6 +125,7 @@ TEST(Mesh, ApplyToVertices)
         6101, 6102, 6103,   6211, 6212,    6321, 6312, 6313, 6314,
         7101, 7102, 7103,   7211, 7212,    7311, 7312, 7313, 7314,
     };
+    // clang-format off
 
     EXPECT_EQ(expectedVertices, mesh.vertices);
 }

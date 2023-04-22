@@ -31,26 +31,26 @@ private:
     [[nodiscard]] size_t getNativeSize(VertexElementType type) const;
 };
 
-struct VertexLayout {
+struct VertexLayout
+{
     VertexLayout() = default;
 
-    VertexLayout(std::convertible_to<VertexElementType> auto&& ... args)
+    VertexLayout(std::convertible_to<VertexElementType> auto &&...args)
     {
         (elements.emplace_back(std::forward<VertexElementType>(args)), ...);
         calculateStrideAndOffsets();
     }
 
-    void pushElement(VertexElementType type) {
+    void pushElement(VertexElementType type)
+    {
         elements.emplace_back(type);
         calculateStrideAndOffsets();
     }
 
-    const VertexLayoutElement* getElement(VertexElementType type) const
+    const VertexLayoutElement *getElement(VertexElementType type) const
     {
-        auto element = std::find_if(elements.begin(), elements.end(),
-                            [&type](const auto &elem){
-                              return elem.type == type;
-                            });
+        auto element =
+            std::find_if(elements.begin(), elements.end(), [&type](const auto &elem) { return elem.type == type; });
         if (element != elements.end())
         {
             return &(*element);
@@ -59,9 +59,10 @@ struct VertexLayout {
     }
 
     size_t stride{0};
+
 private:
     std::vector<VertexLayoutElement> elements;
     void calculateStrideAndOffsets();
 };
 
-} // namespace Sage
+}  // namespace Sage

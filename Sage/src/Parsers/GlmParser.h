@@ -20,5 +20,3 @@ struct adl_serializer<glm::vec3>
     }
 };
 }  // namespace nlohmann
-
-

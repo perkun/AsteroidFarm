@@ -27,10 +27,10 @@ struct LightcurveStorage
     std::vector<Lightcurve> lightcurves;
 };
 
-void from_json(const nlohmann::json& j, ObsPoint& p);
-void from_json(const nlohmann::json& j, LightcurveStorage& obs);
+void from_json(const nlohmann::json &j, ObsPoint &p);
+void from_json(const nlohmann::json &j, LightcurveStorage &obs);
 
-void to_json(nlohmann::json &j, const ObsPoint&p);
-void to_json(nlohmann::json &j, const LightcurveStorage&p);
+void to_json(nlohmann::json &j, const ObsPoint &p);
+void to_json(nlohmann::json &j, const LightcurveStorage &p);
 
 }  // namespace Sage

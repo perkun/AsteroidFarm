@@ -22,17 +22,12 @@ public:
     static Mesh loadFromObj(const std::filesystem::path &filename);
     static void saveToObj(Mesh &mesh, const std::filesystem::path &filename);
 
-    void applyToVertexElements(
-        VertexElementType type,
-        const std::function<void(std::span<float> &)> &func);
-    void applyToFaces(
-        const std::function<void(const std::vector<std::span<float>> &)> &func);
-    void applyToFacesElements(
-        VertexElementType type,
-        const std::function<void(const std::vector<std::span<float>> &)> &func);
+    void applyToVertexElements(VertexElementType type, const std::function<void(std::span<float> &)> &func);
+    void applyToFaces(const std::function<void(const std::vector<std::span<float>> &)> &func);
+    void applyToFacesElements(VertexElementType type,
+                              const std::function<void(const std::vector<std::span<float>> &)> &func);
 
-    void applyToFacesIndices(
-        std::function<void(const std::span<unsigned int> &)> func);
+    void applyToFacesIndices(std::function<void(const std::span<unsigned int> &)> func);
 
     std::span<float> getVertex(int index);
     std::span<float> getVertexElement(VertexElementType type, int index);
@@ -44,7 +39,6 @@ public:
     void translateToCenterOfMass();
     void rotateToPrincipalAxes();
 
-
     void resetMoments();
 
     std::vector<float> vertices;
@@ -55,8 +49,7 @@ public:
     VertexLayout layout;
 
 private:
-    float computeTetrahedronVolume(const glm::vec3 &v1, const glm::vec3 &v2,
-                                   const glm::vec3 &v3);
+    float computeTetrahedronVolume(const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3);
     float computeVolume();
     glm::vec3 computeCenterOfMass();
     glm::mat3 computeInertia();
