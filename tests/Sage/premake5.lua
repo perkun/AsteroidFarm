@@ -22,7 +22,7 @@ project "SageTests"
 	{
  		"%{prj.name}/src",
         "%{wks.location}/Sage/src/",
-		"%{wks.location}/vendor/fmt/"
+		"%{wks.location}/vendor/fmt/",
  		--"vendor/cppargs/src",
 	}
 
