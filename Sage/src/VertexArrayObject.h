@@ -13,10 +13,10 @@ public:
     ~VertexArrayObject();
 
     int numDrawElements{0};
+    GLuint vaoId;
+    const unsigned int drawType{GL_TRIANGLES};
 private:
-    const unsigned int _drawType{GL_TRIANGLES};
 
-    GLuint _vaoId;
     GLuint _vboId;
     GLuint _idxsId;
 };

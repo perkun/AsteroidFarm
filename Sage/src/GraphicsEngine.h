@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Renderer.h"
 #include "Window.h"
 #include "Scene.h"
 
@@ -15,6 +16,7 @@ public:
 
 private:
     Window _window;
+    Renderer _renderer;
     Scene _scene;
 
 

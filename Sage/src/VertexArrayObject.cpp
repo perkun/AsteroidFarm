@@ -8,8 +8,8 @@ VertexArrayObject::VertexArrayObject(const Mesh &mesh)
     numDrawElements = mesh.indices.size() * 3;
 
     // create VAO
-    glGenVertexArrays(1, &_vaoId);
-    glBindVertexArray(_vaoId);
+    glGenVertexArrays(1, &vaoId);
+    glBindVertexArray(vaoId);
 
     // generate buffers
     glGenBuffers(1, &_vboId);
@@ -32,7 +32,7 @@ VertexArrayObject::VertexArrayObject(const Mesh &mesh)
 
 VertexArrayObject::~VertexArrayObject()
 {
-    glDeleteVertexArrays(1, &_vaoId);
+    glDeleteVertexArrays(1, &vaoId);
     glDeleteBuffers(1, &_vboId);
     glDeleteBuffers(1, &_idxsId);
 }

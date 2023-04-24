@@ -8,6 +8,8 @@ class Camera
 {
 public:
 	Camera(float aspect, float zNear, float zFar);
+    virtual ~Camera() = default;
+
 	virtual glm::mat4 getPerspective() = 0;
 
 	glm::mat4 getView();

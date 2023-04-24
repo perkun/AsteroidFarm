@@ -29,10 +29,20 @@ void Renderer::bindDefaultFramebuffer()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Renderer::beginScene() {}
+// void Renderer::beginScene(std::shared_ptr<Camera> camera)
+// {
+//     // TODO think of a better way...
+//     _camera = camera;
+// }
 
-void Renderer::endScene() {}
+// void Renderer::endScene() {}
 
-void Renderer::submit() {}
+void Renderer::submit(const VertexArrayObject &vao, MaterialComponent &material)
+{
+    material.setUniforms();
+
+    glBindVertexArray(vao.vaoId);
+    glDrawElements(vao.drawType, vao.numDrawElements, GL_UNSIGNED_INT, NULL);
+}
 
 }  // namespace Sage

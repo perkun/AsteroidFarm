@@ -8,7 +8,8 @@
 namespace Sage {
 
 GraphicsEngine::GraphicsEngine()
-    : _window({.width = 600, .height = 600, .title = "SageRendering", .fullscreen = false, .visible = true})
+    : _window({.width = 600, .height = 600, .title = "SageRendering", .fullscreen = false, .visible = true}),
+      _scene(_renderer)
 {
     int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     if (status == 0)
@@ -17,14 +18,14 @@ GraphicsEngine::GraphicsEngine()
         exit(1);
     }
 
-	glEnable(GL_MULTISAMPLE);
+    glEnable(GL_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 }
 
-Scene& GraphicsEngine::getScene()
+Scene &GraphicsEngine::getScene()
 {
     return _scene;
 }
