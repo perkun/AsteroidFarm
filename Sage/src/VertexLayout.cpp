@@ -1,9 +1,11 @@
 #include "VertexLayout.h"
 
+#include "glad/glad.h"
+
 namespace Sage {
 
 VertexLayoutElement::VertexLayoutElement(VertexElementType type)
-    : type(type), size(getSize(type)), nativeSize(getNativeSize(type))
+    : type(type), size(getSize(type)), nativeSize(getNativeSize(type)), glType(getGlType(type))
 {}
 
 // NOTE this is for traversing arrays, i.e. size=3 means going array.begin() + 3
@@ -22,6 +24,21 @@ size_t VertexLayoutElement::getSize(VertexElementType type) const
     case VertexElementType::NONE:
     default:
         return 0;
+    }
+}
+
+int VertexLayoutElement::getGlType(VertexElementType type) const 
+{
+    switch (type)
+    {
+    case VertexElementType::POSITION:
+    case VertexElementType::NORMAL:
+    case VertexElementType::COLOR:
+    case VertexElementType::TEXTURE:
+        return GL_FLOAT;
+    case VertexElementType::NONE:
+    default:
+        return GL_NONE;
     }
 }
 
@@ -47,7 +64,7 @@ void VertexLayout::calculateStrideAndOffsets()
 {
     stride = 0;
     size_t offset = 0;
-    for (auto &layoutElement : elements)
+    for (auto &layoutElement : _elements)
     {
         layoutElement.offset = offset;
         auto size = layoutElement.size;

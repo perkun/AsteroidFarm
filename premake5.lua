@@ -13,6 +13,7 @@ includedirs { "%{wks.location}/vendor/glm",
               "%{wks.location}/vendor/nlohmann",
               "%{wks.location}/vendor/glad/include",
               "%{wks.location}/vendor/glfw/include",
+			  "%{wks.location}/vendor/entt/",
             }
 
 include "vendor/glad"

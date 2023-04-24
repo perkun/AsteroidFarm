@@ -22,7 +22,6 @@ project "Sage"
 	{
  		"src",
 		"src/Parsers",
-		"%{wks.location}/vendor/entt/",
 	}
 
 

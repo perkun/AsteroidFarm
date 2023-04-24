@@ -16,6 +16,17 @@ GraphicsEngine::GraphicsEngine()
         std::cerr << "Glad failed to initialize " << status << std::endl;
         exit(1);
     }
+
+	glEnable(GL_MULTISAMPLE);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+}
+
+Scene& GraphicsEngine::getScene()
+{
+    return _scene;
 }
 
 }  // namespace Sage

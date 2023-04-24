@@ -25,7 +25,7 @@ project "Sandbox"
  		--"vendor/cppargs/src",
 	}
 
-	links { "Sage", "glfw", "glad", "fmt" }
+	links { "Sage", "glfw", "glad", "fmt", "pthread", "dl" }
 
 	filter "configurations:Debug"
 		symbols "On"

@@ -9,12 +9,12 @@ class Scene
 {
 public:
     Scene();
-    ~Scene();
 
     Entity createEntity();
     void draw();
 private:
 	entt::registry _registry;
+    void draw(Entity entity);
 
 };
 

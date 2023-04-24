@@ -23,12 +23,14 @@ struct VertexLayoutElement
     const VertexElementType type;
     const size_t size;
     const size_t nativeSize;
+    const int glType;
 
     size_t offset{0};
 
 private:
     [[nodiscard]] size_t getSize(VertexElementType type) const;
     [[nodiscard]] size_t getNativeSize(VertexElementType type) const;
+    [[nodiscard]] int getGlType(VertexElementType) const;
 };
 
 struct VertexLayout
@@ -37,21 +39,21 @@ struct VertexLayout
 
     VertexLayout(std::convertible_to<VertexElementType> auto &&...args)
     {
-        (elements.emplace_back(std::forward<VertexElementType>(args)), ...);
+        (_elements.emplace_back(std::forward<VertexElementType>(args)), ...);
         calculateStrideAndOffsets();
     }
 
     void pushElement(VertexElementType type)
     {
-        elements.emplace_back(type);
+        _elements.emplace_back(type);
         calculateStrideAndOffsets();
     }
 
     const VertexLayoutElement *getElement(VertexElementType type) const
     {
         auto element =
-            std::find_if(elements.begin(), elements.end(), [&type](const auto &elem) { return elem.type == type; });
-        if (element != elements.end())
+            std::find_if(_elements.begin(), _elements.end(), [&type](const auto &elem) { return elem.type == type; });
+        if (element != _elements.end())
         {
             return &(*element);
         }
@@ -60,8 +62,13 @@ struct VertexLayout
 
     size_t stride{0};
 
+    const std::vector<VertexLayoutElement> &getElements() const
+    {
+        return _elements;
+    }
+
 private:
-    std::vector<VertexLayoutElement> elements;
+    std::vector<VertexLayoutElement> _elements;
     void calculateStrideAndOffsets();
 };
 
