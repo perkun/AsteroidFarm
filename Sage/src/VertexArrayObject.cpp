@@ -16,11 +16,11 @@ VertexArrayObject::VertexArrayObject(const Mesh &mesh)
     glBindBuffer(GL_ARRAY_BUFFER, _vboId);
     glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(float), &mesh.vertices[0], GL_STATIC_DRAW);
 
-    for (unsigned int locationIndex = 0;
-         const VertexLayoutElement &vle : mesh.layout.getElements())
+    for (unsigned int locationIndex = 0; const VertexLayoutElement &vle : mesh.layout.getElements())
     {
         glEnableVertexAttribArray(locationIndex);
-        glVertexAttribPointer(locationIndex, vle.size, vle.glType, GL_FALSE, mesh.layout.stride, (void *)vle.offset);
+        glVertexAttribPointer(
+            locationIndex, vle.size, vle.glType, GL_FALSE, mesh.layout.stride * sizeof(float), (void *)vle.nativeOffset);
         locationIndex++;
     }
 

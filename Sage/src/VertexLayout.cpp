@@ -64,11 +64,18 @@ void VertexLayout::calculateStrideAndOffsets()
 {
     stride = 0;
     size_t offset = 0;
+    size_t nativeOffset = 0;
     for (auto &layoutElement : _elements)
     {
         layoutElement.offset = offset;
+        layoutElement.nativeOffset = nativeOffset;
+
         auto size = layoutElement.size;
         offset += size;
+
+        auto nativeSize = layoutElement.nativeSize;
+        nativeOffset += nativeSize;
+
         stride += size;
     }
 }

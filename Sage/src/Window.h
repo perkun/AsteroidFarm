@@ -19,6 +19,8 @@ public:
     Window(WindowConfig config);
     ~Window();
 
+    void update();
+
 private:
     void destroy();
     void close();

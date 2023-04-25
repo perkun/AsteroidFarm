@@ -13,9 +13,9 @@ public:
     ~GraphicsEngine() = default;
 
     Scene& getScene();
+    Window _window;
 
 private:
-    Window _window;
     Renderer _renderer;
     Scene _scene;
 

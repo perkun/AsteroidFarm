@@ -8,7 +8,7 @@
 namespace Sage {
 
 GraphicsEngine::GraphicsEngine()
-    : _window({.width = 600, .height = 600, .title = "SageRendering", .fullscreen = false, .visible = true}),
+    : _window({.width = 600, .height = 600, .title = "RenderEngine window", .fullscreen = false, .visible = true}),
       _scene(_renderer)
 {
     int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);

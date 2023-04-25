@@ -26,6 +26,7 @@ struct VertexLayoutElement
     const int glType;
 
     size_t offset{0};
+    size_t nativeOffset{0};
 
 private:
     [[nodiscard]] size_t getSize(VertexElementType type) const;

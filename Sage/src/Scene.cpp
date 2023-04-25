@@ -15,10 +15,11 @@ Entity Scene::createEntity()
 
 void Scene::draw()
 {
+    _renderer.bindDefaultFramebuffer();
+    _renderer.setViewport(0, 0, 600, 600);
+    // _renderer.clear();
+    _renderer.clear({0.2, 0.5, 0.3, 1.0});
     // _renderer.beginScene();
-
-    // TODO camera, for now here...
-    camera = new OrthograficCamera(4, 1, 0.1, 10);
 
     auto view = _registry.view<TransformComponent, MaterialComponent, VaoComponent>();
     for (auto e : view)
@@ -28,7 +29,6 @@ void Scene::draw()
     }
 
     // _renderer.endScene();
-    delete camera;
 }
 
 void Scene::draw(Entity entity)

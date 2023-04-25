@@ -41,3 +41,8 @@ void Window::destroy()
 {
     glfwDestroyWindow(_winptr);
 }
+
+void Window::update()
+{
+    glfwSwapBuffers(_winptr);
+}

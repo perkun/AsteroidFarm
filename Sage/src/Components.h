@@ -17,7 +17,7 @@ public:
 
     glm::vec3 position{0.};
     glm::vec3 rotation{0.};
-    glm::vec3 scale{0.};
+    glm::vec3 scale{1.};
 
     glm::mat4 getTransformMatrix();
 
