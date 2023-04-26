@@ -26,7 +26,7 @@ project "SageTests"
  		--"vendor/cppargs/src",
 	}
 
-	links { "fmt", "gtest", "Sage", "pthread"}
+	links { "Sage", "fmt", "gtest", "glfw", "glad", "pthread"}
 
 	filter "configurations:Debug"
 		symbols "On"

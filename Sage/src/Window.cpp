@@ -1,6 +1,8 @@
 #include "Window.h"
 #include <GLFW/glfw3.h>
 
+namespace Sage {
+
 Window::Window(WindowConfig config) : _config(config)
 {
     if (! glfwInit())
@@ -46,3 +48,4 @@ void Window::update()
 {
     glfwSwapBuffers(_winptr);
 }
+}  // namespace Sage

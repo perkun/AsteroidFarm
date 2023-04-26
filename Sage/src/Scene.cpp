@@ -15,11 +15,7 @@ Entity Scene::createEntity()
 
 void Scene::draw()
 {
-    _renderer.bindDefaultFramebuffer();
-    _renderer.setViewport(0, 0, 600, 600);
-    // _renderer.clear();
-    _renderer.clear({0.2, 0.5, 0.3, 1.0});
-    // _renderer.beginScene();
+    _renderer.beginScene();
 
     auto view = _registry.view<TransformComponent, MaterialComponent, VaoComponent>();
     for (auto e : view)

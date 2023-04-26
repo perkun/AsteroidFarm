@@ -6,6 +6,7 @@
 
 namespace Sage {
 
+class Framebuffer;
 class Renderer
 {
 public:
@@ -17,12 +18,14 @@ public:
     void setViewport(int x, int y, int width, int height);
     void bindDefaultFramebuffer();
 
-    // void beginScene(std::shared_ptr<Camera> camera);
-    // void endScene();
+    void beginScene();
+    void endScene();
     void submit(const VertexArrayObject &vao, MaterialComponent &material);
+    glm::vec4 bgColor{0.0};
+
+    Framebuffer *framebuffer;
 
 private:
-    // std::shared_ptr<Camera> _camera;
 };
 
 }  // namespace Sage

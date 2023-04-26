@@ -1,5 +1,6 @@
 #include "GraphicsEngine.h"
 
+#include "Renderer.h"
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 
@@ -7,9 +8,7 @@
 
 namespace Sage {
 
-GraphicsEngine::GraphicsEngine()
-    : _window({.width = 600, .height = 600, .title = "RenderEngine window", .fullscreen = false, .visible = true}),
-      _scene(_renderer)
+GraphicsEngine::GraphicsEngine(const WindowConfig &windowConfig) : _window(windowConfig), _scene(_renderer)
 {
     int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     if (status == 0)
@@ -28,6 +27,16 @@ GraphicsEngine::GraphicsEngine()
 Scene &GraphicsEngine::getScene()
 {
     return _scene;
+}
+
+Window &GraphicsEngine::getWindow()
+{
+    return _window;
+}
+
+Renderer &GraphicsEngine::getRenderer()
+{
+    return _renderer;
 }
 
 }  // namespace Sage

@@ -3,6 +3,7 @@
 #include <string>
 
 class GLFWwindow;
+namespace Sage {
 
 struct WindowConfig
 {
@@ -25,6 +26,8 @@ private:
     void destroy();
     void close();
 
-    GLFWwindow* _winptr;
+    GLFWwindow *_winptr;
     WindowConfig _config;
 };
+
+}  // namespace Sage

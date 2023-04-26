@@ -1,6 +1,7 @@
 #include "Renderer.h"
 
 #include <glad/glad.h>
+#include "Framebuffer.h"
 
 namespace Sage {
 
@@ -29,13 +30,23 @@ void Renderer::bindDefaultFramebuffer()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-// void Renderer::beginScene(std::shared_ptr<Camera> camera)
-// {
-//     // TODO think of a better way...
-//     _camera = camera;
-// }
+void Renderer::beginScene()
+{
+    if (framebuffer)
+    {
+        framebuffer->bind();
+    }
+    else {
+        bindDefaultFramebuffer();
+    }
 
-// void Renderer::endScene() {}
+    clear(bgColor);
+}
+
+void Renderer::endScene()
+{
+    bindDefaultFramebuffer();
+}
 
 void Renderer::submit(const VertexArrayObject &vao, MaterialComponent &material)
 {
