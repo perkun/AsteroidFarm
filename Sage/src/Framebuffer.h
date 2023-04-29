@@ -45,11 +45,10 @@ struct FramebufferAttachmentSpecification
 
 struct FramebufferSpecification
 {
-    unsigned int width = 0, height = 0;
-    FramebufferAttachmentSpecification attachments;
+    unsigned int width = 0;
+    unsigned int height = 0;
     unsigned int samples = 1;
-
-    bool SwapChainTarget = false;
+    FramebufferAttachmentSpecification attachments;
 };
 
 class Framebuffer

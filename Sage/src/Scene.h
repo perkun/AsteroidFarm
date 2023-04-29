@@ -11,18 +11,20 @@ class Renderer;
 class Scene
 {
 public:
-    Scene(Renderer &renderer);
+    virtual ~Scene() = default;
 
     Entity createEntity();
-    void draw();
+    virtual void render() = 0;
 
-    Camera *camera;
+    // TODO unique ptr?
+    std::shared_ptr<Camera> camera{nullptr};
 
-private:
+protected:
     entt::registry _registry;
+    void draw();
     void draw(Entity entity);
 
-    Renderer &_renderer;
+    Renderer _renderer;
 };
 
 }  // namespace Sage

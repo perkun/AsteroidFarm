@@ -6,8 +6,6 @@
 
 namespace Sage {
 
-Scene::Scene(Renderer &renderer) : _renderer(renderer) {}
-
 Entity Scene::createEntity()
 {
     return {_registry.create(), &_registry};
@@ -24,11 +22,16 @@ void Scene::draw()
         draw(entity);
     }
 
-    // _renderer.endScene();
+    _renderer.endScene();
 }
 
 void Scene::draw(Entity entity)
 {
+    if (!camera)
+    {
+        return;
+    }
+
     // NOTE: we do not check for existance of these componenets, we rely on 
     // function calling this one checking for it
     // TODO check for existance?

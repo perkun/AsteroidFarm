@@ -34,7 +34,7 @@ void Renderer::beginScene()
 {
     if (framebuffer)
     {
-        framebuffer->bind();
+        framebuffer.value()->bind();
     }
     else {
         bindDefaultFramebuffer();
@@ -45,7 +45,7 @@ void Renderer::beginScene()
 
 void Renderer::endScene()
 {
-    bindDefaultFramebuffer();
+    // bindDefaultFramebuffer();
 }
 
 void Renderer::submit(const VertexArrayObject &vao, MaterialComponent &material)

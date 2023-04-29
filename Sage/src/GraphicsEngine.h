@@ -1,8 +1,11 @@
 #pragma once
 
-#include "Renderer.h"
+#include "Framebuffer.h"
 #include "Window.h"
 #include "Scene.h"
+
+#include <utility>
+#include <optional>
 
 namespace Sage {
 
@@ -10,17 +13,24 @@ class GraphicsEngine
 {
 public:
     GraphicsEngine(const WindowConfig &windowConfig);
-    ~GraphicsEngine() = default;
+    ~GraphicsEngine();
 
-    Scene& getScene();
-    Window& getWindow();
-    Renderer& getRenderer();
+    Window &getWindow();
+
+    void renderScenes();
+    template <typename T, typename... Args>
+    T &pushScene(Args &&...args)
+    {
+        auto s = new T(std::forward<Args>(args)...);
+        _scenes.emplace_back(s);
+        return *s;
+    }
+
+    // TODO get access to scenes, so you can retreive some data
 
 private:
     Window _window;
-    Renderer _renderer;
-    Scene _scene;
 
-
+    std::vector<Scene *> _scenes;
 };
 }  // namespace Sage

@@ -4,6 +4,8 @@
 #include "Components.h"
 #include "VertexArrayObject.h"
 
+#include <optional>
+
 namespace Sage {
 
 class Framebuffer;
@@ -23,7 +25,8 @@ public:
     void submit(const VertexArrayObject &vao, MaterialComponent &material);
     glm::vec4 bgColor{0.0};
 
-    Framebuffer *framebuffer;
+    // TODO I don't like this pointer...
+    std::optional<Framebuffer*> framebuffer;
 
 private:
 };
