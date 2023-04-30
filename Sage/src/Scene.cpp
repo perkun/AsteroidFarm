@@ -39,9 +39,21 @@ void Scene::draw(Entity entity)
     auto &material = entity.getComponent<MaterialComponent>();
     auto &vao = entity.getComponent<VaoComponent>();
 
-    camera->updateTarget(transform.position);
+    camera->update();
     material.cacheUniformValue("u_view_matrix", camera->getView());
     material.cacheUniformValue("u_perspective_matrix", camera->getPerspective());
+
+    if (light)
+    {
+        light->update();
+        material.cacheUniformValue("u_light_position", light->position);
+        material.cacheUniformValue("u_light_view_matrix", light->getView());
+        material.cacheUniformValue("u_light_perspective_matrix", light->getPerspective());
+
+        // TODO what does this number mean? Texture index?
+        material.cacheUniformValue("u_depth_map", shadowDepthTextureSlot);
+
+    }
 
     material.cacheUniformValue("u_model_matrix", transform.getTransformMatrix());
     _renderer.submit(*vao.vao.get(), material);

@@ -26,7 +26,10 @@ public:
         return *s;
     }
 
-    // TODO get access to scenes, so you can retreive some data
+    void updateWindow()
+    {
+        _window.update();
+    }
 
 private:
     Window _window;
