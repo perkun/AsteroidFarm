@@ -30,8 +30,20 @@ void Renderer::bindDefaultFramebuffer()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Renderer::beginScene()
+void Renderer::beginScene(Camera *camera, Camera *light)
 {
+    sceneData.lightPosition = light->position;
+    sceneData.lightView = light->getView();
+    sceneData.lightPerspecitve = light->getPerspective();
+
+    beginScene(camera);
+}
+
+void Renderer::beginScene(Camera *camera)
+{
+    sceneData.view = camera->getView();
+    sceneData.perspective = camera->getPerspective();
+
     if (framebuffer)
     {
         framebuffer.value()->bind();
@@ -46,10 +58,27 @@ void Renderer::beginScene()
 void Renderer::endScene()
 {
     // bindDefaultFramebuffer();
+    sceneData = ScenData{};
 }
 
 void Renderer::submit(const VertexArrayObject &vao, MaterialComponent &material)
 {
+    material.cacheUniformValue("u_view_matrix", sceneData.view);
+    material.cacheUniformValue("u_perspective_matrix", sceneData.perspective);
+
+    if (sceneData.lightPosition)
+    {
+        material.cacheUniformValue("u_light_position", sceneData.lightPosition.value());
+    }
+    if (sceneData.lightView)
+    {
+        material.cacheUniformValue("u_light_view_matrix", sceneData.lightView.value());
+    }
+    if (sceneData.lightPerspecitve)
+    {
+        material.cacheUniformValue("u_light_perspective_matrix", sceneData.lightPerspecitve.value());
+    }
+
     material.setUniforms();
 
     glBindVertexArray(vao.vaoId);

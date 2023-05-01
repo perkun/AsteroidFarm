@@ -42,27 +42,28 @@ public:
         t2.position = glm::vec3{0., 7., .5};
         t2.scale = glm::vec3{0.5f};
 
-        myCamera = std::make_shared<OrthograficCamera>(4., 1., 0.1, 10.);
-        myCamera->position = glm::vec3{2., 0., 0.};
-        myCamera->updateTarget(t.position);
+        camera = std::make_unique<OrthograficCamera>(4., 1., 0.1, 10.);
+        camera->position = glm::vec3{2., 0., 0.};
+        camera->updateTarget(t.position);
 
-        myLight = std::make_shared<OrthograficCamera>(3., 1., 0.1, 10.);
-        myLight->position = glm::vec3{0.};
-        myLight->updateTarget(t.position);
+        light = std::make_unique<OrthograficCamera>(3., 1., 0.1, 10.);
+        light->position = glm::vec3{0.};
+        light->updateTarget(t.position);
 
         _renderer.bgColor = glm::vec4(0.2, 1., 0.3, 1.0);
-        // _renderer.bgColor = glm::vec4{0.,0.,0.,1.};
     }
 
     void render() override
     {
+        camera->update();
+        light->update();
         // _renderer.framebuffer = &_framebuffer;
 
         // shadowmap
         _renderer.framebuffer = &_lightFramebuffer;
-        camera = myLight;
-        light.reset();
-        draw();
+        _renderer.beginScene(camera.get());
+        drawEntities();
+        _renderer.endScene();
 
         // from camera
         _lightFramebuffer.bind_depth_texture(shadowDepthTextureSlot);
@@ -72,17 +73,17 @@ public:
         // TODO automate this!
         _renderer.setViewport(0, 0, 600, 600);
 
-        camera = myCamera;
-        light = myLight;
-        draw();
+        _renderer.beginScene(camera.get(), light.get());
+        drawEntities();
+        _renderer.endScene();
     }
 
 private:
     Framebuffer _framebuffer;
     Framebuffer _lightFramebuffer;
 
-    std::shared_ptr<Camera> myCamera;
-    std::shared_ptr<Camera> myLight;
+    std::unique_ptr<Camera> camera;
+    std::unique_ptr<Camera> light;
 
 };
 

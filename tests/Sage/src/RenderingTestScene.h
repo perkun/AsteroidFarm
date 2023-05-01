@@ -27,7 +27,7 @@ public:
         auto &m = asteroid.addComponent<MaterialComponent>(shader);
         t.position = glm::vec3{0., 5., 0.};
 
-        camera = std::make_shared<OrthograficCamera>(4., 1., 0.1, 10.);
+        camera = std::make_unique<OrthograficCamera>(4., 1., 0.1, 10.);
         camera->position = glm::vec3{1., 2., 3.};
         camera->updateTarget(t.position);
 
@@ -37,11 +37,15 @@ public:
     void render() override
     {
         _renderer.framebuffer = &_framebuffer;
-        draw();
+        camera->update();
+        _renderer.beginScene(camera.get());
+        drawEntities();
+        _renderer.endScene();
     }
 
 private:
     Framebuffer _framebuffer;
+    std::unique_ptr<Camera> camera;
 };
 
 }  // namespace Sage

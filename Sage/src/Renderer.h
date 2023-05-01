@@ -20,7 +20,8 @@ public:
     void setViewport(int x, int y, int width, int height);
     void bindDefaultFramebuffer();
 
-    void beginScene();
+    void beginScene(Camera *camera);
+    void beginScene(Camera *camera, Camera* light);
     void endScene();
     void submit(const VertexArrayObject &vao, MaterialComponent &material);
     glm::vec4 bgColor{0.0};
@@ -29,6 +30,15 @@ public:
     std::optional<Framebuffer*> framebuffer;
 
 private:
+    struct ScenData
+    {
+        glm::mat4 view{1};
+        glm::mat4 perspective{1};
+
+        std::optional<glm::vec3> lightPosition{std::nullopt};
+        std::optional<glm::mat4> lightView{std::nullopt};
+        std::optional<glm::mat4> lightPerspecitve{std::nullopt};
+    } sceneData;
 };
 
 }  // namespace Sage

@@ -16,14 +16,10 @@ public:
     Entity createEntity();
     virtual void render() = 0;
 
-    // TODO unique ptr? optional?
-    std::shared_ptr<Camera> camera{nullptr};
-    std::shared_ptr<Camera> light{nullptr};
-
 protected:
     static constexpr int shadowDepthTextureSlot{1};
     entt::registry _registry;
-    void draw();
+    void drawEntities();
     void draw(Entity entity);
 
     Renderer _renderer;
