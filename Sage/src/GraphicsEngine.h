@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Framebuffer.h"
+#include "Renderer.h"
 #include "Window.h"
 #include "Scene.h"
 
@@ -21,7 +22,7 @@ public:
     template <typename T, typename... Args>
     T &pushScene(Args &&...args)
     {
-        auto s = new T(std::forward<Args>(args)...);
+        auto s = new T(_renderer, std::forward<Args>(args)...);
         _scenes.emplace_back(s);
         return *s;
     }
@@ -33,6 +34,7 @@ public:
 
 private:
     Window _window;
+    Renderer _renderer;
 
     std::vector<Scene *> _scenes;
 };

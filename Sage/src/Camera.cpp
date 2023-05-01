@@ -16,7 +16,7 @@ Camera::Camera(float aspect, float zNear, float zFar) : _aspect(aspect)
     updateTarget(glm::vec3(1., 1., 1.));
 }
 
-glm::mat4 Camera::getView()
+glm::mat4 Camera::getView() const
 {
     return glm::lookAt(position, position + front, up);
 }
@@ -40,18 +40,17 @@ PerspectiveCamera::PerspectiveCamera(float fov, float aspect, float zNear, float
     : Camera(aspect, zNear, zFar), _fov(fov)
 {}
 
-glm::mat4 PerspectiveCamera::getPerspective()
+glm::mat4 PerspectiveCamera::getPerspective() const
 {
     return glm::perspective(_fov, _aspect, _boundingBox.near, _boundingBox.far);
 }
 
-OrthograficCamera::OrthograficCamera(float size_x, float aspect, float zNear, float zFar)
+OrthographicCamera::OrthographicCamera(float size_x, float aspect, float zNear, float zFar)
     : Camera(aspect, zNear, zFar), _sizeX(size_x)
 {}
 
-glm::mat4 OrthograficCamera::getPerspective()
+glm::mat4 OrthographicCamera::getPerspective() const
 {
-    updateViewBox();
     return glm::ortho(_boundingBox.left,
                       _boundingBox.right,
                       _boundingBox.bottom,
@@ -60,8 +59,9 @@ glm::mat4 OrthograficCamera::getPerspective()
                       _boundingBox.far);
 }
 
-void OrthograficCamera::updateViewBox()
+void OrthographicCamera::update()
 {
+    Camera::update();
     _boundingBox.left = -_sizeX / 2.0;
     _boundingBox.right = _sizeX / 2.0;
 

@@ -12,8 +12,9 @@ namespace Sage {
 class SandboxScene : public Scene
 {
 public:
-    SandboxScene(glm::uvec2 framebufferSize)
-        : _framebuffer(
+    SandboxScene(Renderer &renderer, glm::uvec2 framebufferSize)
+        : Scene(renderer),
+          _framebuffer(
               {.width = framebufferSize.x,
                .height = framebufferSize.y,
                .samples = 1,
@@ -22,7 +23,9 @@ public:
               {.width = 2048,
                .height = 2048,
                .samples = 1,
-               .attachments = {FramebufferTextureFormat::RGBA32F, FramebufferTextureFormat::DEPTH32FSTENCIL8}})
+               .attachments = {FramebufferTextureFormat::RGBA32F, FramebufferTextureFormat::DEPTH32FSTENCIL8}}),
+          _camera(4., 1., 0.1, 10.),
+          _light(3., 1., 0.1, 10.)
     {
         auto mesh = Mesh::loadFromObj("data/model_shifted.obj");
         mesh.rotateToPrincipalAxes();
@@ -42,38 +45,36 @@ public:
         t2.position = glm::vec3{0., 7., .5};
         t2.scale = glm::vec3{0.5f};
 
-        camera = std::make_unique<OrthograficCamera>(4., 1., 0.1, 10.);
-        camera->position = glm::vec3{2., 0., 0.};
-        camera->updateTarget(t.position);
+        _camera.position = glm::vec3{2., 0., 0.};
+        _camera.updateTarget(t.position);
 
-        light = std::make_unique<OrthograficCamera>(3., 1., 0.1, 10.);
-        light->position = glm::vec3{0.};
-        light->updateTarget(t.position);
+        _light.position = glm::vec3{0.};
+        _light.updateTarget(t.position);
 
         _renderer.bgColor = glm::vec4(0.2, 1., 0.3, 1.0);
     }
 
     void render() override
     {
-        camera->update();
-        light->update();
+        _camera.update();
+        _light.update();
         // _renderer.framebuffer = &_framebuffer;
 
         // shadowmap
-        _renderer.framebuffer = &_lightFramebuffer;
-        _renderer.beginScene(camera.get());
+        _renderer.setFramebuffer(&_lightFramebuffer);
+        _renderer.beginScene(_camera);
         drawEntities();
         _renderer.endScene();
 
         // from camera
-        _lightFramebuffer.bind_depth_texture(shadowDepthTextureSlot);
+        _lightFramebuffer.bindDepthTexture(shadowDepthTextureSlot);
         // _renderer.framebuffer = &_framebuffer;
-        _renderer.framebuffer = std::nullopt;
+        _renderer.setDefaultFramebuffer();
 
         // TODO automate this!
-        _renderer.setViewport(0, 0, 600, 600);
+        // _renderer.setViewport(0, 0, 600, 600);
 
-        _renderer.beginScene(camera.get(), light.get());
+        _renderer.beginScene(_camera, _light);
         drawEntities();
         _renderer.endScene();
     }
@@ -82,9 +83,8 @@ private:
     Framebuffer _framebuffer;
     Framebuffer _lightFramebuffer;
 
-    std::unique_ptr<Camera> camera;
-    std::unique_ptr<Camera> light;
-
+    OrthographicCamera _camera;
+    OrthographicCamera _light;
 };
 
 }  // namespace Sage

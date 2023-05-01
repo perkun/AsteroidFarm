@@ -7,7 +7,9 @@
 
 namespace Sage {
 
-GraphicsEngine::GraphicsEngine(const WindowConfig &windowConfig) : _window(windowConfig)
+GraphicsEngine::GraphicsEngine(const WindowConfig &windowConfig) 
+    : _window(windowConfig),
+      _renderer({windowConfig.width, windowConfig.height})
 {
     int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     if (status == 0)

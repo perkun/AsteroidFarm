@@ -11,6 +11,7 @@ class Renderer;
 class Scene
 {
 public:
+    Scene(Renderer &renderer) : _renderer(renderer) {}
     virtual ~Scene() = default;
 
     Entity createEntity();
@@ -22,7 +23,7 @@ protected:
     void drawEntities();
     void draw(Entity entity);
 
-    Renderer _renderer;
+    Renderer &_renderer;
 };
 
 }  // namespace Sage

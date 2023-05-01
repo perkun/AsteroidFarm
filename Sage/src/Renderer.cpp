@@ -5,7 +5,10 @@
 
 namespace Sage {
 
-Renderer::Renderer() {}
+Renderer::Renderer(glm::ivec2 defaultFramebufferSize) 
+    : _defaultFramebufferSize(defaultFramebufferSize)
+{
+}
 
 Renderer::~Renderer() {}
 
@@ -28,27 +31,29 @@ void Renderer::setViewport(int x, int y, int width, int height)
 void Renderer::bindDefaultFramebuffer()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0,0, _defaultFramebufferSize.x, _defaultFramebufferSize.y);
 }
 
-void Renderer::beginScene(Camera *camera, Camera *light)
+void Renderer::beginScene(const Camera &camera, const Camera &light)
 {
-    sceneData.lightPosition = light->position;
-    sceneData.lightView = light->getView();
-    sceneData.lightPerspecitve = light->getPerspective();
+    sceneData.lightPosition = light.position;
+    sceneData.lightView = light.getView();
+    sceneData.lightPerspecitve = light.getPerspective();
 
     beginScene(camera);
 }
 
-void Renderer::beginScene(Camera *camera)
+void Renderer::beginScene(const Camera &camera)
 {
-    sceneData.view = camera->getView();
-    sceneData.perspective = camera->getPerspective();
+    sceneData.view = camera.getView();
+    sceneData.perspective = camera.getPerspective();
 
-    if (framebuffer)
+    if (_framebuffer)
     {
-        framebuffer.value()->bind();
+        _framebuffer.value()->bind();
     }
-    else {
+    else
+    {
         bindDefaultFramebuffer();
     }
 
@@ -57,8 +62,17 @@ void Renderer::beginScene(Camera *camera)
 
 void Renderer::endScene()
 {
-    // bindDefaultFramebuffer();
     sceneData = ScenData{};
+}
+
+void Renderer::setFramebuffer(Framebuffer *framebuffer)
+{
+    _framebuffer = framebuffer;
+}
+
+void Renderer::setDefaultFramebuffer()
+{
+    _framebuffer.reset();
 }
 
 void Renderer::submit(const VertexArrayObject &vao, MaterialComponent &material)

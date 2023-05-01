@@ -27,20 +27,20 @@ enum class FramebufferTextureFormat
 struct FramebufferTextureSpecification
 {
     FramebufferTextureSpecification() = default;
-    FramebufferTextureSpecification(FramebufferTextureFormat format) : texture_format(format) {}
+    FramebufferTextureSpecification(FramebufferTextureFormat format) : textureFormat(format) {}
 
-    FramebufferTextureFormat texture_format = FramebufferTextureFormat::None;
+    FramebufferTextureFormat textureFormat = FramebufferTextureFormat::None;
     // TODO: filtering/wrap
 };
 
 struct FramebufferAttachmentSpecification
 {
     FramebufferAttachmentSpecification() = default;
-    FramebufferAttachmentSpecification(std::initializer_list<FramebufferTextureSpecification> texture_specs)
-        : texture_specs(texture_specs)
+    FramebufferAttachmentSpecification(std::initializer_list<FramebufferTextureSpecification> textureSpecs)
+        : textureSpecs(textureSpecs)
     {}
 
-    std::vector<FramebufferTextureSpecification> texture_specs;
+    std::vector<FramebufferTextureSpecification> textureSpecs;
 };
 
 struct FramebufferSpecification
@@ -55,11 +55,11 @@ class Framebuffer
 {
 public:
     static void blit(Framebuffer *ms_framebuffer, Framebuffer *framebuffer, int, int);
-    static GLenum texture_target(bool multisampled);
-    static void create_textures(bool multisampled, unsigned int *out_id, unsigned int count);
-    static void bind_texture(bool multisampled, unsigned int id);
+    static GLenum textureTarget(bool multisampled);
+    static void createTextures(bool multisampled, unsigned int *out_id, unsigned int count);
+    static void bindTexture(bool multisampled, unsigned int id);
 
-    static void attach_color_texture(unsigned int id,
+    static void attachColorTexture(unsigned int id,
                                      int samples,
                                      GLenum internal_format,
                                      GLenum attachment_type,
@@ -67,7 +67,7 @@ public:
                                      unsigned int height,
                                      int index);
 
-    static void attach_depth_texture(
+    static void attachDepthTexture(
         unsigned int id, int samples, GLenum internal_format, GLenum format, unsigned int width, unsigned int height);
 
     Framebuffer(const FramebufferSpecification &specs);
@@ -76,26 +76,26 @@ public:
     void invalidate();
 
     void bind();
-    void bind_depth_texture(unsigned int slot);
-    void bind_color_texture(unsigned int slot);
+    void bindDepthTexture(unsigned int slot);
+    void bindColorTexture(unsigned int slot);
     void clear();
-    void clear_attachment(int slot, int value);
+    void clearAttachment(int slot, int value);
     void unbind();
 
     void resize(unsigned int width, unsigned int height);
 
-    int read_pixel(int slot, int x, int y);
+    int readPixel(int slot, int x, int y);
 
-    unsigned int get_color_attachment_id(int slot = 0) const
+    unsigned int getColorAttachmentId(int slot = 0) const
     {
-        return color_attachments[slot];
+        return _colorAttachments[slot];
     }
-    unsigned int get_depth_attachment_id() const
+    unsigned int getDepthAttachmentId() const
     {
-        return depth_attachment;
+        return _depthAttachment;
     }
 
-    const FramebufferSpecification &get_specification() const
+    const FramebufferSpecification &getSpecification() const
     {
         return specification;
     }
@@ -103,11 +103,11 @@ public:
     FramebufferSpecification specification;
 
 private:
-    std::vector<unsigned int> color_attachments;
-    unsigned int depth_attachment = 0;
+    std::vector<unsigned int> _colorAttachments;
+    unsigned int _depthAttachment = 0;
 
-    std::vector<FramebufferTextureSpecification> color_attachment_specs;
-    FramebufferTextureSpecification depth_attachment_specs;
+    std::vector<FramebufferTextureSpecification> _colorAttachmentSpecs;
+    FramebufferTextureSpecification _depthAttachmentSpecs;
 };
 
 }  // namespace Sage

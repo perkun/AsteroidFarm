@@ -12,7 +12,7 @@ class Framebuffer;
 class Renderer
 {
 public:
-    Renderer();
+    Renderer(glm::ivec2 defaultFramebufferSize);
     ~Renderer();
 
     void clear();
@@ -20,14 +20,14 @@ public:
     void setViewport(int x, int y, int width, int height);
     void bindDefaultFramebuffer();
 
-    void beginScene(Camera *camera);
-    void beginScene(Camera *camera, Camera* light);
+    void beginScene(const Camera &camera);
+    void beginScene(const Camera &camera, const Camera &light);
     void endScene();
     void submit(const VertexArrayObject &vao, MaterialComponent &material);
     glm::vec4 bgColor{0.0};
 
-    // TODO I don't like this pointer...
-    std::optional<Framebuffer*> framebuffer;
+    void setFramebuffer(Framebuffer *framebuffer);
+    void setDefaultFramebuffer();
 
 private:
     struct ScenData
@@ -39,6 +39,10 @@ private:
         std::optional<glm::mat4> lightView{std::nullopt};
         std::optional<glm::mat4> lightPerspecitve{std::nullopt};
     } sceneData;
+
+    // TODO I don't like this pointer...
+    std::optional<Framebuffer *> _framebuffer;
+    glm::ivec2 _defaultFramebufferSize;
 };
 
 }  // namespace Sage

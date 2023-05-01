@@ -10,11 +10,11 @@ public:
 	Camera(float aspect, float zNear, float zFar);
     virtual ~Camera() = default;
 
-	virtual glm::mat4 getPerspective() = 0;
+	virtual glm::mat4 getPerspective() const = 0;
 
-	glm::mat4 getView();
+	glm::mat4 getView() const;
 	void updateTarget(glm::vec3 newTarget);
-	void update();
+	virtual void update();
 
 	glm::vec3 position;
     glm::vec3 front;
@@ -43,23 +43,23 @@ public:
     PerspectiveCamera(float fov, float aspect, float zNear, float zFar);
     virtual ~PerspectiveCamera() = default;
 
-	virtual glm::mat4 getPerspective() override;
+	virtual glm::mat4 getPerspective() const override;
 
 protected:
 	float _fov;
 };
 
 
-class OrthograficCamera : public Camera
+class OrthographicCamera : public Camera
 {
 public:
-    OrthograficCamera(float size_x, float aspect, float zNear, float zFar);
-    virtual ~OrthograficCamera() = default;
+    OrthographicCamera(float size_x, float aspect, float zNear, float zFar);
+    virtual ~OrthographicCamera() = default;
 
-	virtual glm::mat4 getPerspective() override;
+	virtual glm::mat4 getPerspective() const override;
+    void update() override;
 
 protected:
-    void updateViewBox();
     float _sizeX;
 };
 
