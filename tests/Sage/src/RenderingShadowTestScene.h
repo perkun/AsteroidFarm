@@ -9,10 +9,10 @@
 
 namespace Sage {
 
-class SandboxScene : public Scene
+class RenderingShadowTestScene : public Scene
 {
 public:
-    SandboxScene(Renderer &renderer, glm::uvec2 framebufferSize)
+    RenderingShadowTestScene(Renderer &renderer, glm::uvec2 framebufferSize)
         : Scene(renderer),
           _framebuffer(
               {.width = framebufferSize.x,
