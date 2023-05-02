@@ -58,18 +58,16 @@ public:
     {
         _camera.update();
         _light.update();
-        // _renderer.framebuffer = &_framebuffer;
 
         // shadowmap
         _renderer.setFramebuffer(&_lightFramebuffer);
-        _renderer.beginScene(_camera);
+        _renderer.beginScene(_light);
         drawEntities();
         _renderer.endScene();
 
         // from camera
         _lightFramebuffer.bindDepthTexture(shadowDepthTextureSlot);
         _renderer.setFramebuffer(&_framebuffer);
-        // _renderer.setDefaultFramebuffer();
 
         _renderer.beginScene(_camera, _light);
         drawEntities();
