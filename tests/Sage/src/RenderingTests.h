@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 
-using namespace Sage;
+namespace Sage::Test {
 
 TEST(Rendering, RenderAsteroid)
 {
@@ -41,17 +41,15 @@ TEST(Rendering, RenderAsteroidsWithShadows)
 {
     constexpr glm::uvec2 windowSize{256};
 
-    GraphicsEngine graphicsEngine({
-        .width = windowSize.x,
-        .height = windowSize.y,
-        .title = "RenderEngine window",
-        .fullscreen = false,
-        .visible = false
-    });
+    GraphicsEngine graphicsEngine({.width = windowSize.x,
+                                   .height = windowSize.y,
+                                   .title = "RenderEngine window",
+                                   .fullscreen = false,
+                                   .visible = false});
 
     graphicsEngine.pushScene<RenderingShadowTestScene>(windowSize);
     graphicsEngine.renderScenes();
-    
+
     std::vector<float> pixelBuffRed(windowSize.x * windowSize.y);
     std::vector<float> pixelBuffGreen(windowSize.x * windowSize.y);
     std::vector<float> pixelBuffBlue(windowSize.x * windowSize.y);
@@ -68,3 +66,5 @@ TEST(Rendering, RenderAsteroidsWithShadows)
     EXPECT_EQ(expectedPixelBuffGreen, pixelBuffGreen);
     EXPECT_EQ(expectedPixelBuffBlue, pixelBuffBlue);
 }
+
+}  // namespace Sage::Test

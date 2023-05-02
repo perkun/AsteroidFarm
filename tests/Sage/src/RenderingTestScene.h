@@ -5,7 +5,7 @@
 
 // TODO namespace for tests?
 
-namespace Sage {
+namespace Sage::Test {
 
 class RenderingTestScene : public Scene
 {
@@ -50,4 +50,4 @@ private:
     OrthographicCamera _camera;
 };
 
-}  // namespace Sage
+}  // namespace Sage::Test

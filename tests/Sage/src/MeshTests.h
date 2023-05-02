@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include <fmt/format.h>
 
-using namespace Sage;
+namespace Sage::Test {
 
 TEST(Mesh, LoadObjFile)
 {
@@ -225,3 +225,5 @@ TEST(Mesh, Normals)
     EXPECT_LT(abs(0.00419329 - vertex[2]), precision);
 
 }
+
+} // namespace Sage::Test
