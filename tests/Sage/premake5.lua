@@ -21,9 +21,7 @@ project "SageTests"
 	includedirs
 	{
  		"%{prj.name}/src",
-        "%{wks.location}/Sage/src/",
 		"%{wks.location}/vendor/fmt/",
- 		--"vendor/cppargs/src",
 	}
 
 	links { "Sage", "fmt", "gtest", "glfw", "glad", "pthread"}

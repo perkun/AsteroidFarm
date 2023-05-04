@@ -15,14 +15,11 @@ project "Sandbox"
 	{
 		"src/**.h",
 		"src/**.cpp",
-		--"vendor/stb_image/**.h",
 	}
 
 	includedirs
 	{
  		"%{prj.name}/src",
-        "%{wks.location}/Sage/src/",
- 		--"vendor/cppargs/src",
 	}
 
 	links { "Sage", "glfw", "glad", "fmt", "pthread", "dl" }

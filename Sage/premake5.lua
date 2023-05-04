@@ -15,13 +15,10 @@ project "Sage"
 	{
 		"src/**.h",
 		"src/**.cpp",
-		--"vendor/stb_image/**.h",
 	}
 
 	includedirs
 	{
- 		"src",
-		"src/Parsers",
 	}
 
 
