@@ -1,5 +1,6 @@
-#include <type_traits>
-namespace Sage::Math {
+#pragma once
+
+namespace Sage {
 
 namespace Units
 {
@@ -23,21 +24,11 @@ template <Dimension DimensionId, double Factor>
 class Unit
 {
 public:
-	static Unit make(double val)
+	static Unit cast(double val)
 	{
 		return { val };
 	}
 
-	// various literals
-	friend Unit<Dimension::Angle, Units::Radian> operator ""_rad(long double);
-	friend Unit<Dimension::Angle, Units::Radian> operator ""_rad(unsigned long long int);
-	friend Unit<Dimension::Angle, Units::Degree> operator ""_deg(long double);
-	friend Unit<Dimension::Angle, Units::Degree> operator ""_deg(unsigned long long int);
-
-	friend Unit<Dimension::Length, Units::Meter> operator "" _m(long double val);
-	friend Unit<Dimension::Length, Units::Mile> operator "" _mi(long double val);
-
-public:
 	Unit() = default;
 
 	template <double OtherFactor>
@@ -115,12 +106,19 @@ public:
 		return *this;
 	}
 
+	Unit operator-() const
+	{
+        return cast(-_value);
+	}
+
 	template <double OtherFactor>
 	friend Unit operator-(Unit lhs, Unit<DimensionId, OtherFactor>& rhs)
 	{
 		lhs -= rhs;
 		return lhs;
 	}
+
+
 
 private:
 	Unit(const long double val) : _value(val) {}
@@ -138,25 +136,26 @@ template <double Factor>
 using Angle = Unit<Dimension::Angle, Factor>;
 
 
-Angle<Units::Radian> operator "" _rad(long double val)
+namespace UnitLiterals {
+
+auto operator"" _rad(long double val)
 {
-	return {val};
+    return Angle<Units::Radian>::cast(val);
 }
 
-Angle<Units::Radian> operator "" _rad(unsigned long long int val)
+auto operator"" _rad(unsigned long long int val)
 {
-	return {static_cast<long double>(val)};
+    return Angle<Units::Radian>::cast(static_cast<long double>(val));
 }
 
-
-Angle<Units::Degree> operator "" _deg(long double val)
+auto operator"" _deg(long double val)
 {
-	return Angle<Units::Degree>(val);
+    return Angle<Units::Degree>::cast(val);
 }
 
-Angle<Units::Degree> operator "" _deg(unsigned long long int val)
+auto operator"" _deg(unsigned long long int val)
 {
-	return Angle<Units::Degree>(val);
+    return Angle<Units::Degree>::cast(val);
 }
 
 const auto Pi = 3.141592653589793238462643383279502884197169399375_rad;
@@ -164,15 +163,17 @@ const auto Pi = 3.141592653589793238462643383279502884197169399375_rad;
 template <double Factor>
 using Distance = Unit<Dimension::Length, Factor>;
 
-Distance<Units::Meter> operator "" _m(long double val)
+auto operator"" _m(long double val)
 {
-	return Distance<Units::Meter>(val);
+    return Distance<Units::Meter>::cast(val);
 }
 
-Distance<Units::Mile> operator "" _mi(long double val)
+auto operator"" _mi(long double val)
 {
-	return Distance<Units::Mile>(val);
+    return Distance<Units::Mile>::cast(val);
 }
+
+} //
 
 
 }  // namespace Sage::Math
