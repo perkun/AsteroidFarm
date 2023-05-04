@@ -8,8 +8,9 @@ namespace Sage {
 
 void from_json(const json &j, ObsPoint &p)
 {
-    p.julianDay = j.at("julianDay").get<double>();
-    p.magnitude = j.at("magnitude").get<double>();
+    p.julianDay = j.at("julianDay").get<JulianDay<Units::Day>>();
+    p.magnitude = j.at("magnitude").get<Magnitude>();
+    p.rotPhase = j.at("rotPhase").get<Angle<Units::Radian>>();
     p.observerPosition = j.at("observerPosition").get<glm::vec3>();
     p.targetPosition = j.at("targetPosition").get<glm::vec3>();
 }
@@ -24,6 +25,7 @@ void to_json(json &j, const ObsPoint &p)
 {
     j = {{"julianDay", p.julianDay},
          {"magnitude", p.magnitude},
+         {"rotPhase", p.rotPhase},
          {"observerPosition", p.observerPosition},
          {"targetPosition", p.targetPosition}};
 }

@@ -1,0 +1,13 @@
+{
+    "modelPath": "data/model_shifted.obj",
+    "vertexShaderPath": "data/shadow.vs",
+    "fragmentShaderPath": "data/shadow.fs",
+    "targetName": "Test target name",
+    "asteroidParams": {
+        "eclipticLongitude": 170,
+        "eclipticLatitude": -32,
+        "period": 12.123,
+        "epoch": 2457999.0334,
+        "rotPhaseForEpoch": 34.123
+    }
+}

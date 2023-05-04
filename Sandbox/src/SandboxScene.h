@@ -1,10 +1,14 @@
 #include <memory>
 #include <numeric>
+#include "Angle.h"
 #include "Camera.h"
+#include "LightcurveConfig.h"
 #include "Scene.h"
 #include "Renderer.h"
 #include "Mesh.h"
 #include "Framebuffer.h"
+
+#include "Observations.h"
 
 // TODO namespace for tests?
 
@@ -13,7 +17,7 @@ namespace Sage {
 class SandboxScene : public Scene
 {
 public:
-    SandboxScene(Renderer &renderer, glm::uvec2 framebufferSize)
+    SandboxScene(Renderer &renderer, glm::uvec2 framebufferSize, const LightcurveConfig &config)
         : Scene(renderer),
           _framebuffer(
               {.width = framebufferSize.x,
@@ -28,10 +32,10 @@ public:
           _camera(4., 1., 0.1, 10.),
           _light(3., 1., 0.1, 10.)
     {
-        auto mesh = Mesh::loadFromObj("data/model_shifted.obj");
+        auto mesh = Mesh::loadFromObj(config.modelPath);
         mesh.rotateToPrincipalAxes();
 
-        auto shader = std::make_shared<Shader>("data/shadow.vs", "data/shadow.fs");
+        auto shader = std::make_shared<Shader>(config.vertexShaderPath, config.fragmentShaderPath);
 
         asteroid = createEntity();
         asteroid.addComponent<VaoComponent>(mesh);
@@ -46,6 +50,8 @@ public:
         _light.updateTarget(t.position);
 
         _renderer.bgColor = glm::vec4(1., 0., 0., 1.0);
+
+        syntheticObs.targetName = config.targetName;
     }
 
     void renderSceneWithShadows()
@@ -76,18 +82,35 @@ public:
         const auto fbHeight = _framebuffer.specification.height;
         std::vector<float> pixelBuffRed(fbWidth * fbHeight);
 
+        Lightcurve lightcurve;
+        lightcurve.reserve(numPoints);
+
         for (int i = 0; i < numPoints; i++)
         {
             auto &t = asteroid.getComponent<TransformComponent>();
-            auto phase = (i * 360. / numPoints) / 180.0 * M_PI;
-            t.rotation.z = phase;
+            // TODO get rid of "/ 180.0 * M_PI"
+            Angle phase = Angle<Units::Radian>::cast((i * 360. / numPoints) / 180.0 * M_PI);
+            t.rotation.z = phase.value();
             renderSceneWithShadows();
 
             glReadPixels(0, 0, fbWidth, fbHeight, GL_RED, GL_FLOAT, pixelBuffRed.data());
             auto mag = -2.5 * log10(std::accumulate(pixelBuffRed.begin(), pixelBuffRed.end(), 0.));
-            fmt::print("{} {}\n", phase, mag);
+            // fmt::print("{} {}\n", phase.value(), mag);
+
+            using namespace UnitLiterals;
+            lightcurve.push_back({
+                .julianDay = 0_jd,
+                .rotPhase = phase,
+                .magnitude = Magnitude::cast(mag),
+                .observerPosition = _camera.position,
+                .targetPosition = t.position
+            });
         }
+
+        syntheticObs.lightcurves.push_back(lightcurve);
     }
+
+    LightcurveStorage syntheticObs;
 
 private:
     Framebuffer _framebuffer;
