@@ -20,8 +20,7 @@ Angle<Units::Radian> operator"" _rad(unsigned long long int val);
 Angle<Units::Degree> operator"" _deg(long double val);
 Angle<Units::Degree> operator"" _deg(unsigned long long int val);
 
-const auto Pi = Angle<Units::Radian>::cast(3.141592653589793238462643383279502884197169399375);
-
 }  // namespace UnitLiterals
 
+const auto Pi = Angle<Units::Radian>::cast(3.141592653589793238462643383279502884197169399375);
 }  // namespace Sage

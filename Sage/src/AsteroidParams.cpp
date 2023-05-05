@@ -1,7 +1,61 @@
 #include "AsteroidParams.h"
 
+#include <glm/gtx/quaternion.hpp>
+#include "Angle.h"
+
 namespace Sage {
 using namespace nlohmann;
+
+void AsteroidParams::setRotPhase(const JulianDay<Units::Day> &jd)
+{
+    rotPhase = computeRotPhase(jd);
+    normalizeRotPhase();
+}
+
+Angle<Units::Radian> AsteroidParams::computeRotPhase(const JulianDay<Units::Day> &jd)
+{
+    auto rotPhase = (jd - epoch) / period * 2 * Pi;
+    return rotPhase;
+}
+
+
+void AsteroidParams::normalizeRotPhase()
+{
+    using namespace UnitLiterals;
+    while (rotPhase > 2 * Pi)
+    {
+        rotPhase -= 2 * Pi;
+    }
+    while (rotPhase < 0_rad)
+    {
+        rotPhase += 2 * Pi;
+    }
+
+}
+
+glm::vec3 AsteroidParams::computeXyzRotation()
+{    
+    glm::quat ql, qb, qg;
+    // rotate gamma about z axis
+    qg.w = cos((rotPhaseForEpoch + rotPhase).value() / 2);
+    qg.x = 0;
+    qg.y = 0;
+    qg.z = sin((rotPhaseForEpoch + rotPhase).value() / 2);
+
+    // // rotate beta about y axis
+    qb.w = cos((M_PI_2 - eclipticLatitude.value()) / 2);
+    qb.x = 0;
+    qb.y = sin((M_PI_2 - eclipticLatitude.value()) / 2);
+    qb.z = 0;
+
+    // // rotate alpha about z axis
+    ql.w = cos(eclipticLongitude.value() / 2);
+    ql.x = 0;
+    ql.y = 0;
+    ql.z = sin(eclipticLongitude.value() / 2);
+
+    return glm::eulerAngles(ql * qb * qg);
+}
 
 // TODO check for value validity
 

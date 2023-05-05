@@ -20,6 +20,7 @@ struct ObsPoint
 {
     JulianDay<Units::Day> julianDay{0_jd};
     Angle<Units::Radian> rotPhase{0_rad};
+    unsigned int step{0};
 
     // TODO Units for magnitdes
     Magnitude magnitude;

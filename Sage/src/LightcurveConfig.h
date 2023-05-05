@@ -1,10 +1,12 @@
 #pragma once
 
+#include "AsteroidParams.h"
+#include <nlohmann/json.hpp>
+#include <glm/glm.hpp>
+
 #include <string>
 #include <filesystem>
-#include "AsteroidParams.h"
-
-#include <nlohmann/json.hpp>
+#include <optional>
 
 namespace Sage {
 
@@ -14,7 +16,13 @@ struct LightcurveConfig
     std::filesystem::path vertexShaderPath;
     std::filesystem::path fragmentShaderPath;
     std::string targetName;
+    JulianDay<Units::Day> startJd;
     AsteroidParams asteroidParams;
+    glm::vec3 observerPosition;
+    glm::vec3 targetPosition;
+    glm::vec3 lightPosition;
+    std::optional<std::filesystem::path> outputPath;
+
 };
 
 void from_json(const nlohmann::json &j, LightcurveConfig &lc);

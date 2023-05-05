@@ -3,16 +3,26 @@
 #include "Angle.h"
 #include "Time.h"
 #include <nlohmann/json.hpp>
+#include <glm/glm.hpp>
 
 namespace Sage {
 
-struct AsteroidParams
+class AsteroidParams
 {
-    Angle<Units::Degree> eclipticLongitude;
-    Angle<Units::Degree> eclipticLatitude;
+public:
+    Angle<Units::Radian> eclipticLongitude;
+    Angle<Units::Radian> eclipticLatitude;
     JulianDay<Units::Hour> period;
     JulianDay<Units::Day> epoch;
-    Angle<Units::Degree> rotPhaseForEpoch;
+    Angle<Units::Radian> rotPhaseForEpoch;
+    Angle<Units::Radian> rotPhase;
+
+    glm::vec3 computeXyzRotation();
+    void setRotPhase(const JulianDay<Units::Day> &jd);
+    void normalizeRotPhase();
+
+private:
+    Angle<Units::Radian> computeRotPhase(const JulianDay<Units::Day> &jd);
 };
 
 void from_json(const nlohmann::json& j, AsteroidParams& p);

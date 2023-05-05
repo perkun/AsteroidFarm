@@ -22,9 +22,11 @@ include "vendor/glad"
 include "vendor/glfw"
 include "Sage"
 include "Sandbox"
+include "Photometry"
 
 -- TESTS --
 include "tests/Sage"
+include "tests/Photometry"
 
 -- DOCS --
 --include "docs"

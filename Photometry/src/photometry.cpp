@@ -1,19 +1,8 @@
-//#include <fmt/format.h>
-//
-//#include <chrono>
-//#include <glm/glm.hpp>
-//#include <glm/gtc/type_ptr.hpp>
-//#include <glm/gtx/pca.hpp>
-//#include <iostream>
-//#include <iomanip>
-//
 #include "GraphicsEngine.h"
 #include "LightcurveConfig.h"
-#include "SandboxScene.h"
+#include "PhotometryScene.h"
 
 #include "JsonLoader.h"
-#include "AsteroidParams.h"
-#include "Time.h"
 
 using namespace Sage;
 
@@ -30,15 +19,9 @@ int main()
     });
 
     auto config = LoadFromJson<LightcurveConfig>("data/testLcConfig.json");
-
-    auto &scene = graphicsEngine.pushScene<SandboxScene>(windowSize, config);
+    auto &scene = graphicsEngine.pushScene<PhotometryScene>(windowSize, config);
     graphicsEngine.renderScenes();
     // graphicsEngine.updateWindow();
-
-    if (config.outputPath)
-    {
-        SaveToJson(scene.syntheticObs, config.outputPath.value());
-    }
 
 
     return 0;

@@ -3,6 +3,8 @@
 #include "VertexArrayObject.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "Time.h"
+#include "Angle.h"
 
 #include <glm/glm.hpp>
 #include <memory>
@@ -63,5 +65,6 @@ struct CameraComponent
     CameraComponent(std::shared_ptr<Camera> camera) : camera(camera) {}
     std::shared_ptr<Camera> camera;
 };
+
 
 }  // namespace Sage

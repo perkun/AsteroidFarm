@@ -10,7 +10,7 @@ enum class Dimension
     Length,
     Time,
     Mass,
-    Light
+    Light,
 };
 
 template <Dimension DimensionId, double Factor>
@@ -78,6 +78,19 @@ public:
         return rhs /= lhs;
     }
 
+    // Unitless
+    double &operator/=(const Unit &rhs)
+    {
+        return _value /= rhs.value();
+    }
+
+    template <double OtherFactor>
+    friend double operator/(Unit lhs, const Unit<DimensionId, OtherFactor> &rhs)
+    {
+        Unit rhsConv{rhs};
+        return lhs /= rhsConv;
+    }
+
     template <double OtherFactor>
     Unit &operator+=(const Unit<DimensionId, OtherFactor> &rhs)
     {
@@ -95,7 +108,7 @@ public:
     template <double OtherFactor>
     Unit &operator-=(const Unit<DimensionId, OtherFactor> &rhs)
     {
-        _value += OtherFactor / Factor * rhs.value();
+        _value -= OtherFactor / Factor * rhs.value();
         return *this;
     }
 
@@ -111,6 +124,31 @@ public:
         return lhs;
     }
 
+    template <double OtherFactor>
+    friend bool operator<(const Unit &lhs, const Unit<DimensionId, OtherFactor> &rhs)
+    {
+        return lhs.value() < OtherFactor / Factor * rhs.value();
+    }
+
+    template <double OtherFactor>
+    friend bool operator>(const Unit &lhs, const Unit<DimensionId, OtherFactor> &rhs)
+    {
+        return rhs < lhs;
+    }
+
+    template <double OtherFactor>
+    friend bool operator<=(const Unit &lhs, const Unit<DimensionId, OtherFactor> &rhs)
+    {
+        return !(lhs > rhs);
+    }
+
+    template <double OtherFactor>
+    friend bool operator>=(const Unit &lhs, const Unit<DimensionId, OtherFactor> &rhs)
+    {
+        return !(lhs < rhs);
+    }
+
+
 private:
     Unit(const long double val) : _value(val) {}
 
@@ -123,6 +161,11 @@ bool operator==(const Unit<DimensionId, Factor1> &lhs, const Unit<DimensionId, F
     return lhs.value() == Factor2 / Factor1 * rhs.value();
 }
 
+template <Dimension DimensionId, double Factor>
+std::ostream& operator<<(std::ostream& out, const Unit<DimensionId, Factor> &u)
+{
+    return out << u.value();
+}
 
 template <Dimension DimensionId, double Factor>
 void from_json(const nlohmann::json& j, Unit<DimensionId, Factor>& u)

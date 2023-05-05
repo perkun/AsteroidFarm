@@ -13,6 +13,5 @@
         "period": 12.123,
         "epoch": 2457999.0334,
         "rotPhaseForEpoch": 34.123
-    },
-    "outputPath": "tests/data/testLightcurve.json"
+    }
 }
