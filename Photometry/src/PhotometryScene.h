@@ -77,7 +77,7 @@ public:
 
     void render() override
     {
-        constexpr int numPoints = 90;
+        const unsigned int numPoints = _config.numPoints;
 
         auto asteroidParams = _config.asteroidParams;
 

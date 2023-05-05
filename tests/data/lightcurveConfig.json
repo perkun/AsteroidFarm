@@ -7,6 +7,7 @@
     "observerPosition": [2, 0, 0],
     "lightPosition": [0, 0, 0],
     "startJd": 2458009.0334,
+    "numPoints": 90,
     "asteroidParams": {
         "eclipticLongitude": 170,
         "eclipticLatitude": -32,
