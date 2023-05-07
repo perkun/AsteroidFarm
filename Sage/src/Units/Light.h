@@ -5,7 +5,7 @@
 namespace Sage {
 
 namespace Units {
-constexpr double Mag = 1.0;
+constexpr Factor_t Mag{1.0};
 }  // namespace Units
 
 using Magnitude = Unit<Dimension::Light, Units::Mag>;

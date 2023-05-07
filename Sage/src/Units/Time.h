@@ -5,13 +5,13 @@
 namespace Sage {
 
 namespace Units {
-constexpr double Day = 1.0;
-constexpr double Hour = 1./24.0;
-constexpr double Minute = Hour / 60.;
-constexpr double Second = Hour / 3600.;
+constexpr Factor_t Day{1.0};
+constexpr Factor_t Hour{1./24.0};
+constexpr Factor_t Minute{1./ 24. / 60.};
+constexpr Factor_t Second{1./ 24. / 3600.};
 }  // namespace Units
 
-template <double Factor>
+template <Factor_t Factor>
 using JulianDay = Unit<Dimension::Time, Factor>;
 
 namespace UnitLiterals {
