@@ -14,32 +14,17 @@
 #include "JsonLoader.h"
 #include "AsteroidParams.h"
 #include "Time.h"
+#include "Angle.h"
 
 using namespace Sage;
 
 int main()
 {
-    constexpr glm::uvec2 windowSize{256};
+    Angle<Units::Degree> a;
+    // Angle<Units::Day> b;
+    JulianDay<Units::Hour> jd;
 
-    GraphicsEngine graphicsEngine({
-        .width = windowSize.x,
-        .height = windowSize.y,
-        .title = "RenderEngine window",
-        .fullscreen = false,
-        .visible = false
-    });
-
-    auto config = LoadFromJson<LightcurveConfig>("data/testLcConfig.json");
-
-    auto &scene = graphicsEngine.pushScene<SandboxScene>(windowSize, config);
-    graphicsEngine.renderScenes();
-    // graphicsEngine.updateWindow();
-
-    if (config.outputPath)
-    {
-        SaveToJson(scene.syntheticObs, config.outputPath.value());
-    }
-
+    // Unit<Dimension::Angle, Units::Day> c;
 
     return 0;
 }

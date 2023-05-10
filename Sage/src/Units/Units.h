@@ -12,10 +12,11 @@ enum class Dimension
     Mass,
     Light,
 };
-
+template <Dimension DimensionId>
 struct Factor_t
 {
     double factor;
+
     friend double operator*(Factor_t lhs, const Factor_t &rhs)
     {
         return lhs.factor * rhs.factor;
@@ -24,7 +25,29 @@ struct Factor_t
     {
         return lhs.factor / rhs.factor;
     }
+
+    template <Dimension OtherDimensionId>
+    friend constexpr bool operator==(const Factor_t<DimensionId> &lhs, const Factor_t<OtherDimensionId> &rhs)
+    {
+        return std::is_same<decltype(lhs), decltype(rhs)>::value && lhs.factor == rhs.factor;
+    }
 };
+
+namespace Units {
+constexpr double PiVal = 3.141592653589793238462643383279502884197169399375L;
+constexpr Factor_t<Dimension::Angle> Degree{PiVal / 180.0};
+constexpr Factor_t<Dimension::Angle> Radian{1.0};
+
+constexpr Factor_t<Dimension::Length> Meter{1.0};
+constexpr Factor_t<Dimension::Length> Mile{1609.344};
+
+constexpr Factor_t<Dimension::Time> Day{1.0};
+constexpr Factor_t<Dimension::Time> Hour{1. / 24.0};
+constexpr Factor_t<Dimension::Time> Minute{1. / 24. / 60.};
+constexpr Factor_t<Dimension::Time> Second{1. / 24. / 3600.};
+
+constexpr Factor_t<Dimension::Light> Mag{1.0};
+}  // namespace Units
 
 template <Dimension DimensionId, Factor_t Factor>
 class Unit
@@ -35,7 +58,15 @@ public:
         return {val};
     }
 
-    Unit() = default;
+    Unit()
+    {
+        static_assert((DimensionId == Dimension::Angle && (Factor == Units::Degree || Factor == Units::Radian)) ||
+                          (DimensionId == Dimension::Time && (Factor == Units::Day || Factor == Units::Hour ||
+                                                              Factor == Units::Minute || Factor == Units::Second)) ||
+                          (DimensionId == Dimension::Light && (Factor == Units::Mag)) ||
+                          (DimensionId == Dimension::Length && (Factor == Units::Meter || Factor == Units::Mile)),
+                      "Units have to be of apropriate dimension.");
+    }
 
     template <Factor_t OtherFactor>
     Unit(const Unit<DimensionId, OtherFactor> &other) : _value(OtherFactor / Factor * other.value())
@@ -152,15 +183,14 @@ public:
     template <Factor_t OtherFactor>
     friend bool operator<=(const Unit &lhs, const Unit<DimensionId, OtherFactor> &rhs)
     {
-        return !(lhs > rhs);
+        return ! (lhs > rhs);
     }
 
     template <Factor_t OtherFactor>
     friend bool operator>=(const Unit &lhs, const Unit<DimensionId, OtherFactor> &rhs)
     {
-        return !(lhs < rhs);
+        return ! (lhs < rhs);
     }
-
 
 private:
     Unit(const long double val) : _value(val) {}
@@ -175,22 +205,21 @@ bool operator==(const Unit<DimensionId, Factor1> &lhs, const Unit<DimensionId, F
 }
 
 template <Dimension DimensionId, Factor_t Factor>
-std::ostream& operator<<(std::ostream& out, const Unit<DimensionId, Factor> &u)
+std::ostream &operator<<(std::ostream &out, const Unit<DimensionId, Factor> &u)
 {
     return out << u.value();
 }
 
 template <Dimension DimensionId, Factor_t Factor>
-void from_json(const nlohmann::json& j, Unit<DimensionId, Factor>& u)
+void from_json(const nlohmann::json &j, Unit<DimensionId, Factor> &u)
 {
     u = Unit<DimensionId, Factor>::cast(j.get<double>());
 }
 
 template <Dimension DimensionId, Factor_t Factor>
-void to_json(nlohmann::json& j, const Unit<DimensionId, Factor>& u)
+void to_json(nlohmann::json &j, const Unit<DimensionId, Factor> &u)
 {
     j = u.value();
 }
-
 
 }  // namespace Sage

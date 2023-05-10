@@ -303,4 +303,4 @@ void Framebuffer::bindColorTexture(unsigned int slot)
 	glBindTexture(textureTarget(specification.samples > 1), _colorAttachments[slot]);
 }
 
-} // 
+} //

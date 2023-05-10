@@ -4,11 +4,6 @@
 
 namespace Sage {
 
-namespace Units {
-constexpr double PiVal = 3.141592653589793238462643383279502884197169399375L;
-constexpr Factor_t Degree{PiVal / 180.0};
-constexpr Factor_t Radian{1.0};
-}  // namespace Units
 
 template <Factor_t Factor>
 using Angle = Unit<Dimension::Angle, Factor>;

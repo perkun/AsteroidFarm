@@ -4,10 +4,6 @@
 
 namespace Sage {
 
-namespace Units {
-constexpr Factor_t Mag{1.0};
-}  // namespace Units
-
 using Magnitude = Unit<Dimension::Light, Units::Mag>;
 
 namespace UnitLiterals {

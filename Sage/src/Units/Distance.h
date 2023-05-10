@@ -4,12 +4,6 @@
 
 namespace Sage {
 
-namespace Units {
-constexpr Factor_t Meter{1.0};
-constexpr Factor_t Mile{1609.344};
-
-}  // namespace Units
-
 template <Factor_t Factor>
 using Distance = Unit<Dimension::Length, Factor>;
 
