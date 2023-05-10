@@ -3,8 +3,7 @@
 #include "VertexArrayObject.h"
 #include "Shader.h"
 #include "Camera.h"
-#include "Time.h"
-#include "Angle.h"
+#include "Units.h"
 
 #include <glm/glm.hpp>
 #include <memory>

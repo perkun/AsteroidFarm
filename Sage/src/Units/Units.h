@@ -12,6 +12,7 @@ enum class Dimension
     Mass,
     Light,
 };
+
 template <Dimension DimensionId>
 struct Factor_t
 {
@@ -221,5 +222,43 @@ void to_json(nlohmann::json &j, const Unit<DimensionId, Factor> &u)
 {
     j = u.value();
 }
+
+// Specializations:
+
+template <Factor_t Factor>
+using Angle = Unit<Dimension::Angle, Factor>;
+const auto Pi = Angle<Units::Radian>::cast(3.141592653589793238462643383279502884197169399375);
+
+template <Factor_t Factor>
+using JulianDay = Unit<Dimension::Time, Factor>;
+
+template <Factor_t Factor>
+using Distance = Unit<Dimension::Length, Factor>;
+
+using Magnitude = Unit<Dimension::Light, Units::Mag>;
+
+namespace UnitLiterals {
+
+Angle<Units::Radian> operator"" _rad(long double val);
+Angle<Units::Radian> operator"" _rad(unsigned long long int val);
+Angle<Units::Degree> operator"" _deg(long double val);
+Angle<Units::Degree> operator"" _deg(unsigned long long int val);
+
+JulianDay<Units::Day> operator""_jd(long double val);
+JulianDay<Units::Day> operator""_jd(unsigned long long int val);
+JulianDay<Units::Hour> operator""_h(long double val);
+JulianDay<Units::Hour> operator""_h(unsigned long long int val);
+JulianDay<Units::Minute> operator""_min(long double val);
+JulianDay<Units::Minute> operator""_min(unsigned long long int val);
+JulianDay<Units::Second> operator""_sec(long double val);
+JulianDay<Units::Second> operator""_sec(unsigned long long int val);
+
+Distance<Units::Meter> operator"" _m(long double val);
+Distance<Units::Meter> operator"" _mi(long double val);
+
+Magnitude operator""_mag(long double val);
+Magnitude operator""_mag(unsigned long long int val);
+
+}  // namespace UnitLiterals
 
 }  // namespace Sage

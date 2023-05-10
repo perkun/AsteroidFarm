@@ -1,9 +1,7 @@
 #pragma once
 
 #include "GlmParser.h"
-#include "Time.h"
-#include "Angle.h"
-#include "Light.h"
+#include "Units.h"
 
 #include <nlohmann/json.hpp>
 #include <glm/vec3.hpp>

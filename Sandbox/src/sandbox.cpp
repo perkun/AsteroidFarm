@@ -13,8 +13,7 @@
 
 #include "JsonLoader.h"
 #include "AsteroidParams.h"
-#include "Time.h"
-#include "Angle.h"
+#include "Units.h"
 
 using namespace Sage;
 

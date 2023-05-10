@@ -1,6 +1,6 @@
 #include <memory>
 #include <numeric>
-#include "Angle.h"
+#include "Units.h"
 #include "Camera.h"
 #include "LightcurveConfig.h"
 #include "Scene.h"

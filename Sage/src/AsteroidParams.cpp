@@ -1,7 +1,7 @@
 #include "AsteroidParams.h"
 
 #include <glm/gtx/quaternion.hpp>
-#include "Angle.h"
+#include "Units.h"
 
 namespace Sage {
 using namespace nlohmann;
@@ -34,7 +34,7 @@ void AsteroidParams::normalizeRotPhase()
 }
 
 glm::vec3 AsteroidParams::computeXyzRotation()
-{    
+{
     glm::quat ql, qb, qg;
     // rotate gamma about z axis
     qg.w = cos((rotPhaseForEpoch + rotPhase).value() / 2);
