@@ -36,7 +36,8 @@ struct FramebufferTextureSpecification
 struct FramebufferAttachmentSpecification
 {
     FramebufferAttachmentSpecification() = default;
-    FramebufferAttachmentSpecification(std::initializer_list<FramebufferTextureSpecification> textureSpecs)
+    FramebufferAttachmentSpecification(
+        std::initializer_list<FramebufferTextureSpecification> textureSpecs)
         : textureSpecs(textureSpecs)
     {}
 
@@ -60,15 +61,19 @@ public:
     static void bindTexture(bool multisampled, unsigned int id);
 
     static void attachColorTexture(unsigned int id,
-                                     int samples,
-                                     GLenum internal_format,
-                                     GLenum attachment_type,
-                                     unsigned int width,
-                                     unsigned int height,
-                                     int index);
+                                   int samples,
+                                   GLenum internal_format,
+                                   GLenum attachment_type,
+                                   unsigned int width,
+                                   unsigned int height,
+                                   int index);
 
-    static void attachDepthTexture(
-        unsigned int id, int samples, GLenum internal_format, GLenum format, unsigned int width, unsigned int height);
+    static void attachDepthTexture(unsigned int id,
+                                   int samples,
+                                   GLenum internal_format,
+                                   GLenum format,
+                                   unsigned int width,
+                                   unsigned int height);
 
     Framebuffer(const FramebufferSpecification &specs);
     ~Framebuffer();

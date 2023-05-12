@@ -15,8 +15,8 @@ public:
     int numDrawElements{0};
     GLuint vaoId;
     const unsigned int drawType{GL_TRIANGLES};
-private:
 
+private:
     GLuint _vboId;
     GLuint _idxsId;
 };

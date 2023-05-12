@@ -14,16 +14,16 @@ class RenderingShadowTestScene : public Scene
 public:
     RenderingShadowTestScene(Renderer &renderer, glm::uvec2 framebufferSize)
         : Scene(renderer),
-          _framebuffer(
-              {.width = framebufferSize.x,
-               .height = framebufferSize.y,
-               .samples = 1,
-               .attachments = {FramebufferTextureFormat::RGBA32F, FramebufferTextureFormat::DEPTH32FSTENCIL8}}),
-          _lightFramebuffer(
-              {.width = 2048,
-               .height = 2048,
-               .samples = 1,
-               .attachments = {FramebufferTextureFormat::RGBA32F, FramebufferTextureFormat::DEPTH32FSTENCIL8}}),
+          _framebuffer({.width = framebufferSize.x,
+                        .height = framebufferSize.y,
+                        .samples = 1,
+                        .attachments = {FramebufferTextureFormat::RGBA32F,
+                                        FramebufferTextureFormat::DEPTH32FSTENCIL8}}),
+          _lightFramebuffer({.width = 2048,
+                             .height = 2048,
+                             .samples = 1,
+                             .attachments = {FramebufferTextureFormat::RGBA32F,
+                                             FramebufferTextureFormat::DEPTH32FSTENCIL8}}),
           _camera(4., 1., 0.1, 10.),
           _light(3., 1., 0.1, 10.)
     {

@@ -20,23 +20,24 @@ public:
     PhotometryScene(Renderer &renderer, glm::uvec2 framebufferSize, const LightcurveConfig &config)
         : Scene(renderer),
           _config(config),
-          _framebuffer(
-              {.width = framebufferSize.x,
-               .height = framebufferSize.y,
-               .samples = 1,
-               .attachments = {FramebufferTextureFormat::RGBA32F, FramebufferTextureFormat::DEPTH32FSTENCIL8}}),
-          _lightFramebuffer(
-              {.width = 2048,
-               .height = 2048,
-               .samples = 1,
-               .attachments = {FramebufferTextureFormat::RGBA32F, FramebufferTextureFormat::DEPTH32FSTENCIL8}}),
+          _framebuffer({.width = framebufferSize.x,
+                        .height = framebufferSize.y,
+                        .samples = 1,
+                        .attachments = {FramebufferTextureFormat::RGBA32F,
+                                        FramebufferTextureFormat::DEPTH32FSTENCIL8}}),
+          _lightFramebuffer({.width = 2048,
+                             .height = 2048,
+                             .samples = 1,
+                             .attachments = {FramebufferTextureFormat::RGBA32F,
+                                             FramebufferTextureFormat::DEPTH32FSTENCIL8}}),
           _camera(4., 1., 0.1, 10.),
           _light(3., 1., 0.1, 10.)
     {
         auto mesh = Mesh::loadFromObj(_config.modelPath);
         mesh.rotateToPrincipalAxes();
 
-        auto shader = std::make_shared<Shader>(_config.vertexShaderPath, _config.fragmentShaderPath);
+        auto shader =
+            std::make_shared<Shader>(_config.vertexShaderPath, _config.fragmentShaderPath);
 
         asteroid = createEntity();
         asteroid.addComponent<VaoComponent>(mesh);
@@ -102,7 +103,8 @@ public:
             renderSceneWithShadows();
 
             glReadPixels(0, 0, fbWidth, fbHeight, GL_RED, GL_FLOAT, pixelBuffRed.data());
-            auto mag = Magnitude::cast(-2.5 * log10(std::accumulate(pixelBuffRed.begin(), pixelBuffRed.end(), 0.)));
+            auto mag = Magnitude::cast(
+                -2.5 * log10(std::accumulate(pixelBuffRed.begin(), pixelBuffRed.end(), 0.)));
             // fmt::print("{} {}\n", phase.value(), mag.value());
 
             using namespace UnitLiterals;

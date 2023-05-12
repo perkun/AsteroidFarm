@@ -17,8 +17,7 @@ void from_json(const nlohmann::json &j, LightcurveConfig &lc)
     lc.observerPosition = j.at("observerPosition").get<glm::vec3>();
     lc.lightPosition = j.at("lightPosition").get<glm::vec3>();
 
-    if (const auto it = j.find("outputPath");
-        it != j.end())
+    if (const auto it = j.find("outputPath"); it != j.end())
     {
         lc.outputPath = j.at("outputPath").get<std::filesystem::path>();
     }

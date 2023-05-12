@@ -1,11 +1,11 @@
-//#include <fmt/format.h>
+// #include <fmt/format.h>
 //
-//#include <chrono>
-//#include <glm/glm.hpp>
-//#include <glm/gtc/type_ptr.hpp>
-//#include <glm/gtx/pca.hpp>
-//#include <iostream>
-//#include <iomanip>
+// #include <chrono>
+// #include <glm/glm.hpp>
+// #include <glm/gtc/type_ptr.hpp>
+// #include <glm/gtx/pca.hpp>
+// #include <iostream>
+// #include <iomanip>
 //
 #include "GraphicsEngine.h"
 #include "LightcurveConfig.h"

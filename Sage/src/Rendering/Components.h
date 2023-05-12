@@ -65,5 +65,4 @@ struct CameraComponent
     std::shared_ptr<Camera> camera;
 };
 
-
 }  // namespace Sage

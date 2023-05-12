@@ -5,10 +5,9 @@
 
 namespace Sage {
 
-Renderer::Renderer(glm::ivec2 defaultFramebufferSize) 
+Renderer::Renderer(glm::ivec2 defaultFramebufferSize)
     : _defaultFramebufferSize(defaultFramebufferSize)
-{
-}
+{}
 
 Renderer::~Renderer() {}
 
@@ -31,7 +30,7 @@ void Renderer::setViewport(int x, int y, int width, int height)
 void Renderer::bindDefaultFramebuffer()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0,0, _defaultFramebufferSize.x, _defaultFramebufferSize.y);
+    glViewport(0, 0, _defaultFramebufferSize.x, _defaultFramebufferSize.y);
 }
 
 void Renderer::beginScene(const Camera &camera, const Camera &light)
@@ -90,7 +89,8 @@ void Renderer::submit(const VertexArrayObject &vao, MaterialComponent &material)
     }
     if (sceneData.lightPerspecitve)
     {
-        material.cacheUniformValue("u_light_perspective_matrix", sceneData.lightPerspecitve.value());
+        material.cacheUniformValue("u_light_perspective_matrix",
+                                   sceneData.lightPerspecitve.value());
     }
 
     material.setUniforms();

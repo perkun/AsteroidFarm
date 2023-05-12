@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <optional>
-#include <concepts>
+#include <algorithm>
 
 namespace Sage {
 
@@ -52,8 +52,9 @@ struct VertexLayout
 
     const VertexLayoutElement *getElement(VertexElementType type) const
     {
-        auto element =
-            std::find_if(_elements.begin(), _elements.end(), [&type](const auto &elem) { return elem.type == type; });
+        auto element = std::find_if(_elements.begin(),
+                                    _elements.end(),
+                                    [&type](const auto &elem) { return elem.type == type; });
         if (element != _elements.end())
         {
             return &(*element);

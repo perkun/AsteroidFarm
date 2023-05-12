@@ -59,7 +59,8 @@ TEST(Rendering, RenderAsteroidsWithShadows)
     glReadPixels(0, 0, windowSize.x, windowSize.y, GL_BLUE, GL_FLOAT, pixelBuffBlue.data());
 
     auto expectedPixelBuffRed = LoadFromJson<std::vector<float>>("data/pixelBuffRed_shadow.json");
-    auto expectedPixelBuffGreen = LoadFromJson<std::vector<float>>("data/pixelBuffGreen_shadow.json");
+    auto expectedPixelBuffGreen =
+        LoadFromJson<std::vector<float>>("data/pixelBuffGreen_shadow.json");
     auto expectedPixelBuffBlue = LoadFromJson<std::vector<float>>("data/pixelBuffBlue_shadow.json");
 
     EXPECT_EQ(expectedPixelBuffRed, pixelBuffRed);

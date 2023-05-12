@@ -51,25 +51,26 @@ void MaterialComponent::cacheUniformValue(std::string name, float value)
     _uniforms.floats[name] = value;
 }
 
-void MaterialComponent::setUniforms() {
+void MaterialComponent::setUniforms()
+{
     _shader->bind();
-    for (auto [name, value]: _uniforms.vec4s) 
+    for (auto [name, value] : _uniforms.vec4s)
     {
         _shader->setUniform4fv(name, value);
     }
-    for (auto [name, value]: _uniforms.vec3s) 
+    for (auto [name, value] : _uniforms.vec3s)
     {
         _shader->setUniform3fv(name, value);
     }
-    for (auto [name, value]: _uniforms.mat4s) 
+    for (auto [name, value] : _uniforms.mat4s)
     {
         _shader->setUniformMat4f(name, value);
     }
-    for (auto [name, value]: _uniforms.ints) 
+    for (auto [name, value] : _uniforms.ints)
     {
         _shader->setUniform1i(name, value);
     }
-    for (auto [name, value]: _uniforms.floats) 
+    for (auto [name, value] : _uniforms.floats)
     {
         _shader->setUniform1f(name, value);
     }

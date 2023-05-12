@@ -27,7 +27,7 @@ size_t VertexLayoutElement::getSize(VertexElementType type) const
     }
 }
 
-int VertexLayoutElement::getGlType(VertexElementType type) const 
+int VertexLayoutElement::getGlType(VertexElementType type) const
 {
     switch (type)
     {

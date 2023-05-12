@@ -18,7 +18,6 @@ Angle<Units::Radian> AsteroidParams::computeRotPhase(const JulianDay<Units::Day>
     return rotPhase;
 }
 
-
 void AsteroidParams::normalizeRotPhase()
 {
     using namespace UnitLiterals;
@@ -30,7 +29,6 @@ void AsteroidParams::normalizeRotPhase()
     {
         rotPhase += 2 * Pi;
     }
-
 }
 
 glm::vec3 AsteroidParams::computeXyzRotation()

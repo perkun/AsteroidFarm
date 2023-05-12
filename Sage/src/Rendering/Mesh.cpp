@@ -10,7 +10,8 @@
 
 namespace Sage {
 
-void Mesh::applyToVertexElements(VertexElementType type, const std::function<void(std::span<float> &)> &func)
+void Mesh::applyToVertexElements(VertexElementType type,
+                                 const std::function<void(std::span<float> &)> &func)
 {
     const auto layoutElementIt = layout.getElement(type);
     if (! layoutElementIt)
@@ -22,7 +23,8 @@ void Mesh::applyToVertexElements(VertexElementType type, const std::function<voi
 
     for (int vertexBegin = 0; vertexBegin < vertices.size(); vertexBegin += layout.stride)
     {
-        std::span<float> vertexElement{vertices.begin() + vertexBegin + layoutElementIt->offset, layoutElementIt->size};
+        std::span<float> vertexElement{vertices.begin() + vertexBegin + layoutElementIt->offset,
+                                       layoutElementIt->size};
         func(vertexElement);
     }
 }
@@ -44,8 +46,8 @@ void Mesh::applyToFaces(const std::function<void(const std::vector<std::span<flo
     }
 }
 
-void Mesh::applyToFacesElements(VertexElementType type,
-                                const std::function<void(const std::vector<std::span<float>> &)> &func)
+void Mesh::applyToFacesElements(
+    VertexElementType type, const std::function<void(const std::vector<std::span<float>> &)> &func)
 {
     for (int faceBegin = 0; faceBegin < indices.size(); faceBegin += verticesPerFace)
     {
@@ -303,26 +305,27 @@ glm::mat3 Mesh::computeInertia()
 {
     glm::mat3 products{0};
 
-    applyToFacesElements(VertexElementType::POSITION,
-                         [&products, this](auto &faces)
-                         {
-                             const auto &v1 = makeVec3Ref(faces[0]);
-                             const auto &v2 = makeVec3Ref(faces[1]);
-                             const auto &v3 = makeVec3Ref(faces[2]);
+    applyToFacesElements(
+        VertexElementType::POSITION,
+        [&products, this](auto &faces)
+        {
+            const auto &v1 = makeVec3Ref(faces[0]);
+            const auto &v2 = makeVec3Ref(faces[1]);
+            const auto &v3 = makeVec3Ref(faces[2]);
 
-                             auto volume = computeTetrahedronVolume(v1, v2, v3);
+            auto volume = computeTetrahedronVolume(v1, v2, v3);
 
-                             for (int k = 0; k < 3; k++)
-                             {
-                                 for (int j = k; j < 3; j++)
-                                 {
-                                     products[k][j] += volume / 20. *
-                                                       (2 * v1[k] * v1[j] + 2 * v2[k] * v2[j] + 2 * v3[k] * v3[j] +
-                                                        v1[k] * v2[j] + v1[j] * v2[k] + v1[k] * v3[j] + v1[j] * v3[k] +
-                                                        v2[k] * v3[j] + v2[j] * v3[k]);
-                                 }
-                             }
-                         });
+            for (int k = 0; k < 3; k++)
+            {
+                for (int j = k; j < 3; j++)
+                {
+                    products[k][j] += volume / 20. *
+                                      (2 * v1[k] * v1[j] + 2 * v2[k] * v2[j] + 2 * v3[k] * v3[j] +
+                                       v1[k] * v2[j] + v1[j] * v2[k] + v1[k] * v3[j] +
+                                       v1[j] * v3[k] + v2[k] * v3[j] + v2[j] * v3[k]);
+                }
+            }
+        });
 
     glm::mat3 inertia;
     inertia[0][0] = products[1][1] + products[2][2];
@@ -401,13 +404,15 @@ void Mesh::saveToObj(Mesh &mesh, const std::filesystem::path &filename)
         return;
     }
 
-    mesh.applyToVertexElements(VertexElementType::POSITION,
-                               [&objFile](const auto &position)
-                               { objFile << "v " << position[0] << " " << position[1] << " " << position[2] << "\n"; });
+    mesh.applyToVertexElements(
+        VertexElementType::POSITION,
+        [&objFile](const auto &position)
+        { objFile << "v " << position[0] << " " << position[1] << " " << position[2] << "\n"; });
 
-    mesh.applyToVertexElements(VertexElementType::NORMAL,
-                               [&objFile](const auto &normal)
-                               { objFile << "vn " << normal[0] << " " << normal[1] << " " << normal[2] << "\n"; });
+    mesh.applyToVertexElements(
+        VertexElementType::NORMAL,
+        [&objFile](const auto &normal)
+        { objFile << "vn " << normal[0] << " " << normal[1] << " " << normal[2] << "\n"; });
 
     for (int i = 0; i < mesh.indices.size(); i += mesh.verticesPerFace)
     {

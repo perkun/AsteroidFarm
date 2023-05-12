@@ -12,11 +12,11 @@ class RenderingTestScene : public Scene
 public:
     RenderingTestScene(Renderer &renderer, glm::uvec2 framebufferSize)
         : Scene(renderer),
-          _framebuffer(
-              {.width = framebufferSize.x,
-               .height = framebufferSize.y,
-               .samples = 1,
-               .attachments = {FramebufferTextureFormat::RGBA32F, FramebufferTextureFormat::DEPTH32FSTENCIL8}}),
+          _framebuffer({.width = framebufferSize.x,
+                        .height = framebufferSize.y,
+                        .samples = 1,
+                        .attachments = {FramebufferTextureFormat::RGBA32F,
+                                        FramebufferTextureFormat::DEPTH32FSTENCIL8}}),
           _camera(4., 1., 0.1, 10.)
     {
         auto mesh = Mesh::loadFromObj("data/model_shifted.obj");

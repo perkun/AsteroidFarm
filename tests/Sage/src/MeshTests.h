@@ -63,7 +63,8 @@ TEST(Mesh, ApplyToVertices)
 
     mesh.indices = {0, 1, 2, 2, 3, 4, 4, 5, 6};
 
-    mesh.layout = VertexLayout(VertexElementType::POSITION, VertexElementType::TEXTURE, VertexElementType::COLOR);
+    mesh.layout = VertexLayout(
+        VertexElementType::POSITION, VertexElementType::TEXTURE, VertexElementType::COLOR);
 
     mesh.applyToVertexElements(VertexElementType::TEXTURE,
                                [](auto &textureCoords)

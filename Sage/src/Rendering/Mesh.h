@@ -22,10 +22,12 @@ public:
     static Mesh loadFromObj(const std::filesystem::path &filename);
     static void saveToObj(Mesh &mesh, const std::filesystem::path &filename);
 
-    void applyToVertexElements(VertexElementType type, const std::function<void(std::span<float> &)> &func);
+    void applyToVertexElements(VertexElementType type,
+                               const std::function<void(std::span<float> &)> &func);
     void applyToFaces(const std::function<void(const std::vector<std::span<float>> &)> &func);
-    void applyToFacesElements(VertexElementType type,
-                              const std::function<void(const std::vector<std::span<float>> &)> &func);
+    void applyToFacesElements(
+        VertexElementType type,
+        const std::function<void(const std::vector<std::span<float>> &)> &func);
 
     void applyToFacesIndices(std::function<void(const std::span<unsigned int> &)> func);
 

@@ -24,7 +24,7 @@ private:
     Angle<Units::Radian> computeRotPhase(const JulianDay<Units::Day> &jd);
 };
 
-void from_json(const nlohmann::json& j, AsteroidParams& p);
-void to_json(nlohmann::json& j, const AsteroidParams& obs);
+void from_json(const nlohmann::json &j, AsteroidParams &p);
+void to_json(nlohmann::json &j, const AsteroidParams &obs);
 
-} // namespace Sage
+}  // namespace Sage

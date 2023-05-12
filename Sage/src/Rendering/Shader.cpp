@@ -85,7 +85,8 @@ unsigned int Shader::compileShader(unsigned int type, const char *source)
         glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
         char *message = (char *)alloca(length * sizeof(char));
         glGetShaderInfoLog(id, length, &length, message);
-        fmt::print("Failed to compile {} shader", (type == GL_VERTEX_SHADER ? "vertex" : "fragment"));
+        fmt::print("Failed to compile {} shader",
+                   (type == GL_VERTEX_SHADER ? "vertex" : "fragment"));
         fmt::print("{}", message);
         glDeleteShader(id);
         return 0;

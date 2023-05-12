@@ -23,7 +23,6 @@ struct LightcurveConfig
     glm::vec3 targetPosition;
     glm::vec3 lightPosition;
     std::optional<std::filesystem::path> outputPath;
-
 };
 
 void from_json(const nlohmann::json &j, LightcurveConfig &lc);

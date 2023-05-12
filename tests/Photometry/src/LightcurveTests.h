@@ -17,7 +17,6 @@ namespace Sage::Test {
 //     return out << v.x << " " << v.y << " " << v.z;
 // }
 
-
 TEST(Photometry, SingleLightcurve)
 {
     constexpr glm::uvec2 windowSize{256};
@@ -33,7 +32,8 @@ TEST(Photometry, SingleLightcurve)
     graphicsEngine.renderScenes();
     // graphicsEngine.updateWindow();
 
-    auto expectedLightcurve = LoadFromJson<LightcurveStorage>("data/testLightcurve.json").lightcurves.front();
+    auto expectedLightcurve =
+        LoadFromJson<LightcurveStorage>("data/testLightcurve.json").lightcurves.front();
     auto &synthLightcurve = scene.syntheticObs.lightcurves.front();
 
     for (int i = 0; i < expectedLightcurve.size(); i++)
@@ -51,7 +51,6 @@ TEST(Photometry, SingleLightcurve)
             EXPECT_EQ(expectedObsPoint.observerPosition[i], synthObsPoint.observerPosition[i]);
             EXPECT_EQ(expectedObsPoint.targetPosition[i], synthObsPoint.targetPosition[i]);
         }
-
     }
 }
 
