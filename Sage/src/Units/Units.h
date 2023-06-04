@@ -17,6 +17,7 @@ template <Dimension DimensionId>
 struct Factor_t
 {
     double factor;
+    static constexpr Dimension dimension{DimensionId};
 
     friend double operator*(Factor_t lhs, const Factor_t &rhs)
     {
@@ -54,14 +55,7 @@ constexpr Factor_t<Dimension::Light> Mag{1.0};
 template <Dimension DimensionId, Factor_t Factor>
 class Unit
 {
-    static_assert(
-        (DimensionId == Dimension::Angle && (Factor == Units::Degree || Factor == Units::Radian)) ||
-            (DimensionId == Dimension::Time &&
-             (Factor == Units::Day || Factor == Units::Hour || Factor == Units::Minute ||
-              Factor == Units::Second)) ||
-            (DimensionId == Dimension::Light && (Factor == Units::Mag)) ||
-            (DimensionId == Dimension::Length && (Factor == Units::Meter || Factor == Units::Mile)),
-        "Units have to be of apropriate dimension.");
+    static_assert(Factor.dimension == DimensionId, "Units have to be of apropriate dimension.");
 
 public:
     constexpr static Unit cast(double val)
@@ -78,12 +72,6 @@ public:
     template <Factor_t OtherFactor>
     Unit &operator=(const Unit<DimensionId, OtherFactor> &other)
     {
-        // TODO
-        // if (this == &other)
-        //{
-        //	return *this;
-        //}
-
         _value = OtherFactor / Factor * other.value();
         return *this;
     }
