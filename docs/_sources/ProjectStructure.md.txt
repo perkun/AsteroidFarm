@@ -11,7 +11,7 @@ containing its own `premake5.lua` file.
 Libraries used in projects should be stored in `vendor` folder. Rules for
 building can be added to the premake file stored there.
 
-# How to build Sage
+## How to build Sage
 
 First, you need to generate `Makefile`s. To do so, run this command in project's root directory:
 
@@ -35,7 +35,7 @@ make config=release
 Binaries are located in `build/<Target>/<Project>` directory, where `<Target>`
 is either `Build` or `Release`.
 
-# Documentation
+## Documentation
 
 Documentation is stored in `documentation/source` folder. The `index.rst` is the main
 page. You can link other files in `toc` section in either rst or markdown
@@ -53,7 +53,7 @@ make
 ```
 then open `documentation/build/html/index.html` in a web browser.
 
-# Dependencies
+## Dependencies
 
 * fmt
 * gtest

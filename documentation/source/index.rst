@@ -10,7 +10,9 @@ Welcome to SAGE's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   About.md
    ProjectStructure.md
+   UserManual/index.rst
 
 Indices and tables
 ==================
