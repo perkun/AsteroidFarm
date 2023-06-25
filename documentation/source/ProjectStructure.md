@@ -37,7 +37,7 @@ is either `Build` or `Release`.
 
 # Documentation
 
-Documentation is stored in `docs/source` folder. The `index.rst` is the main
+Documentation is stored in `documentation/source` folder. The `index.rst` is the main
 page. You can link other files in `toc` section in either rst or markdown
 formats.
 
@@ -45,6 +45,13 @@ Documentation is generated automatically when the whole projetc is build. You
 need to have `Sphinx` installed (with some extra packages). See dependencies
 section.
 
+To generate documentation locally:
+
+```
+cd docs
+make
+```
+then open `documentation/build/html/index.html` in a web browser.
 
 # Dependencies
 

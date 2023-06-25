@@ -29,4 +29,4 @@ include "tests/Sage"
 include "tests/Photometry"
 
 -- DOCS --
---include "docs"
+-- include "documentation"

@@ -107,12 +107,18 @@ is either <code class="docutils literal notranslate"><span class="pre">Build</sp
 </section>
 <section id="documentation">
 <h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading"></a></h1>
-<p>Documentation is stored in <code class="docutils literal notranslate"><span class="pre">docs/source</span></code> folder. The <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> is the main
+<p>Documentation is stored in <code class="docutils literal notranslate"><span class="pre">documentation/source</span></code> folder. The <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> is the main
 page. You can link other files in <code class="docutils literal notranslate"><span class="pre">toc</span></code> section in either rst or markdown
 formats.</p>
 <p>Documentation is generated automatically when the whole projetc is build. You
 need to have <code class="docutils literal notranslate"><span class="pre">Sphinx</span></code> installed (with some extra packages). See dependencies
 section.</p>
+<p>To generate documentation locally:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">docs</span>
+<span class="n">make</span>
+</pre></div>
+</div>
+<p>then open <code class="docutils literal notranslate"><span class="pre">documentation/build/html/index.html</span></code> in a web browser.</p>
 </section>
 <section id="dependencies">
 <h1>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading"></a></h1>

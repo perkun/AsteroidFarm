@@ -7,10 +7,5 @@ code written throughout the years while developing the method.
 
 # Documentation
 
-To generate documentation run:
+Documentation is available on [GitHub pages](https://perkun.github.io/Sage2/).
 
-```
-cd docs
-make
-```
-then open `docs/build/html/index.html` in a web browser.
