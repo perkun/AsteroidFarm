@@ -15,6 +15,7 @@ project "PhotometryTests"
 	{
 		"src/**.h",
 		"src/**.cpp",
+		"%{wks.location}/Photometry/src/PhotometryScene.cpp"
 	}
 
 	includedirs

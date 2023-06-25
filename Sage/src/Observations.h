@@ -17,8 +17,7 @@ namespace Sage {
 using namespace UnitLiterals;
 struct ObsPoint
 {
-    // TODO change to JulianDay
-    JulianDay julianDay{0};
+    JulianDay julianDay{0_jd};
     Angle<Units::Radian> rotPhase{0_rad};
     unsigned int step{0};
 
