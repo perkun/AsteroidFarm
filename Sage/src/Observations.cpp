@@ -8,7 +8,7 @@ namespace Sage {
 
 void from_json(const json &j, ObsPoint &p)
 {
-    p.julianDay = j.at("julianDay").get<JulianDay<Units::Day>>();
+    p.julianDay = j.at("julianDay").get<JulianDay>();
     p.magnitude = j.at("magnitude").get<Magnitude>();
     p.rotPhase = j.at("rotPhase").get<Angle<Units::Radian>>();
     p.step = j.at("step").get<unsigned int>();

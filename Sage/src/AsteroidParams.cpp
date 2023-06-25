@@ -2,17 +2,18 @@
 
 #include <glm/gtx/quaternion.hpp>
 #include "Units.h"
+#include "JulianDay.h"
 
 namespace Sage {
 using namespace nlohmann;
 
-void AsteroidParams::setRotPhase(const JulianDay<Units::Day> &jd)
+void AsteroidParams::setRotPhase(const JulianDay &jd)
 {
     rotPhase = computeRotPhase(jd);
     normalizeRotPhase();
 }
 
-Angle<Units::Radian> AsteroidParams::computeRotPhase(const JulianDay<Units::Day> &jd)
+Angle<Units::Radian> AsteroidParams::computeRotPhase(const JulianDay &jd)
 {
     auto rotPhase = (jd - epoch) / period * 2 * Pi;
     return rotPhase;
@@ -61,8 +62,8 @@ void from_json(const json &j, AsteroidParams &p)
 {
     p.eclipticLongitude = j.at("eclipticLongitude").get<Angle<Units::Degree>>();
     p.eclipticLatitude = j.at("eclipticLatitude").get<Angle<Units::Degree>>();
-    p.period = j.at("period").get<JulianDay<Units::Hour>>();
-    p.epoch = j.at("epoch").get<JulianDay<Units::Day>>();
+    p.period = j.at("period").get<Duration<Units::Hour>>();
+    p.epoch = j.at("epoch").get<JulianDay>();
     p.rotPhaseForEpoch = j.at("rotPhaseForEpoch").get<Angle<Units::Degree>>();
 }
 

@@ -11,7 +11,7 @@ void from_json(const nlohmann::json &j, LightcurveConfig &lc)
     lc.fragmentShaderPath = j.at("fragmentShaderPath").get<std::filesystem::path>();
     lc.targetName = j.at("targetName").get<std::string>();
     lc.numPoints = j.at("numPoints").get<unsigned int>();
-    lc.startJd = j.at("startJd").get<JulianDay<Units::Day>>();
+    lc.startJd = j.at("startJd").get<JulianDay>();
     lc.asteroidParams = j.at("asteroidParams").get<AsteroidParams>();
     lc.targetPosition = j.at("targetPosition").get<glm::vec3>();
     lc.observerPosition = j.at("observerPosition").get<glm::vec3>();

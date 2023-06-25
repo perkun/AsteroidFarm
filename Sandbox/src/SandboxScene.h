@@ -89,7 +89,7 @@ public:
         {
             auto &t = asteroid.getComponent<TransformComponent>();
             // TODO get rid of "/ 180.0 * M_PI"
-            Angle phase = Angle<Units::Radian>::cast((i * 360. / numPoints) / 180.0 * M_PI);
+            auto phase = Angle<Units::Radian>::cast((i * 360. / numPoints) / 180.0 * M_PI);
             t.rotation.z = phase.value();
             renderSceneWithShadows();
 

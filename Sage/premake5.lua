@@ -21,9 +21,7 @@ project "Sage"
 	{
 	}
 
-
-
-	links { "glfw", "glad"}
+	links {"glfw", "glad"}
 
 
 	filter "configurations:Debug"

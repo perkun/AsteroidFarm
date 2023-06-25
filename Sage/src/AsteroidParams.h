@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Units.h"
+#include "JulianDay.h"
 #include <nlohmann/json.hpp>
 #include <glm/glm.hpp>
 
@@ -11,17 +12,17 @@ class AsteroidParams
 public:
     Angle<Units::Radian> eclipticLongitude;
     Angle<Units::Radian> eclipticLatitude;
-    JulianDay<Units::Hour> period;
-    JulianDay<Units::Day> epoch;
+    Duration<Units::Hour> period;
+    JulianDay epoch;
     Angle<Units::Radian> rotPhaseForEpoch;
     Angle<Units::Radian> rotPhase;
 
     glm::vec3 computeXyzRotation();
-    void setRotPhase(const JulianDay<Units::Day> &jd);
+    void setRotPhase(const JulianDay &jd);
     void normalizeRotPhase();
 
 private:
-    Angle<Units::Radian> computeRotPhase(const JulianDay<Units::Day> &jd);
+    Angle<Units::Radian> computeRotPhase(const JulianDay &jd);
 };
 
 void from_json(const nlohmann::json &j, AsteroidParams &p);

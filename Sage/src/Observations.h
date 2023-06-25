@@ -2,6 +2,7 @@
 
 #include "GlmParser.h"
 #include "Units.h"
+#include "JulianDay.h"
 
 #include <nlohmann/json.hpp>
 #include <glm/vec3.hpp>
@@ -16,11 +17,11 @@ namespace Sage {
 using namespace UnitLiterals;
 struct ObsPoint
 {
-    JulianDay<Units::Day> julianDay{0_jd};
+    // TODO change to JulianDay
+    JulianDay julianDay{0};
     Angle<Units::Radian> rotPhase{0_rad};
     unsigned int step{0};
 
-    // TODO Units for magnitdes
     Magnitude magnitude;
     glm::vec3 observerPosition{0};
     glm::vec3 targetPosition{0};

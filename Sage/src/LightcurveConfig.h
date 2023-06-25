@@ -17,7 +17,7 @@ struct LightcurveConfig
     std::filesystem::path fragmentShaderPath;
     std::string targetName;
     unsigned int numPoints;
-    JulianDay<Units::Day> startJd;
+    JulianDay startJd;
     AsteroidParams asteroidParams;
     glm::vec3 observerPosition;
     glm::vec3 targetPosition;
