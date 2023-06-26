@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AsteroidParams.h"
+#include "ObservationsConfig.h"
 #include "GlmParser.h"
 #include "Units.h"
 #include "JulianDay.h"
@@ -31,6 +32,7 @@ using Lightcurve = std::vector<ObsPoint>;
 
 struct LightcurveStorage
 {
+    SceneConfig sceneConfig;
     AsteroidParams asteroidParams;
     std::vector<Lightcurve> lightcurves;
 };

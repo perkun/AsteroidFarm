@@ -1,7 +1,9 @@
 {
-    "modelPath": "data/model_shifted.obj",
-    "vertexShaderPath": "data/shadow.vs",
-    "fragmentShaderPath": "data/shadow.fs",
+    "scene": {
+        "modelPath": "data/model_shifted.obj",
+        "vertexShaderPath": "data/shadow.vs",
+        "fragmentShaderPath": "data/shadow.fs"
+    },
     "asteroidParams": {
         "name": "Test target name",
         "eclipticLongitude": 170,
@@ -10,7 +12,6 @@
         "epoch": 2457999.0334,
         "rotPhaseForEpoch": 34.123
     },
-    "outputPath": "tests/data/testLightcurve.json",
     "lightcurves": [
         {
             "targetPosition": [0,4,0],
@@ -19,5 +20,6 @@
             "startJd": 2458009.0334,
             "numPoints": 90
         }
-    ]
+    ],
+    "outputPath": "tests/data/testLightcurve.json"
 }

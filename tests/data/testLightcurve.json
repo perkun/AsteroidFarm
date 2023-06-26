@@ -1,4 +1,9 @@
 {
+    "scene": {
+        "modelPath": "data/model_shifted.obj",
+        "vertexShaderPath": "data/shadow.vs",
+        "fragmentShaderPath": "data/shadow.fs"
+    },
     "asteroidParams": {
         "name": "Test target name",
         "eclipticLongitude": 170,

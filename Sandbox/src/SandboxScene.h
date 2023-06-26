@@ -2,7 +2,7 @@
 #include <numeric>
 #include "Units.h"
 #include "Camera.h"
-#include "LightcurveConfig.h"
+#include "ObservationsConfig.h"
 #include "Scene.h"
 #include "Renderer.h"
 #include "Mesh.h"

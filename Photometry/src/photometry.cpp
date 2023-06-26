@@ -1,5 +1,5 @@
 #include "GraphicsEngine.h"
-#include "LightcurveConfig.h"
+#include "ObservationsConfig.h"
 #include "PhotometryScene.h"
 
 #include "JsonLoader.h"

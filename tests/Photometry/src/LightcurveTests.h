@@ -1,8 +1,6 @@
 #pragma once
 
 #include "GraphicsEngine.h"
-#include "LightcurveConfig.h"
-#include "Observations.h"
 #include "PhotometryScene.h"
 
 #include "JsonLoader.h"

@@ -8,7 +8,7 @@
 // #include <iomanip>
 //
 #include "GraphicsEngine.h"
-#include "LightcurveConfig.h"
+#include "ObservationsConfig.h"
 // #include "SandboxScene.h"
 
 #include "JsonLoader.h"

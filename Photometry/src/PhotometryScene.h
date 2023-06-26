@@ -2,15 +2,11 @@
 #include <numeric>
 #include "Units.h"
 #include "Camera.h"
-#include "LightcurveConfig.h"
 #include "Scene.h"
 #include "Renderer.h"
 #include "Mesh.h"
 #include "Framebuffer.h"
-
 #include "Observations.h"
-
-// TODO namespace for tests?
 
 namespace Sage {
 
@@ -27,7 +23,7 @@ public:
     LightcurveStorage syntheticObs;
 
 private:
-    LightcurveSeriesConfig _config;
+    const LightcurveSeriesConfig &_config;
 
     Framebuffer _framebuffer;
     Framebuffer _lightFramebuffer;

@@ -1,4 +1,5 @@
 #include "PhotometryScene.h"
+
 namespace Sage {
 
 PhotometryScene::PhotometryScene(Renderer &renderer,
@@ -19,10 +20,11 @@ PhotometryScene::PhotometryScene(Renderer &renderer,
       _camera(4., 1., 0.1, 10.),
       _light(3., 1., 0.1, 10.)
 {
-    auto mesh = Mesh::loadFromObj(_config.modelPath);
+    auto mesh = Mesh::loadFromObj(_config.scene.modelPath);
     mesh.rotateToPrincipalAxes();
 
-    auto shader = std::make_shared<Shader>(_config.vertexShaderPath, _config.fragmentShaderPath);
+    auto shader = std::make_shared<Shader>(_config.scene.vertexShaderPath,
+                                           _config.scene.fragmentShaderPath);
 
     asteroid = createEntity();
     asteroid.addComponent<VaoComponent>(mesh);

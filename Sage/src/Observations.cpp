@@ -18,6 +18,7 @@ void from_json(const json &j, ObsPoint &p)
 
 void from_json(const json &j, LightcurveStorage &obs)
 {
+    obs.sceneConfig = j.at("scene").get<SceneConfig>();
     obs.asteroidParams = j.at("asteroidParams").get<AsteroidParams>();
     obs.lightcurves = j.at("lightcurves").get<std::vector<Lightcurve>>();
 }
@@ -34,7 +35,8 @@ void to_json(json &j, const ObsPoint &p)
 
 void to_json(json &j, const LightcurveStorage &obs)
 {
-    j = {{"asteroidParams", obs.asteroidParams},
+    j = {{"scene", obs.sceneConfig},
+         {"asteroidParams", obs.asteroidParams},
          {"lightcurves", obs.lightcurves}};
 }
 
