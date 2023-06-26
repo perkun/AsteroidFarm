@@ -1,0 +1,21 @@
+site_name: SAGE documentation
+theme:
+  name: material
+  palette:
+    primary: black
+    accent: deep orange
+  features:
+    - navigation.sections
+    - navigation.instant
+    - navigation.tabs
+    - navigation.tabs.sticky
+
+plugins:
+  - offline
+  - search
+
+# Navigation
+nav:
+  - About: index.md
+  - Project's structure: ProjectStructure.md
+  - User manual: UserManual.md

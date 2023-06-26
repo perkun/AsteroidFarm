@@ -15,14 +15,9 @@ ifeq ($(config),debug)
   TARGET = $(TARGETDIR)/vendor
   define BUILDCMDS
 	@echo Running build commands
-	sphinx-build -M html source build
-	rm -r ../docs
-	cp -r build/html ../docs
-	touch ../docs/.nojekyll
+	mkdocs build -d ../docs
   endef
   define CLEANCMDS
-	@echo Running clean commands
-	rm -rf build;
   endef
 endif
 
@@ -31,14 +26,9 @@ ifeq ($(config),release)
   TARGET = $(TARGETDIR)/vendor
   define BUILDCMDS
 	@echo Running build commands
-	sphinx-build -M html source build
-	rm -r ../docs
-	cp -r build/html ../docs
-	touch ../docs/.nojekyll
+	mkdocs build -d ../docs
   endef
   define CLEANCMDS
-	@echo Running clean commands
-	rm -rf build;
   endef
 endif
 
@@ -47,14 +37,9 @@ ifeq ($(config),dist)
   TARGET = $(TARGETDIR)/vendor
   define BUILDCMDS
 	@echo Running build commands
-	sphinx-build -M html source build
-	rm -r ../docs
-	cp -r build/html ../docs
-	touch ../docs/.nojekyll
+	mkdocs build -d ../docs
   endef
   define CLEANCMDS
-	@echo Running clean commands
-	rm -rf build;
   endef
 endif
 
