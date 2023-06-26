@@ -17,7 +17,9 @@ namespace Sage {
 class PhotometryScene : public Scene
 {
 public:
-    PhotometryScene(Renderer &renderer, glm::uvec2 framebufferSize, const LightcurveConfig &config);
+    PhotometryScene(Renderer &renderer,
+                    glm::uvec2 framebufferSize,
+                    const LightcurveSeriesConfig &config);
 
     void renderSceneWithShadows();
     void render() override;
@@ -25,7 +27,7 @@ public:
     LightcurveStorage syntheticObs;
 
 private:
-    LightcurveConfig _config;
+    LightcurveSeriesConfig _config;
 
     Framebuffer _framebuffer;
     Framebuffer _lightFramebuffer;

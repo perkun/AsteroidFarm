@@ -10,6 +10,7 @@ namespace Sage {
 class AsteroidParams
 {
 public:
+    std::string name;
     Angle<Units::Radian> eclipticLongitude;
     Angle<Units::Radian> eclipticLatitude;
     Duration<Units::Hour> period;

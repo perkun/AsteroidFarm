@@ -27,7 +27,7 @@ TEST(Photometry, SingleLightcurve)
                                    .fullscreen = false,
                                    .visible = false});
 
-    auto config = LoadFromJson<LightcurveConfig>("data/lightcurveConfig.json");
+    auto config = LoadFromJson<LightcurveSeriesConfig>("data/lightcurveConfig.json");
     auto &scene = graphicsEngine.pushScene<PhotometryScene>(windowSize, config);
     graphicsEngine.renderScenes();
     // graphicsEngine.updateWindow();

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AsteroidParams.h"
 #include "GlmParser.h"
 #include "Units.h"
 #include "JulianDay.h"
@@ -21,7 +22,7 @@ struct ObsPoint
     Angle<Units::Radian> rotPhase{0_rad};
     unsigned int step{0};
 
-    Magnitude magnitude;
+    Magnitude magnitude{0_mag};
     glm::vec3 observerPosition{0};
     glm::vec3 targetPosition{0};
 };
@@ -30,14 +31,15 @@ using Lightcurve = std::vector<ObsPoint>;
 
 struct LightcurveStorage
 {
-    std::string targetName;
+    AsteroidParams asteroidParams;
     std::vector<Lightcurve> lightcurves;
 };
 
-void from_json(const nlohmann::json &j, ObsPoint &p);
 void from_json(const nlohmann::json &j, LightcurveStorage &obs);
-
-void to_json(nlohmann::json &j, const ObsPoint &p);
 void to_json(nlohmann::json &j, const LightcurveStorage &p);
+
+void from_json(const nlohmann::json &j, ObsPoint &p);
+void to_json(nlohmann::json &j, const ObsPoint &p);
+
 
 }  // namespace Sage

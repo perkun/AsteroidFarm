@@ -2,8 +2,8 @@
 namespace Sage {
 
 PhotometryScene::PhotometryScene(Renderer &renderer,
-                                       glm::uvec2 framebufferSize,
-                                       const LightcurveConfig &config)
+                                 glm::uvec2 framebufferSize,
+                                 const LightcurveSeriesConfig &config)
     : Scene(renderer),
       _config(config),
       _framebuffer({.width = framebufferSize.x,
@@ -26,19 +26,10 @@ PhotometryScene::PhotometryScene(Renderer &renderer,
 
     asteroid = createEntity();
     asteroid.addComponent<VaoComponent>(mesh);
-    auto &t = asteroid.addComponent<TransformComponent>();
+    asteroid.addComponent<TransformComponent>();
     auto &m = asteroid.addComponent<MaterialComponent>(shader);
-    t.position = _config.targetPosition;
-
-    _camera.position = _config.observerPosition;
-    _camera.updateTarget(t.position);
-
-    _light.position = _config.lightPosition;
-    _light.updateTarget(t.position);
 
     _renderer.bgColor = glm::vec4(1., 0., 0., 1.0);
-
-    syntheticObs.targetName = _config.targetName;
 }
 
 void PhotometryScene::renderSceneWithShadows()
@@ -63,47 +54,56 @@ void PhotometryScene::renderSceneWithShadows()
 
 void PhotometryScene::render()
 {
-    const unsigned int numPoints = _config.numPoints;
-
-    auto asteroidParams = _config.asteroidParams;
-
-    // NOTE this should be done while parsing, but to be extra sure...
-    asteroidParams.setRotPhase(_config.startJd);
-
     const auto fbWidth = _framebuffer.specification.width;
     const auto fbHeight = _framebuffer.specification.height;
     std::vector<float> pixelBuffRed(fbWidth * fbHeight);
 
-    Lightcurve lightcurve;
-    lightcurve.reserve(numPoints);
+    auto asteroidParams = _config.asteroidParams;
 
-    auto phaseIncrement = 2 * Pi / numPoints;
-    auto timeIncrement = asteroidParams.period / numPoints;
-
-    for (unsigned int i = 0; i < numPoints; i++)
+    for (const auto &lightcurveConfig : _config.lightcurves)
     {
+        const auto numPoints = lightcurveConfig.numPoints;
+        asteroidParams.setRotPhase(lightcurveConfig.startJd);
+
+        Lightcurve lightcurve;
+        lightcurve.reserve(numPoints);
+
+        auto phaseIncrement = 2 * Pi / numPoints;
+        auto timeIncrement = asteroidParams.period / numPoints;
+
         auto &t = asteroid.getComponent<TransformComponent>();
-        t.rotation = asteroidParams.computeXyzRotation();
+        t.position = lightcurveConfig.targetPosition;
 
-        renderSceneWithShadows();
+        _camera.position = lightcurveConfig.observerPosition;
+        _camera.updateTarget(t.position);
 
-        glReadPixels(0, 0, fbWidth, fbHeight, GL_RED, GL_FLOAT, pixelBuffRed.data());
-        auto mag = Magnitude::cast(
-            -2.5 * log10(std::accumulate(pixelBuffRed.begin(), pixelBuffRed.end(), 0.)));
-        // fmt::print("{} {}\n", phase.value(), mag.value());
+        _light.position = lightcurveConfig.lightPosition;
+        _light.updateTarget(t.position);
 
-        lightcurve.push_back({.julianDay = _config.startJd + (i * timeIncrement),
-                              .rotPhase = asteroidParams.rotPhase,
-                              .step = i,
-                              .magnitude = mag,
-                              .observerPosition = _camera.position,
-                              .targetPosition = t.position});
+        for (unsigned int i = 0; i < numPoints; i++)
+        {
+            t.rotation = asteroidParams.computeXyzRotation();
 
-        asteroidParams.rotPhase += phaseIncrement;
-        asteroidParams.normalizeRotPhase();
+            renderSceneWithShadows();
+
+            glReadPixels(0, 0, fbWidth, fbHeight, GL_RED, GL_FLOAT, pixelBuffRed.data());
+            auto mag = Magnitude::cast(
+                -2.5 * log10(std::accumulate(pixelBuffRed.begin(), pixelBuffRed.end(), 0.)));
+            // fmt::print("{} {}\n", phase.value(), mag.value());
+
+            lightcurve.push_back({.julianDay = lightcurveConfig.startJd + (i * timeIncrement),
+                                  .rotPhase = asteroidParams.rotPhase,
+                                  .step = i,
+                                  .magnitude = mag,
+                                  .observerPosition = _camera.position,
+                                  .targetPosition = t.position});
+
+            asteroidParams.rotPhase += phaseIncrement;
+            asteroidParams.normalizeRotPhase();
+        }
+
+        syntheticObs.lightcurves.push_back(lightcurve);
     }
-
-    syntheticObs.lightcurves.push_back(lightcurve);
 }
 
 }  // namespace Sage

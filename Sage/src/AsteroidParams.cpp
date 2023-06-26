@@ -60,6 +60,7 @@ glm::vec3 AsteroidParams::computeXyzRotation()
 
 void from_json(const json &j, AsteroidParams &p)
 {
+    p.name = j.at("name").get<std::string>();
     p.eclipticLongitude = j.at("eclipticLongitude").get<Angle<Units::Degree>>();
     p.eclipticLatitude = j.at("eclipticLatitude").get<Angle<Units::Degree>>();
     p.period = j.at("period").get<Duration<Units::Hour>>();
@@ -69,7 +70,8 @@ void from_json(const json &j, AsteroidParams &p)
 
 void to_json(json &j, const AsteroidParams &p)
 {
-    j = {{"eclipticLongitude", p.eclipticLongitude},
+    j = {{"name", p.name},
+         {"eclipticLongitude", p.eclipticLongitude},
          {"eclipticLatitude", p.eclipticLatitude},
          {"period", p.period},
          {"epoch", p.epoch},

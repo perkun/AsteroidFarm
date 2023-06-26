@@ -16,7 +16,7 @@ int main()
                                    .fullscreen = false,
                                    .visible = false});
 
-    auto config = LoadFromJson<LightcurveConfig>("data/testLcConfig.json");
+    auto config = LoadFromJson<LightcurveSeriesConfig>("data/testLcConfig.json");
     auto &scene = graphicsEngine.pushScene<PhotometryScene>(windowSize, config);
     graphicsEngine.renderScenes();
     // graphicsEngine.updateWindow();

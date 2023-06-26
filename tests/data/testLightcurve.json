@@ -1,4 +1,12 @@
 {
+    "asteroidParams": {
+        "name": "Test target name",
+        "eclipticLongitude": 170,
+        "eclipticLatitude": -32,
+        "period": 12.123,
+        "epoch": 2457999.0334,
+        "rotPhaseForEpoch": 34.123
+    },
     "lightcurves": [
         [
             {
@@ -1442,6 +1450,5 @@
                 ]
             }
         ]
-    ],
-    "targetName": "Test target name"
+    ]
 }

@@ -18,7 +18,7 @@ void from_json(const json &j, ObsPoint &p)
 
 void from_json(const json &j, LightcurveStorage &obs)
 {
-    obs.targetName = j.at("targetName").get<std::string>();
+    obs.asteroidParams = j.at("asteroidParams").get<AsteroidParams>();
     obs.lightcurves = j.at("lightcurves").get<std::vector<Lightcurve>>();
 }
 
@@ -34,7 +34,8 @@ void to_json(json &j, const ObsPoint &p)
 
 void to_json(json &j, const LightcurveStorage &obs)
 {
-    j = {{"targetName", obs.targetName}, {"lightcurves", obs.lightcurves}};
+    j = {{"asteroidParams", obs.asteroidParams},
+         {"lightcurves", obs.lightcurves}};
 }
 
 }  // namespace Sage
