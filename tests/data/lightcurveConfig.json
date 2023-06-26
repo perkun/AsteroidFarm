@@ -7,10 +7,10 @@
     "asteroidParams": {
         "name": "Test target name",
         "eclipticLongitude": 170,
-        "eclipticLatitude": -32,
+        "eclipticLatitude": 70,
         "period": 12.123,
         "epoch": 2457999.0334,
-        "rotPhaseForEpoch": 34.123
+        "rotPhaseForEpoch": 44.123
     },
     "lightcurves": [
         {
@@ -20,6 +20,5 @@
             "startJd": 2458009.0334,
             "numPoints": 90
         }
-    ],
-    "outputPath": "tests/data/testLightcurve.json"
+    ]
 }

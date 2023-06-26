@@ -22,16 +22,17 @@ PhotometryScene::PhotometryScene(Renderer &renderer,
 {
     auto mesh = Mesh::loadFromObj(_config.scene.modelPath);
     mesh.rotateToPrincipalAxes();
+    _modelRadius = mesh.getRadius();
 
-    auto shader = std::make_shared<Shader>(_config.scene.vertexShaderPath,
-                                           _config.scene.fragmentShaderPath);
+    auto shader =
+        std::make_shared<Shader>(_config.scene.vertexShaderPath, _config.scene.fragmentShaderPath);
 
     asteroid = createEntity();
     asteroid.addComponent<VaoComponent>(mesh);
     asteroid.addComponent<TransformComponent>();
     auto &m = asteroid.addComponent<MaterialComponent>(shader);
 
-    _renderer.bgColor = glm::vec4(1., 0., 0., 1.0);
+    _renderer.bgColor = glm::vec4(0., 0., 0., 1.0);
 }
 
 void PhotometryScene::renderSceneWithShadows()
@@ -74,11 +75,21 @@ void PhotometryScene::render()
         auto timeIncrement = asteroidParams.period / numPoints;
 
         auto &t = asteroid.getComponent<TransformComponent>();
+        auto &vao = asteroid.getComponent<VaoComponent>().vao;
         t.position = lightcurveConfig.targetPosition;
 
+        double distanceObserverToTarget =
+            glm::length(lightcurveConfig.targetPosition - lightcurveConfig.observerPosition);
+        double distanceLightToTarget =
+            glm::length(lightcurveConfig.targetPosition - lightcurveConfig.lightPosition);
+
+        _camera = OrthographicCamera(
+            _modelRadius * 2, 1.0, distanceObserverToTarget - _modelRadius, distanceObserverToTarget + _modelRadius);
         _camera.position = lightcurveConfig.observerPosition;
         _camera.updateTarget(t.position);
 
+        _light = OrthographicCamera(
+                _modelRadius * 2., 1.0, distanceLightToTarget - _modelRadius, distanceLightToTarget + _modelRadius);
         _light.position = lightcurveConfig.lightPosition;
         _light.updateTarget(t.position);
 
@@ -91,7 +102,7 @@ void PhotometryScene::render()
             glReadPixels(0, 0, fbWidth, fbHeight, GL_RED, GL_FLOAT, pixelBuffRed.data());
             auto mag = Magnitude::cast(
                 -2.5 * log10(std::accumulate(pixelBuffRed.begin(), pixelBuffRed.end(), 0.)));
-            // fmt::print("{} {}\n", phase.value(), mag.value());
+            // fmt::print("{} {}\n", asteroidParams.rotPhase.value(), mag.value());
 
             lightcurve.push_back({.julianDay = lightcurveConfig.startJd + (i * timeIncrement),
                                   .rotPhase = asteroidParams.rotPhase,
@@ -102,6 +113,7 @@ void PhotometryScene::render()
 
             asteroidParams.rotPhase += phaseIncrement;
             asteroidParams.normalizeRotPhase();
+
         }
 
         syntheticObs.lightcurves.push_back(lightcurve);

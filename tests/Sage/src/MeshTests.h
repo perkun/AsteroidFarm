@@ -67,7 +67,7 @@ TEST(Mesh, ApplyToVertices)
         VertexElementType::POSITION, VertexElementType::TEXTURE, VertexElementType::COLOR);
 
     mesh.applyToVertexElements(VertexElementType::TEXTURE,
-                               [](auto &textureCoords)
+                               [](std::span<float> &textureCoords)
                                {
                                    textureCoords[0] += 10;
                                    textureCoords[1] += 10;
@@ -189,7 +189,7 @@ TEST(Mesh, PrincipalAxes)
     EXPECT_LT(abs(-0.126412 - vertex[0]), precision);
     EXPECT_LT(abs(0.0472851 - vertex[1]), precision);
     EXPECT_LT(abs(0.542489 - vertex[2]), precision);
-    
+
     vertex = mesh.getVertexElement(VertexElementType::POSITION, 1000);
     EXPECT_LT(abs(-0.524463 - vertex[0]), precision);
     EXPECT_LT(abs(-0.425167 - vertex[1]), precision);
@@ -214,7 +214,7 @@ TEST(Mesh, Normals)
     EXPECT_LT(abs(0.498685 - vertex[0]), precision);
     EXPECT_LT(abs(-0.257999 - vertex[1]), precision);
     EXPECT_LT(abs(0.827496 - vertex[2]), precision);
-    
+
     vertex = mesh.getVertexElement(VertexElementType::NORMAL, 1000);
     EXPECT_LT(abs(-0.267745 - vertex[0]), precision);
     EXPECT_LT(abs(-0.950802 - vertex[1]), precision);

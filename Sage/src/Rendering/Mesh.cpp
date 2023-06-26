@@ -29,6 +29,25 @@ void Mesh::applyToVertexElements(VertexElementType type,
     }
 }
 
+void Mesh::applyToVertexElements(VertexElementType type,
+                                 const std::function<void(std::span<const float> &)> &func) const
+{
+    const auto layoutElementIt = layout.getElement(type);
+    if (! layoutElementIt)
+    {
+        // TODO introduce proper logging
+        fmt::print("Vertex Layout Element Not found in Mesh");
+        return;
+    }
+
+    for (int vertexBegin = 0; vertexBegin < vertices.size(); vertexBegin += layout.stride)
+    {
+        std::span<const float> vertexElement{vertices.begin() + vertexBegin + layoutElementIt->offset,
+                                       layoutElementIt->size};
+        func(vertexElement);
+    }
+}
+
 void Mesh::applyToFaces(const std::function<void(const std::vector<std::span<float>> &)> &func)
 {
     for (int faceBegin = 0; faceBegin < indices.size(); faceBegin += verticesPerFace)
@@ -125,11 +144,28 @@ glm::mat3 Mesh::getInertia()
     return _moments.inertia.value();
 }
 
+double Mesh::getRadius() const
+{
+    double radius = 0.;
+    applyToVertexElements(VertexElementType::POSITION,
+                          [&radius](auto &vertex)
+                          {
+                              auto &v = makeConstVec3Ref(vertex);
+                              double r = glm::length(v);
+                              if (r > radius)
+                              {
+                                  radius = r;
+                              }
+                          });
+
+    return radius;
+}
+
 void Mesh::translateToCenterOfMass()
 {
     auto centerOfMass = getCenterOfMass();
     applyToVertexElements(VertexElementType::POSITION,
-                          [&centerOfMass](auto &vertex)
+                          [&centerOfMass](std::span<float> &vertex)
                           {
                               auto &v = makeVec3Ref(vertex);
                               v -= centerOfMass;
@@ -190,7 +226,7 @@ void Mesh::rotateToPrincipalAxes()
     }
 
     applyToVertexElements(VertexElementType::POSITION,
-                          [&rotMatrix](auto &vertex)
+                          [&rotMatrix](std::span<float> &vertex)
                           {
                               auto &v = makeVec3Ref(vertex);
                               v = rotMatrix * v;
@@ -243,7 +279,7 @@ void Mesh::computeNormals()
     layout = std::move(newLayout);
 
     applyToVertexElements(VertexElementType::NORMAL,
-                          [](auto &normal)
+                          [](std::span<float> &normal)
                           {
                               auto &n = makeVec3Ref(normal);
                               n = glm::normalize(n);
@@ -346,6 +382,11 @@ glm::mat3 Mesh::computeInertia()
 glm::vec3 &makeVec3Ref(const std::span<float> &span)
 {
     return *(reinterpret_cast<glm::vec3 *>(span.data()));
+}
+
+const glm::vec3 &makeConstVec3Ref(const std::span<const float> &span)
+{
+    return *(reinterpret_cast<const glm::vec3 *>(span.data()));
 }
 
 Mesh Mesh::loadFromObj(const std::filesystem::path &filename)

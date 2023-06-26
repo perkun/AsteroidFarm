@@ -40,6 +40,10 @@ void from_json(const nlohmann::json &j, LightcurveSeriesConfig &lc)
     lc.scene = j.at("scene").get<SceneConfig>();
     lc.asteroidParams = j.at("asteroidParams").get<AsteroidParams>();
     lc.lightcurves = j.at("lightcurves").get<std::vector<LightcurveConfig>>();
+    if (j.find("outputPath") != j.end())
+    {
+        lc.outputPath = j.at("outputPath").get<std::filesystem::path>();
+    }
 }
 
 void to_json(nlohmann::json &j, const LightcurveSeriesConfig &lc)

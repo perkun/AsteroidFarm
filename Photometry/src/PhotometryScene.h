@@ -32,6 +32,9 @@ private:
     OrthographicCamera _light;
 
     Entity asteroid;
+
+    double _modelRadius;
+
 };
 
 }  // namespace Sage

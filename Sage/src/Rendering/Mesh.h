@@ -24,6 +24,8 @@ public:
 
     void applyToVertexElements(VertexElementType type,
                                const std::function<void(std::span<float> &)> &func);
+    void applyToVertexElements(VertexElementType type,
+                               const std::function<void(std::span<const float> &)> &func) const;
     void applyToFaces(const std::function<void(const std::vector<std::span<float>> &)> &func);
     void applyToFacesElements(
         VertexElementType type,
@@ -37,6 +39,7 @@ public:
     float getVolume();
     glm::vec3 getCenterOfMass();
     glm::mat3 getInertia();
+    double getRadius() const;
 
     void translateToCenterOfMass();
     void rotateToPrincipalAxes();
@@ -68,5 +71,6 @@ private:
 };
 
 glm::vec3 &makeVec3Ref(const std::span<float> &span);
+const glm::vec3 &makeConstVec3Ref(const std::span<const float> &span);
 
 }  // namespace Sage

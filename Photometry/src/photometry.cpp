@@ -20,6 +20,8 @@ int main()
     auto &scene = graphicsEngine.pushScene<PhotometryScene>(windowSize, config);
     graphicsEngine.renderScenes();
     // graphicsEngine.updateWindow();
+    // getchar();
+
 
     return 0;
 }
