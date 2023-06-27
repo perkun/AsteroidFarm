@@ -6,6 +6,7 @@
 
 using namespace Sage;
 
+
 int main(int argc, char *argv[])
 {
     if (argc < 2)
@@ -21,6 +22,25 @@ int main(int argc, char *argv[])
         fmt::print("Config file '{}' doesn't exist.\n", configFilePath.string());
         return 0;
     }
+    auto config = LoadFromJson<LightcurveSeriesConfig>("data/testLcConfig.json");
+
+    if (not std::filesystem::exists(config.scene.modelPath))
+    {
+        fmt::print("modelPath '{}' doesn't exist\n", config.scene.modelPath.string());
+        return 0;
+    }
+
+    if (not std::filesystem::exists(config.scene.vertexShaderPath))
+    {
+        fmt::print("vertexShaderPath '{}' doesn't exist\n", config.scene.modelPath.string());
+        return 0;
+    }
+
+    if (not std::filesystem::exists(config.scene.fragmentShaderPath))
+    {
+        fmt::print("fragmentShaderPath '{}' doesn't exist\n", config.scene.modelPath.string());
+        return 0;
+    }
 
     constexpr glm::uvec2 windowSize{256};
 
@@ -30,7 +50,6 @@ int main(int argc, char *argv[])
                                    .fullscreen = false,
                                    .visible = false});
 
-    auto config = LoadFromJson<LightcurveSeriesConfig>("data/testLcConfig.json");
     auto &scene = graphicsEngine.pushScene<PhotometryScene>(windowSize, config);
     graphicsEngine.renderScenes();
 
