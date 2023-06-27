@@ -1,4 +1,5 @@
 #include "AOScene.h"
+#include "stb_image/stb_image_write.h"
 
 namespace Sage {
 
@@ -8,7 +9,6 @@ AOScene::AOScene(Renderer &renderer, glm::uvec2 framebufferSize, const AOSeriesC
 
 void AOScene::render()
 {
-    _renderer.bgColor = glm::vec4(1., 0., 0., 1.0);
     auto asteroidParams = _config.asteroidParams;
 
     for (const auto &aoImageConfig : _config.aoImages)
@@ -55,6 +55,22 @@ void AOScene::render()
         glReadPixels(0, 0, fbWidth, fbHeight, GL_RED, GL_FLOAT, pixelBuffRed.data());
         glReadPixels(0, 0, fbWidth, fbHeight, GL_GREEN, GL_FLOAT, pixelBuffGreen.data());
         glReadPixels(0, 0, fbWidth, fbHeight, GL_BLUE, GL_FLOAT, pixelBuffBlue.data());
+
+        stbi_flip_vertically_on_write(1);
+        int channels = 3;
+
+        unsigned char *png_data = new unsigned char[fbWidth * fbHeight * channels];
+
+        for (int i = 0; i < fbWidth * fbHeight; i++)
+        {
+            png_data[i * channels + 0] = (unsigned char)(pixelBuffRed[i] * 255);
+            png_data[i * channels + 1] = (unsigned char)(pixelBuffGreen[i] * 255);
+            png_data[i * channels + 2] = (unsigned char)(pixelBuffBlue[i] * 255);
+        }
+
+        stbi_write_png("data/AO.png", fbWidth, fbHeight, channels, png_data, fbWidth * channels);
+
+        delete[] png_data;
     }
 }
 

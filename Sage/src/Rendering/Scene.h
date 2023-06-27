@@ -18,7 +18,6 @@ public:
     virtual void render() = 0;
 
 protected:
-    static constexpr int shadowDepthTextureSlot{1};
     entt::registry _registry;
     void drawEntities();
     void draw(Entity entity);

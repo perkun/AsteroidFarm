@@ -48,14 +48,12 @@ int main(int argc, char *argv[])
                                    .height = windowSize.y,
                                    .title = "RenderEngine window",
                                    .fullscreen = false,
-                                   .visible = true});
+                                   .visible = false});
 
     auto &scene = graphicsEngine.pushScene<AOScene>(windowSize, config);
     graphicsEngine.renderScenes();
-    graphicsEngine.updateWindow();
-    getchar();
-
-    SaveToJson(config, "data/aoConfigOut.json");
+    // graphicsEngine.updateWindow();
+    // getchar();
 
     // if (config.outputPath)
     // {

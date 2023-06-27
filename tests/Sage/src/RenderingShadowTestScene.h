@@ -66,7 +66,7 @@ public:
         _renderer.endScene();
 
         // from camera
-        _lightFramebuffer.bindDepthTexture(shadowDepthTextureSlot);
+        _lightFramebuffer.bindDepthTexture(_renderer.shadowDepthTextureSlot);
         _renderer.setFramebuffer(&_framebuffer);
 
         _renderer.beginScene(_camera, _light);

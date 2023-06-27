@@ -78,6 +78,7 @@ void Renderer::submit(const VertexArrayObject &vao, MaterialComponent &material)
 {
     material.cacheUniformValue("u_view_matrix", sceneData.view);
     material.cacheUniformValue("u_perspective_matrix", sceneData.perspective);
+    material.cacheUniformValue("u_depth_map", shadowDepthTextureSlot);
 
     if (sceneData.lightPosition)
     {

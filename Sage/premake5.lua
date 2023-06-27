@@ -15,6 +15,8 @@ project "Sage"
 	{
 		"src/**.h",
 		"src/**.cpp",
+		"%{wks.location}/vendor/stb_image/**.h",
+		"%{wks.location}/vendor/stb_image/**.cpp",
 	}
 
 	includedirs

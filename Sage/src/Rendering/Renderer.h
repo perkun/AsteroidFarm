@@ -29,6 +29,8 @@ public:
     void setFramebuffer(Framebuffer *framebuffer);
     void setDefaultFramebuffer();
 
+    static constexpr int shadowDepthTextureSlot{1};
+
 private:
     struct ScenData
     {

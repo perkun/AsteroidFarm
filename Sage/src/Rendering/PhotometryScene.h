@@ -74,9 +74,9 @@ void PhotometryScene<Config>::renderSceneWithShadows()
     _renderer.endScene();
 
     // from camera
-    _lightFramebuffer.bindDepthTexture(shadowDepthTextureSlot);
-    // _renderer.setFramebuffer(&_framebuffer);
-    _renderer.setDefaultFramebuffer();
+    _lightFramebuffer.bindDepthTexture(_renderer.shadowDepthTextureSlot);
+    _renderer.setFramebuffer(&_framebuffer);
+    // _renderer.setDefaultFramebuffer();
 
     _renderer.beginScene(_camera, _light);
     drawEntities();

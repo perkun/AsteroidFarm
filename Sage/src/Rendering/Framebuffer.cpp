@@ -233,7 +233,7 @@ void Framebuffer::invalidate()
     //   glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
-        fmt::print("cos nie tak z framebufferem");
+        fmt::print("Framebuffer invalidation failed.");
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
