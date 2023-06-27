@@ -19,36 +19,20 @@ void LightcurveScene::render()
     for (const auto &lightcurveConfig : _config.lightcurves)
     {
         const auto numPoints = lightcurveConfig.numPoints;
-        asteroidParams.setRotPhase(lightcurveConfig.startJd);
 
         Lightcurve lightcurve;
         lightcurve.reserve(numPoints);
 
-        auto phaseIncrement = 2 * Pi / numPoints;
+        auto phaseIncrement = 2. * Pi / numPoints;
         auto timeIncrement = asteroidParams.period / numPoints;
 
-        auto &t = asteroid.getComponent<TransformComponent>();
-        auto &vao = asteroid.getComponent<VaoComponent>().vao;
-        t.position = lightcurveConfig.targetPosition;
+        updatePositions(lightcurveConfig.startJd,
+                        asteroidParams,
+                        lightcurveConfig.targetPosition,
+                        lightcurveConfig.observerPosition,
+                        lightcurveConfig.lightPosition);
 
-        double distanceObserverToTarget =
-            glm::length(lightcurveConfig.targetPosition - lightcurveConfig.observerPosition);
-        double distanceLightToTarget =
-            glm::length(lightcurveConfig.targetPosition - lightcurveConfig.lightPosition);
-
-        _camera = OrthographicCamera(_modelRadius * 2,
-                                     1.0,
-                                     distanceObserverToTarget - _modelRadius,
-                                     distanceObserverToTarget + _modelRadius);
-        _camera.position = lightcurveConfig.observerPosition;
-        _camera.updateTarget(t.position);
-
-        _light = OrthographicCamera(_modelRadius * 2.,
-                                    1.0,
-                                    distanceLightToTarget - _modelRadius,
-                                    distanceLightToTarget + _modelRadius);
-        _light.position = lightcurveConfig.lightPosition;
-        _light.updateTarget(t.position);
+        auto &t = _asteroid.getComponent<TransformComponent>();
 
         for (unsigned int i = 0; i < numPoints; i++)
         {

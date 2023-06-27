@@ -80,6 +80,7 @@ void from_json(const nlohmann::json &j, AOSeriesConfig &ao)
     ao.asteroidParams = j.at("asteroidParams").get<AsteroidParams>();
     ao.aoImages = j.at("aoImages").get<std::vector<AOConfig>>();
     ao.imagePrefix = j.at("imagePrefix").get<std::string>();
+    ao.outputFolderPath = j.at("outputFolderPath").get<std::filesystem::path>();
 }
 
 void to_json(nlohmann::json &j, const AOSeriesConfig &ao)

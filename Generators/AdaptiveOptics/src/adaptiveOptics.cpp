@@ -9,19 +9,19 @@ using namespace Sage;
 
 int main(int argc, char *argv[])
 {
-    // if (argc < 2)
-    // {
-    //     fmt::print("Not enought arguments.\nUSAGE:\n\t{} <config.json>\n", argv[0]);
-    //     return 0;
-    // }
+    if (argc < 2)
+    {
+        fmt::print("Not enought arguments.\nUSAGE:\n\t{} <config.json>\n", argv[0]);
+        return 0;
+    }
 
-    // std::filesystem::path configFilePath{argv[1]};
+    std::filesystem::path configFilePath{argv[1]};
 
-    // if (not std::filesystem::exists(configFilePath))
-    // {
-    //     fmt::print("Config file '{}' doesn't exist.\n", configFilePath.string());
-    //     return 0;
-    // }
+    if (not std::filesystem::exists(configFilePath))
+    {
+        fmt::print("Config file '{}' doesn't exist.\n", configFilePath.string());
+        return 0;
+    }
     auto config = LoadFromJson<AOSeriesConfig>("data/testAoConfig.json");
 
     if (not std::filesystem::exists(config.scene.modelPath))
@@ -41,6 +41,11 @@ int main(int argc, char *argv[])
         fmt::print("fragmentShaderPath '{}' doesn't exist\n", config.scene.modelPath.string());
         return 0;
     }
+    if (not std::filesystem::exists(config.outputFolderPath))
+    {
+        fmt::print("outputFolderPath '{}' doesn't exist\n", config.outputFolderPath.string());
+        return 0;
+    }
 
     constexpr glm::uvec2 windowSize{512};
 
@@ -52,13 +57,6 @@ int main(int argc, char *argv[])
 
     auto &scene = graphicsEngine.pushScene<AOScene>(windowSize, config);
     graphicsEngine.renderScenes();
-    // graphicsEngine.updateWindow();
-    // getchar();
-
-    // if (config.outputPath)
-    // {
-    //     SaveToJson(scene.syntheticObs, config.outputPath.value());
-    // }
 
     return 0;
 }

@@ -37,15 +37,20 @@ public:
         auto shader = std::make_shared<Shader>(_config.scene.vertexShaderPath,
                                                _config.scene.fragmentShaderPath);
 
-        asteroid = createEntity();
-        asteroid.addComponent<VaoComponent>(mesh);
-        asteroid.addComponent<TransformComponent>();
-        auto &m = asteroid.addComponent<MaterialComponent>(shader);
+        _asteroid = createEntity();
+        _asteroid.addComponent<VaoComponent>(mesh);
+        _asteroid.addComponent<TransformComponent>();
+        auto &m = _asteroid.addComponent<MaterialComponent>(shader);
 
         _renderer.bgColor = glm::vec4(0., 0., 0., 1.0);
     }
 
     void renderSceneWithShadows();
+    void updatePositions(JulianDay jd,
+                         AsteroidParams &asteroidParams,
+                         const glm::vec3 &targetPos,
+                         const glm::vec3 &observerPos,
+                         const glm::vec3 &lightPos);
 
 protected:
     const Config &_config;
@@ -56,12 +61,12 @@ protected:
     OrthographicCamera _camera;
     OrthographicCamera _light;
 
-    Entity asteroid;
+    Entity _asteroid;
 
     double _modelRadius;
 };
 
-template<class Config>
+template <class Config>
 void PhotometryScene<Config>::renderSceneWithShadows()
 {
     _camera.update();
@@ -83,5 +88,35 @@ void PhotometryScene<Config>::renderSceneWithShadows()
     _renderer.endScene();
 }
 
+template <class Config>
+void PhotometryScene<Config>::updatePositions(JulianDay jd,
+                                              AsteroidParams &asteroidParams,
+                                              const glm::vec3 &targetPos,
+                                              const glm::vec3 &observerPos,
+                                              const glm::vec3 &lightPos)
+{
+    auto &t = _asteroid.getComponent<TransformComponent>();
+    t.position = targetPos;
+
+    double distanceObserverToTarget = glm::length(targetPos - observerPos);
+    double distanceLightToTarget = glm::length(targetPos - lightPos);
+
+    _camera = OrthographicCamera(_modelRadius * 2,
+                                 1.0,
+                                 distanceObserverToTarget - _modelRadius,
+                                 distanceObserverToTarget + _modelRadius);
+    _camera.position = observerPos;
+    _camera.updateTarget(t.position);
+
+    _light = OrthographicCamera(_modelRadius * 2.,
+                                1.0,
+                                distanceLightToTarget - _modelRadius,
+                                distanceLightToTarget + _modelRadius);
+    _light.position = lightPos;
+    _light.updateTarget(t.position);
+
+    asteroidParams.setRotPhase(jd);
+    t.rotation = asteroidParams.computeXyzRotation();
+}
 
 }  // namespace Sage

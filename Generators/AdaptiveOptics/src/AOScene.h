@@ -21,6 +21,9 @@ public:
     void render() override;
 
     AOStorage aoImages;
+
+private:
+    void saveImage(int idx, unsigned int width, unsigned int height);
 };
 
 }  // namespace Sage
