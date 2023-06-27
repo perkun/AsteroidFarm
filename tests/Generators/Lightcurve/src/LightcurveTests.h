@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GraphicsEngine.h"
-#include "PhotometryScene.h"
+#include "LightcurveScene.h"
 
 #include "JsonLoader.h"
 
@@ -26,7 +26,7 @@ TEST(Photometry, SingleLightcurve)
                                    .visible = false});
 
     auto config = LoadFromJson<LightcurveSeriesConfig>("data/lightcurveConfig.json");
-    auto &scene = graphicsEngine.pushScene<PhotometryScene>(windowSize, config);
+    auto &scene = graphicsEngine.pushScene<LightcurveScene>(windowSize, config);
     graphicsEngine.renderScenes();
     // graphicsEngine.updateWindow();
 

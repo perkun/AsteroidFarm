@@ -23,6 +23,7 @@ include "vendor/glfw"
 include "Sage"
 include "Sandbox"
 include "Generators/Lightcurve"
+include "Generators/AdaptiveOptics"
 
 -- TESTS --
 include "tests/Sage"

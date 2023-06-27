@@ -20,6 +20,5 @@
             "startJd": 2458009.0334,
             "numPoints": 90
         }
-    ],
-    "outputPath": "tests/data/testLightcurve.json"
+    ]
 }

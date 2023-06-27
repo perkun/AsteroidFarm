@@ -37,11 +37,20 @@ struct LightcurveStorage
     std::vector<Lightcurve> lightcurves;
 };
 
+// TODO
+struct AOImage {};
+
+struct AOStorage
+{
+    SceneConfig sceneConfig;
+    AsteroidParams asteroidParams;
+    std::vector<AOImage> images;
+};
+
 void from_json(const nlohmann::json &j, LightcurveStorage &obs);
 void to_json(nlohmann::json &j, const LightcurveStorage &p);
 
 void from_json(const nlohmann::json &j, ObsPoint &p);
 void to_json(nlohmann::json &j, const ObsPoint &p);
-
 
 }  // namespace Sage

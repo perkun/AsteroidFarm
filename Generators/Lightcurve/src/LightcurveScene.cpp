@@ -1,61 +1,14 @@
-#include "PhotometryScene.h"
+#include "LightcurveScene.h"
 
 namespace Sage {
 
-PhotometryScene::PhotometryScene(Renderer &renderer,
+LightcurveScene::LightcurveScene(Renderer &renderer,
                                  glm::uvec2 framebufferSize,
                                  const LightcurveSeriesConfig &config)
-    : Scene(renderer),
-      _config(config),
-      _framebuffer({.width = framebufferSize.x,
-                    .height = framebufferSize.y,
-                    .samples = 1,
-                    .attachments = {FramebufferTextureFormat::RGBA32F,
-                                    FramebufferTextureFormat::DEPTH32FSTENCIL8}}),
-      _lightFramebuffer({.width = 2048,
-                         .height = 2048,
-                         .samples = 1,
-                         .attachments = {FramebufferTextureFormat::RGBA32F,
-                                         FramebufferTextureFormat::DEPTH32FSTENCIL8}}),
-      _camera(4., 1., 0.1, 10.),
-      _light(3., 1., 0.1, 10.)
-{
-    auto mesh = Mesh::loadFromObj(_config.scene.modelPath);
-    mesh.rotateToPrincipalAxes();
-    _modelRadius = mesh.getRadius();
+    : PhotometryScene(renderer, framebufferSize, config)
+{}
 
-    auto shader =
-        std::make_shared<Shader>(_config.scene.vertexShaderPath, _config.scene.fragmentShaderPath);
-
-    asteroid = createEntity();
-    asteroid.addComponent<VaoComponent>(mesh);
-    asteroid.addComponent<TransformComponent>();
-    auto &m = asteroid.addComponent<MaterialComponent>(shader);
-
-    _renderer.bgColor = glm::vec4(0., 0., 0., 1.0);
-}
-
-void PhotometryScene::renderSceneWithShadows()
-{
-    _camera.update();
-    _light.update();
-
-    // shadowmap
-    _renderer.setFramebuffer(&_lightFramebuffer);
-    _renderer.beginScene(_light);
-    drawEntities();
-    _renderer.endScene();
-
-    // from camera
-    _lightFramebuffer.bindDepthTexture(shadowDepthTextureSlot);
-    _renderer.setFramebuffer(&_framebuffer);
-
-    _renderer.beginScene(_camera, _light);
-    drawEntities();
-    _renderer.endScene();
-}
-
-void PhotometryScene::render()
+void LightcurveScene::render()
 {
     const auto fbWidth = _framebuffer.specification.width;
     const auto fbHeight = _framebuffer.specification.height;
@@ -83,13 +36,17 @@ void PhotometryScene::render()
         double distanceLightToTarget =
             glm::length(lightcurveConfig.targetPosition - lightcurveConfig.lightPosition);
 
-        _camera = OrthographicCamera(
-            _modelRadius * 2, 1.0, distanceObserverToTarget - _modelRadius, distanceObserverToTarget + _modelRadius);
+        _camera = OrthographicCamera(_modelRadius * 2,
+                                     1.0,
+                                     distanceObserverToTarget - _modelRadius,
+                                     distanceObserverToTarget + _modelRadius);
         _camera.position = lightcurveConfig.observerPosition;
         _camera.updateTarget(t.position);
 
-        _light = OrthographicCamera(
-                _modelRadius * 2., 1.0, distanceLightToTarget - _modelRadius, distanceLightToTarget + _modelRadius);
+        _light = OrthographicCamera(_modelRadius * 2.,
+                                    1.0,
+                                    distanceLightToTarget - _modelRadius,
+                                    distanceLightToTarget + _modelRadius);
         _light.position = lightcurveConfig.lightPosition;
         _light.updateTarget(t.position);
 
@@ -113,7 +70,6 @@ void PhotometryScene::render()
 
             asteroidParams.rotPhase += phaseIncrement;
             asteroidParams.normalizeRotPhase();
-
         }
 
         syntheticObs.lightcurves.push_back(lightcurve);

@@ -7,34 +7,20 @@
 #include "Mesh.h"
 #include "Framebuffer.h"
 #include "Observations.h"
+#include "PhotometryScene.h"
 
 namespace Sage {
 
-class PhotometryScene : public Scene
+class LightcurveScene : public PhotometryScene<LightcurveSeriesConfig>
 {
 public:
-    PhotometryScene(Renderer &renderer,
+    LightcurveScene(Renderer &renderer,
                     glm::uvec2 framebufferSize,
                     const LightcurveSeriesConfig &config);
 
-    void renderSceneWithShadows();
     void render() override;
 
     LightcurveStorage syntheticObs;
-
-private:
-    const LightcurveSeriesConfig &_config;
-
-    Framebuffer _framebuffer;
-    Framebuffer _lightFramebuffer;
-
-    OrthographicCamera _camera;
-    OrthographicCamera _light;
-
-    Entity asteroid;
-
-    double _modelRadius;
-
 };
 
 }  // namespace Sage
