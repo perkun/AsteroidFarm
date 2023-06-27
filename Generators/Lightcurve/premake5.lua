@@ -1,4 +1,4 @@
-project "PhotometryTests"
+project "Lightcurve"
 	location "./"
 	kind "ConsoleApp"
 
@@ -6,8 +6,8 @@ project "PhotometryTests"
 	cppdialect "C++2a"
 	buildoptions { }
 
-	targetdir ("%{wks.location}/tests/bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("%{wks.location}/tests/build/" .. outputdir  .. "/%{prj.name}")
+	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("%{wks.location}/build/" .. outputdir  .. "/%{prj.name}")
 
 	--pchheader "src/svpch.h"
 
@@ -15,17 +15,14 @@ project "PhotometryTests"
 	{
 		"src/**.h",
 		"src/**.cpp",
-		"%{wks.location}/Photometry/src/PhotometryScene.cpp"
 	}
 
 	includedirs
 	{
  		"%{prj.name}/src",
-		"%{wks.location}/vendor/fmt/",
-		"%{wks.location}/Photometry/src"
 	}
 
-	links { "Sage", "fmt", "gtest", "glfw", "glad", "pthread"}
+	links { "Sage", "glfw", "glad", "fmt", "pthread", "dl" }
 
 	filter "configurations:Debug"
 		symbols "On"

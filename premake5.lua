@@ -22,11 +22,11 @@ include "vendor/glad"
 include "vendor/glfw"
 include "Sage"
 include "Sandbox"
-include "Photometry"
+include "Generators/Lightcurve"
 
 -- TESTS --
 include "tests/Sage"
-include "tests/Photometry"
+include "tests/Generators/Lightcurve"
 
 -- DOCS --
 -- include "documentation"
