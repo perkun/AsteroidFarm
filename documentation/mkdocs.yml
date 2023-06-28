@@ -18,4 +18,7 @@ plugins:
 nav:
   - About: index.md
   - Project's structure: ProjectStructure.md
-  - User manual: UserManual.md
+  - User manual:
+    - How To: UserManual/HowTo.md
+    - Config Files: UserManual/Config.md
+    - Observation Generators: UserManual/Generators.md
