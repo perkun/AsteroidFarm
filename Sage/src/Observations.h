@@ -47,6 +47,15 @@ struct AOStorage
     std::vector<AOImage> images;
 };
 
+struct RadarImage {};
+
+struct RadarStorage
+{
+    SceneConfig sceneConfig;
+    AsteroidParams asteroidParams;
+    std::vector<RadarImage> images;
+};
+
 void from_json(const nlohmann::json &j, LightcurveStorage &obs);
 void to_json(nlohmann::json &j, const LightcurveStorage &p);
 

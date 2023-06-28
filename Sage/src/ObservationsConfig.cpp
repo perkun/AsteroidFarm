@@ -88,4 +88,31 @@ void to_json(nlohmann::json &j, const AOSeriesConfig &ao)
     // TODO
 }
 
+void from_json(const nlohmann::json &j, RadarConfig &r)
+{
+    r.jd = j.at("jd").get<JulianDay>();
+    r.targetPosition = j.at("targetPosition").get<glm::vec3>();
+    r.observerPosition = j.at("observerPosition").get<glm::vec3>();
+    r.resolution = j.at("resolution").get<size_t>();
+}
+
+void to_json(nlohmann::json &j, const RadarConfig &r)
+{
+    // TODO
+}
+
+void from_json(const nlohmann::json &j, RadarSeriesConfig &r)
+{
+    r.scene = j.at("scene").get<SceneConfig>();
+    r.asteroidParams = j.at("asteroidParams").get<AsteroidParams>();
+    r.radarImages = j.at("radarImages").get<std::vector<RadarConfig>>();
+    r.imagePrefix = j.at("imagePrefix").get<std::string>();
+    r.outputFolderPath = j.at("outputFolderPath").get<std::filesystem::path>();
+}
+
+void to_json(nlohmann::json &j, const RadarSeriesConfig &r)
+{
+    // TODO
+}
+
 }  // namespace Sage

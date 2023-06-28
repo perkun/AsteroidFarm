@@ -25,6 +25,7 @@ include "Sage"
 include "Sandbox"
 include "Generators/Lightcurve"
 include "Generators/AdaptiveOptics"
+include "Generators/Radar"
 
 -- TESTS --
 include "tests/Sage"

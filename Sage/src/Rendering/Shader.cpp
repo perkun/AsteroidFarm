@@ -139,7 +139,7 @@ int Shader::getUniformLocation(std::string name)
     location = glGetUniformLocation(program, name.c_str());
     if (location == -1)
     {
-        fmt::print("The name {} does not exist in shader", name);
+        fmt::print("The name {} does not exist in shader\n", name);
     }
 
     uniformLocationCache[name] = location;
