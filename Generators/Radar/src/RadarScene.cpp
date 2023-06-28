@@ -18,8 +18,6 @@ void RadarScene::render()
     int idx = 0;
     for (const auto &radarImageConfig : _config.radarImages)
     {
-        _framebuffer.resize(radarImageConfig.resolution, radarImageConfig.resolution);
-
         updatePositions(radarImageConfig.jd,
                         asteroidParams,
                         radarImageConfig.targetPosition,
@@ -27,74 +25,101 @@ void RadarScene::render()
                         radarImageConfig.observerPosition);
 
         renderSceneWithShadows();
-        saveImage(idx++, _framebuffer.specification.width, _framebuffer.specification.height);
+        saveImage(idx++, radarImageConfig.resolution, radarImageConfig.resolution);
     }
 }
 
-void RadarScene::saveImage(int idx, unsigned int width, unsigned int height)
+void RadarScene::saveImage(int idx, unsigned int imageWidth, unsigned int imageHeight)
 {
-    std::vector<float> pixelBuffVelocity(width * height);
-    std::vector<float> pixelBuffNormals(width * height);
-    std::vector<float> pixelBuffDepth(width * height);
-    glReadPixels(0, 0, width, height, GL_RED, GL_FLOAT, pixelBuffVelocity.data());
-    glReadPixels(0, 0, width, height, GL_GREEN, GL_FLOAT, pixelBuffNormals.data());
-    glReadPixels(0, 0, width, height, GL_BLUE, GL_FLOAT, pixelBuffDepth.data());
+    std::vector<float> pixelBuffVelocity(_framebuffer.specification.width *
+                                         _framebuffer.specification.height);
+    std::vector<float> pixelBuffScattering(_framebuffer.specification.width *
+                                           _framebuffer.specification.height);
+    std::vector<float> pixelBuffDepth(_framebuffer.specification.width *
+                                      _framebuffer.specification.height);
+    glReadPixels(0,
+                 0,
+                 _framebuffer.specification.width,
+                 _framebuffer.specification.height,
+                 GL_RED,
+                 GL_FLOAT,
+                 pixelBuffVelocity.data());
+    glReadPixels(0,
+                 0,
+                 _framebuffer.specification.width,
+                 _framebuffer.specification.height,
+                 GL_GREEN,
+                 GL_FLOAT,
+                 pixelBuffScattering.data());
+    glReadPixels(0,
+                 0,
+                 _framebuffer.specification.width,
+                 _framebuffer.specification.height,
+                 GL_BLUE,
+                 GL_FLOAT,
+                 pixelBuffDepth.data());
 
-    auto delayDoppler = constructDelayDoppler(pixelBuffVelocity, pixelBuffDepth, pixelBuffNormals, width, height);
+    auto delayDoppler = constructDelayDoppler(
+        pixelBuffVelocity, pixelBuffScattering, pixelBuffDepth, imageWidth, imageHeight);
 
     auto filename = fmt::format("{}_{}.png", _config.imagePrefix, idx);
     auto filePath = _config.outputFolderPath / filename;
-    Image::SavePng(filePath, width, height, delayDoppler);
+    Image::SavePng(filePath, imageWidth, imageHeight, delayDoppler, true);
 }
 
-std::vector<float> RadarScene::constructDelayDoppler(std::vector<float> &radial_vel_buffer,
-                                       std::vector<float> &depth_buffer,
-                                       std::vector<float> &normal_buffer,
-                                       int buffer_width,
-                                       int buffer_height)
+std::vector<float> RadarScene::constructDelayDoppler(std::vector<float> &radialVelBuffer,
+                                                     std::vector<float> &surfaceScatteringBuffer,
+                                                     std::vector<float> &depthBuffer,
+                                                     int delayDopplerWidth,
+                                                     int delayDopplerHeight)
 {
-    auto max_vr = *std::max_element(radial_vel_buffer.begin(), radial_vel_buffer.end());
-    auto min_vr = *std::min_element(radial_vel_buffer.begin(), radial_vel_buffer.end());
+    auto maxRadialVel = *std::max_element(radialVelBuffer.begin(), radialVelBuffer.end());
+    auto minRadialVel = *std::min_element(radialVelBuffer.begin(), radialVelBuffer.end());
 
-    auto max_depth = *std::max_element(depth_buffer.begin(), depth_buffer.end());
-    auto min_depth = *std::min_element(depth_buffer.begin(), depth_buffer.end());
 
-    int delay_dopler_width = buffer_width;
-    int delay_dopler_height = buffer_height;
+    auto maxDepth = *std::max_element(depthBuffer.begin(), depthBuffer.end());
 
-    std::vector<float> delay_doppler(delay_dopler_width * delay_dopler_height, 0.0);
-
-    for (int i = 0; i < buffer_width * buffer_height; i++)
+    // TODO while calculating min/max of buffers, take the background into account, e.g.:
+    // * special value for each/one buffer
+    // * compare values between buffers
+    // * ...
+    auto minDepth{maxDepth};
+    for (auto depthPixel : depthBuffer)
     {
-        if (depth_buffer[i] == 0.)  // background
+        if (depthPixel < minDepth && depthPixel != 0.)
+        {
+            minDepth = depthPixel;
+        }
+    }
+
+    std::vector<float> delayDopplerImage(delayDopplerWidth * delayDopplerHeight, 0.0);
+
+    for (int i = 0; i < radialVelBuffer.size(); i++)
+    {
+        if (depthBuffer[i] == 0.)  // background
         {
             continue;
         }
 
-        int vr = floor(delay_dopler_width * (radial_vel_buffer[i] - min_vr) / (max_vr - min_vr));
-        int d =
-            floor(delay_dopler_height * (depth_buffer[i] - min_depth) / (max_depth - min_depth));
+        int vr = floor(delayDopplerWidth * (radialVelBuffer[i] - minRadialVel) /
+                       (maxRadialVel - minRadialVel));
+        int d = floor(delayDopplerHeight * (depthBuffer[i] - minDepth) / (maxDepth - minDepth));
 
-        // 		if (i == 200*400 + 170)
-        // 			TRACE("vr, d: {}, {}", vr, d);
-
-        if (d < 0 || d >= delay_dopler_height)
+        if (d < 0 || d >= delayDopplerHeight || vr < 0 || vr >= delayDopplerWidth)
+        {
             continue;
-        if (vr < 0 || vr >= delay_dopler_width)
-            continue;
+        }
 
-        delay_doppler[d * delay_dopler_width + vr] += normal_buffer[i];
+        delayDopplerImage[d * delayDopplerWidth + vr] += surfaceScatteringBuffer[i];
     }
 
-    // normalize delay_doppler
-    float dd_max = delay_doppler[0];
-    for (int i = 0; i < delay_dopler_width * delay_dopler_height; i++)
-        if (delay_doppler[i] > dd_max)
-            dd_max = delay_doppler[i];
-    for (int i = 0; i < delay_dopler_width * delay_dopler_height; i++)
-        delay_doppler[i] /= dd_max;
+    // TODO normalization of values is not that trivial. It has to relate to physics of radar.
+    // auto maxVal = *std::max_element(delayDopplerImage.begin(), delayDopplerImage.end());
+    // std::for_each(delayDopplerImage.begin(),
+    //               delayDopplerImage.end(),
+    //               [&maxVal](float &pixel) { pixel /= maxVal; });
 
-    return delay_doppler;
+    return delayDopplerImage;
 }
 
 }  // namespace Sage

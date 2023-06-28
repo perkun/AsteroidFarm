@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    constexpr glm::uvec2 windowSize{512};
+    constexpr glm::uvec2 windowSize{1024};
 
     GraphicsEngine graphicsEngine({.width = windowSize.x,
                                    .height = windowSize.y,
