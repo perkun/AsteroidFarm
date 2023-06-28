@@ -95,6 +95,12 @@ void PhotometryScene<Config>::updatePositions(JulianDay jd,
                                               const glm::vec3 &observerPos,
                                               const glm::vec3 &lightPos)
 {
+    // TODO move observer and target to positions multiplied by a factor.
+    // Models could have arbitrary size, although if processed by Mesh algorithm they shoud have a
+    // radius of 1 unit. The positions are defined in astronomical units, so there will be problems
+    // with lighting, shadows etc if positions and relative distances are approaching 1, which they
+    // will.
+
     auto &t = _asteroid.getComponent<TransformComponent>();
     t.position = targetPos;
 
