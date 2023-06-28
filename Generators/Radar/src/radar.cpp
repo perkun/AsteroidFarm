@@ -9,20 +9,20 @@ using namespace Sage;
 
 int main(int argc, char *argv[])
 {
-    // if (argc < 2)
-    // {
-    //     fmt::print("Not enought arguments.\nUSAGE:\n\t{} <config.json>\n", argv[0]);
-    //     return 0;
-    // }
+    if (argc < 2)
+    {
+        fmt::print("Not enought arguments.\nUSAGE:\n\t{} <config.json>\n", argv[0]);
+        return 0;
+    }
 
-    // std::filesystem::path configFilePath{argv[1]};
+    std::filesystem::path configFilePath{argv[1]};
 
-    // if (not std::filesystem::exists(configFilePath))
-    // {
-    //     fmt::print("Config file '{}' doesn't exist.\n", configFilePath.string());
-    //     return 0;
-    // }
-    auto config = LoadFromJson<RadarSeriesConfig>("data/testRadarConfig.json");
+    if (not std::filesystem::exists(configFilePath))
+    {
+        fmt::print("Config file '{}' doesn't exist.\n", configFilePath.string());
+        return 0;
+    }
+    auto config = LoadFromJson<RadarSeriesConfig>(configFilePath);
 
     if (not std::filesystem::exists(config.scene.modelPath))
     {
