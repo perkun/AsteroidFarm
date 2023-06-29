@@ -12,14 +12,14 @@
         <link rel="prev" href="index.html">
       
       
-        <link rel="next" href="UserManual/HowTo.html">
+        <link rel="next" href="UserManual/HowToBuild.html">
       
       <link rel="icon" href="assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.17">
     
     
       
-        <title>Project's structure - SAGE documentation</title>
+        <title>Project's structure - Asteroid Farm</title>
       
     
     
@@ -83,7 +83,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="index.html" title="SAGE documentation" class="md-header__button md-logo" aria-label="SAGE documentation" data-md-component="logo">
+    <a href="index.html" title="Asteroid Farm" class="md-header__button md-logo" aria-label="Asteroid Farm" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -96,7 +96,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            SAGE documentation
+            Asteroid Farm
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -190,7 +190,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="UserManual/HowTo.html" class="md-tabs__link">
+      <a href="UserManual/HowToBuild.html" class="md-tabs__link">
         User manual
       </a>
     </li>
@@ -224,13 +224,13 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="index.html" title="SAGE documentation" class="md-nav__button md-logo" aria-label="SAGE documentation" data-md-component="logo">
+    <a href="index.html" title="Asteroid Farm" class="md-nav__button md-logo" aria-label="Asteroid Farm" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
 
     </a>
-    SAGE documentation
+    Asteroid Farm
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -292,6 +292,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#build-system" class="md-nav__link">
+    Build system
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#external-libraries" class="md-nav__link">
     External libraries
   </a>
@@ -348,8 +355,8 @@
   
   
     <li class="md-nav__item">
-      <a href="UserManual/HowTo.html" class="md-nav__link">
-        How To
+      <a href="UserManual/HowToBuild.html" class="md-nav__link">
+        How To Build
       </a>
     </li>
   
@@ -417,6 +424,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#build-system" class="md-nav__link">
+    Build system
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#external-libraries" class="md-nav__link">
     External libraries
   </a>
@@ -446,30 +460,33 @@
 
 
 <h1 id="projects-structure">Project's structure</h1>
-<p><code>premake5</code> is used as underlying build system.
-Sage is organized into workspace and projects. The <code>premake5.lua</code> file in root
-directory defines the workspace, global include directories and includes
-individual projects. Projects are stored in separate directories, each
-containing its own <code>premake5.lua</code> file.</p>
+<h2 id="build-system">Build system</h2>
+<p><code>premake5</code> is used as underlying build system. Asteroid Farm is organized into workspace and
+projects. The <code>premake5.lua</code> file in root directory defines the workspace, global include
+directories and includes individual projects. Projects are stored in separate directories, each
+containing its own <code>premake5.lua</code> file. <code>premage5</code> generates a <em>master</em> <code>Makefile</code> that includes
+<code>Makefile</code>s of each project.</p>
 <h2 id="external-libraries">External libraries</h2>
 <p>Libraries used in projects should be stored in <code>vendor</code> folder. Rules for
 building can be added to the premake file stored there.</p>
 <h2 id="documentation">Documentation</h2>
-<p>Documentation is stored in <code>documentation/source</code> folder. The <code>index.md</code> is the main
+<p>Documentation is stored in <code>documentation/</code> folder.  The <code>index.md</code> is the main
 page.</p>
-<p>Documentation is generated automatically when the whole projetc is build. You
-need to have <code>mkdocs</code> installed. See dependencies
-section.</p>
+<p>Documentation is generated automatically when the whole projetc is build. You need to have
+<code>mkdocs-material</code> installed:</p>
+<pre><code class="language-sh">pip install mkdocs-material
+</code></pre>
 <p>To generate documentation locally:</p>
 <pre><code>cd docs
 make
 </code></pre>
-<p>then open <code>documentation/build/html/index.html</code> in a web browser.</p>
+<p>The output files will be generated in <code>docs</code> folder, which is also under version control. After
+updating documentation and building it, commit the changes in <code>docs</code> folder as well.</p>
 <h1 id="dependencies">Dependencies</h1>
 <ul>
 <li>fmt</li>
 <li>gtest</li>
-<li>mkdocs</li>
+<li>mkdocs-material</li>
 </ul>
 
 

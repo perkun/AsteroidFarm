@@ -1,6 +1,4 @@
-#How tos
-
-## How to build Sage
+# How to build Asteroid Farm
 
 First, you need to generate `Makefile`s. To do so, run this command in project's root directory:
 

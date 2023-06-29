@@ -1,4 +1,4 @@
-site_name: SAGE documentation
+site_name: Asteroid Farm
 theme:
   name: material
   palette:
@@ -19,6 +19,6 @@ nav:
   - About: index.md
   - Project's structure: ProjectStructure.md
   - User manual:
-    - How To: UserManual/HowTo.md
+    - How To Build: UserManual/HowToBuild.md
     - Config Files: UserManual/Config.md
     - Observation Generators: UserManual/Generators.md
