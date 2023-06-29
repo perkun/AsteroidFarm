@@ -16,8 +16,8 @@
 #include "Units.h"
 #include "JulianDay.h"
 
-using namespace Sage;
-using namespace Sage::UnitLiterals;
+using namespace AsteroidFarm;
+using namespace AsteroidFarm::UnitLiterals;
 
 int main()
 {

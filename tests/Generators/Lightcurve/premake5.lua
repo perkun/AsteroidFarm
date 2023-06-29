@@ -25,16 +25,16 @@ project "LightcurveTests"
 		"%{wks.location}/Generators/Lightcurve/src"
 	}
 
-	links { "Sage", "fmt", "gtest", "glfw", "glad", "pthread"}
+	links { "Core", "fmt", "gtest", "glfw", "glad", "pthread"}
 
 	filter "configurations:Debug"
 		symbols "On"
-		defines "SAGE_DEBUG"
+		defines "AF_DEBUG"
 		--defines "..."
 
 	filter "configurations:Release"
 		optimize "On"
-		defines "SAGE_RELEASE"
+		defines "AF_RELEASE"
 		--defines "..."
 
 	filter "configurations:Dist"

@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 #include <fmt/format.h>
 
-using namespace Sage;
+using namespace AsteroidFarm;
 
 int main(int argc, char *argv[])
 {

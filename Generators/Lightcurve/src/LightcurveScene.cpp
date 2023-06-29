@@ -1,6 +1,6 @@
 #include "LightcurveScene.h"
 
-namespace Sage {
+namespace AsteroidFarm {
 
 LightcurveScene::LightcurveScene(Renderer &renderer,
                                  glm::uvec2 framebufferSize,
@@ -60,4 +60,4 @@ void LightcurveScene::render()
     }
 }
 
-}  // namespace Sage
+}  // namespace AsteroidFarm

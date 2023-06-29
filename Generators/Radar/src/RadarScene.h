@@ -9,7 +9,7 @@
 #include "Observations.h"
 #include "PhotometryScene.h"
 
-namespace Sage {
+namespace AsteroidFarm {
 
 class RadarScene : public PhotometryScene<RadarSeriesConfig>
 {
@@ -29,4 +29,4 @@ private:
                                              int buffer_height);
 };
 
-}  // namespace Sage
+}  // namespace AsteroidFarm

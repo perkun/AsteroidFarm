@@ -7,7 +7,7 @@
 
 #include <gtest/gtest.h>
 
-namespace Sage::Test {
+namespace AsteroidFarm::Test {
 
 // TODO move this to apropriate place
 // inline std::ostream& operator<<(std::ostream& out, const glm::vec3 &v)
@@ -52,4 +52,4 @@ TEST(Photometry, SingleLightcurve)
     }
 }
 
-}  // namespace Sage::Test
+}  // namespace AsteroidFarm::Test

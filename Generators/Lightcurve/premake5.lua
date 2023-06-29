@@ -22,16 +22,16 @@ project "Lightcurve"
  		"%{prj.name}/src",
 	}
 
-	links { "Sage", "glfw", "glad", "fmt", "pthread", "dl" }
+	links { "Core", "glfw", "glad", "fmt", "pthread", "dl" }
 
 	filter "configurations:Debug"
 		symbols "On"
-		defines "SAGE_DEBUG"
+		defines "AF_DEBUG"
 		--defines "..."
 
 	filter "configurations:Release"
 		optimize "On"
-		defines "SAGE_RELEASE"
+		defines "AF_RELEASE"
 		--defines "..."
 
 	filter "configurations:Dist"

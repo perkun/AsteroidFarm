@@ -3,7 +3,7 @@
 make
 cd tests
 
-bin/Debug/SageTests/SageTests
+bin/Debug/CoreTests/CoreTests
 bin/Debug/LightcurveTests/LightcurveTests
 
 cd ..

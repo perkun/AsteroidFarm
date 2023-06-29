@@ -9,7 +9,7 @@
 #include "Observations.h"
 #include "PhotometryScene.h"
 
-namespace Sage {
+namespace AsteroidFarm {
 
 class LightcurveScene : public PhotometryScene<LightcurveSeriesConfig>
 {
@@ -23,4 +23,4 @@ public:
     LightcurveStorage syntheticObs;
 };
 
-}  // namespace Sage
+}  // namespace AsteroidFarm

@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-namespace Sage {
+namespace AsteroidFarm {
 
 RadarScene::RadarScene(Renderer &renderer,
                        glm::uvec2 framebufferSize,
@@ -122,4 +122,4 @@ std::vector<float> RadarScene::constructDelayDoppler(std::vector<float> &radialV
     return delayDopplerImage;
 }
 
-}  // namespace Sage
+}  // namespace AsteroidFarm

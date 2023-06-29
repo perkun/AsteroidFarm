@@ -4,8 +4,7 @@
 
 #include "JsonLoader.h"
 
-using namespace Sage;
-
+using namespace AsteroidFarm;
 
 int main(int argc, char *argv[])
 {

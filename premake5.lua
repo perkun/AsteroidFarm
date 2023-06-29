@@ -1,4 +1,4 @@
-workspace "Sage"
+workspace "AsteroidFarm"
 	architecture "x64"
 
 	configurations
@@ -15,20 +15,20 @@ includedirs { "%{wks.location}/vendor/glm",
               "%{wks.location}/vendor/glfw/include",
 			  "%{wks.location}/vendor/entt/",
               "%{wks.location}/vendor/stb_image",
-			  "%{wks.location}/Sage/src",
-			  "%{wks.location}/Sage/src/**",
+			  "%{wks.location}/Core/src",
+			  "%{wks.location}/Core/src/**",
             }
 
 include "vendor/glad"
 include "vendor/glfw"
-include "Sage"
+include "Core"
 include "Sandbox"
 include "Generators/Lightcurve"
 include "Generators/AdaptiveOptics"
 include "Generators/Radar"
 
 -- TESTS --
-include "tests/Sage"
+include "tests/Core"
 include "tests/Generators/Lightcurve"
 
 -- DOCS --

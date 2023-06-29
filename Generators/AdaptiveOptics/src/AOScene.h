@@ -9,7 +9,7 @@
 #include "Observations.h"
 #include "PhotometryScene.h"
 
-namespace Sage {
+namespace AsteroidFarm {
 
 class AOScene : public PhotometryScene<AOSeriesConfig>
 {
@@ -26,4 +26,4 @@ private:
     void saveImage(int idx, unsigned int width, unsigned int height);
 };
 
-}  // namespace Sage
+}  // namespace AsteroidFarm

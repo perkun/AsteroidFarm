@@ -1,7 +1,7 @@
 #include "AOScene.h"
 #include "Image.h"
 
-namespace Sage {
+namespace AsteroidFarm {
 
 AOScene::AOScene(Renderer &renderer, glm::uvec2 framebufferSize, const AOSeriesConfig &config)
     : PhotometryScene(renderer, framebufferSize, config)
@@ -45,4 +45,4 @@ void AOScene::saveImage(int idx, unsigned int width, unsigned int height)
         filePath, width, height, pixelBuffRed, pixelBuffGreen, pixelBuffBlue, pixelBuffAlpha);
 }
 
-}  // namespace Sage
+}  // namespace AsteroidFarm

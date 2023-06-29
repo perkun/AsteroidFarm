@@ -12,7 +12,7 @@
 
 // TODO namespace for tests?
 
-namespace Sage {
+namespace AsteroidFarm {
 
 class SandboxScene : public Scene
 {
@@ -121,4 +121,4 @@ private:
     Entity asteroid;
 };
 
-}  // namespace Sage
+}  // namespace AsteroidFarm
