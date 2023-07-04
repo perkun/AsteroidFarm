@@ -93,7 +93,11 @@ void from_json(const nlohmann::json &j, RadarConfig &r)
     r.jd = j.at("jd").get<JulianDay>();
     r.targetPosition = j.at("targetPosition").get<glm::vec3>();
     r.observerPosition = j.at("observerPosition").get<glm::vec3>();
-    r.imageSize = j.at("imageSize").get<size_t>();
+
+    if (j.find("imageSize") != j.end())
+    {
+        r.imageSize = j.at("imageSize").get<size_t>();
+    }
 }
 
 void to_json(nlohmann::json &j, const RadarConfig &r)
@@ -106,8 +110,20 @@ void from_json(const nlohmann::json &j, RadarSeriesConfig &r)
     r.scene = j.at("scene").get<SceneConfig>();
     r.asteroidParams = j.at("asteroidParams").get<AsteroidParams>();
     r.radarImages = j.at("radarImages").get<std::vector<RadarConfig>>();
-    r.imagePrefix = j.at("imagePrefix").get<std::string>();
-    r.outputFolderPath = j.at("outputFolderPath").get<std::filesystem::path>();
+    r.exportImages = j.at("exportImages").get<bool>();
+
+    if (j.find("outputPath") != j.end())
+    {
+        r.outputPath = j.at("outputPath").get<std::filesystem::path>();
+    }
+    if (j.find("imagePrefix") != j.end())
+    {
+        r.imagePrefix = j.at("imagePrefix").get<std::string>();
+    }
+    if (j.find("exportFolderPath") != j.end())
+    {
+        r.exportFolderPath = j.at("exportFolderPath").get<std::filesystem::path>();
+    }
 }
 
 void to_json(nlohmann::json &j, const RadarSeriesConfig &r)

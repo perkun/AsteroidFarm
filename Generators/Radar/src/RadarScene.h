@@ -21,12 +21,7 @@ public:
     RadarStorage radarImages;
 
 private:
-    void saveImage(int idx, unsigned int width, unsigned int height);
-    std::vector<float> constructDelayDoppler(std::vector<float> &radial_vel_buffer,
-                                             std::vector<float> &normal_buffer,
-                                             std::vector<float> &depth_buffer,
-                                             int buffer_width,
-                                             int buffer_height);
+    void storeImage();
 };
 
 }  // namespace AsteroidFarm

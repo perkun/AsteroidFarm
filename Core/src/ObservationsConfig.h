@@ -58,7 +58,7 @@ struct RadarConfig
     JulianDay jd;
     glm::vec3 observerPosition;
     glm::vec3 targetPosition;
-    size_t imageSize;
+    std::optional<size_t> imageSize;
 };
 
 struct RadarSeriesConfig
@@ -66,8 +66,10 @@ struct RadarSeriesConfig
     SceneConfig scene;
     AsteroidParams asteroidParams;
     std::vector<RadarConfig> radarImages;
-    std::filesystem::path outputFolderPath;
-    std::string imagePrefix;
+    bool exportImages;
+    std::optional<std::filesystem::path> outputPath;
+    std::optional<std::filesystem::path> exportFolderPath;
+    std::optional<std::string> imagePrefix;
 
 };
 

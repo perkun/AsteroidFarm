@@ -6,7 +6,6 @@
 
 using namespace AsteroidFarm;
 
-
 int main(int argc, char *argv[])
 {
     if (argc < 2)
@@ -41,10 +40,14 @@ int main(int argc, char *argv[])
         fmt::print("fragmentShaderPath '{}' doesn't exist\n", config.scene.modelPath.string());
         return 0;
     }
-    if (not std::filesystem::exists(config.outputFolderPath))
+    if (config.exportFolderPath.has_value())
     {
-        fmt::print("outputFolderPath '{}' doesn't exist\n", config.outputFolderPath.string());
-        return 0;
+        if (not std::filesystem::exists(config.exportFolderPath.value()))
+        {
+            fmt::print("outputFolderPath '{}' doesn't exist\n",
+                       config.exportFolderPath.value().string());
+            return 0;
+        }
     }
 
     constexpr glm::uvec2 windowSize{1024};
@@ -57,6 +60,30 @@ int main(int argc, char *argv[])
 
     auto &scene = graphicsEngine.pushScene<RadarScene>(windowSize, config);
     graphicsEngine.renderScenes();
+
+    if (config.outputPath.has_value())
+    {
+        SaveToJson(scene.radarImages, config.outputPath.value());
+
+        // TODO store data in binary file
+        auto binDataPath = config.outputPath.value().replace_extension("bin");
+        // ...
+    }
+
+    if (config.exportImages)
+    {
+        int idx = 0;
+        for (auto &image : scene.radarImages.images)
+        {
+            auto filename = fmt::format("{}_{}.png", config.imagePrefix.value(), idx);
+            auto filePath = config.exportFolderPath.value() / filename;
+
+            image.saveImage(filePath,
+                            config.radarImages[idx].imageSize.value(),
+                            config.radarImages[idx].imageSize.value());
+            idx++;
+        }
+    }
 
     return 0;
 }

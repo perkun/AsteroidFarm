@@ -38,7 +38,9 @@ struct LightcurveStorage
 };
 
 // TODO
-struct AOImage {};
+struct AOImage
+{
+};
 
 struct AOStorage
 {
@@ -47,7 +49,19 @@ struct AOStorage
     std::vector<AOImage> images;
 };
 
-struct RadarImage {};
+struct RadarImage
+{
+    static std::vector<float> constructDelayDoppler(std::vector<float> &radial_vel_buffer,
+                                                    std::vector<float> &normal_buffer,
+                                                    std::vector<float> &depth_buffer,
+                                                    int buffer_width,
+                                                    int buffer_height);
+    void saveImage(std::filesystem::path filePath, int imageWidth, int imageHeight);
+    std::vector<float> radialVelocityBuffer;
+    std::vector<float> surfaceScatteringBuffer;
+    std::vector<float> depthBuffer;
+
+};
 
 struct RadarStorage
 {
@@ -61,5 +75,11 @@ void to_json(nlohmann::json &j, const LightcurveStorage &p);
 
 void from_json(const nlohmann::json &j, ObsPoint &p);
 void to_json(nlohmann::json &j, const ObsPoint &p);
+
+void from_json(const nlohmann::json &j, RadarStorage &rs);
+void to_json(nlohmann::json &j, const RadarStorage &rs);
+
+void from_json(const nlohmann::json &j, RadarImage &r);
+void to_json(nlohmann::json &j, const RadarImage &r);
 
 }  // namespace AsteroidFarm
