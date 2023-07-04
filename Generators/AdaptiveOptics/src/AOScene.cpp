@@ -14,7 +14,7 @@ void AOScene::render()
     int idx = 0;
     for (const auto &aoImageConfig : _config.aoImages)
     {
-        _framebuffer.resize(aoImageConfig.resolution, aoImageConfig.resolution);
+        _framebuffer.resize(aoImageConfig.imageSize, aoImageConfig.imageSize);
 
         updatePositions(aoImageConfig.jd,
                         asteroidParams,

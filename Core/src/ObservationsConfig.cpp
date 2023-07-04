@@ -62,7 +62,7 @@ void from_json(const nlohmann::json &j, AOConfig &ao)
     ao.targetPosition = j.at("targetPosition").get<glm::vec3>();
     ao.observerPosition = j.at("observerPosition").get<glm::vec3>();
     ao.lightPosition = j.at("lightPosition").get<glm::vec3>();
-    ao.resolution = j.at("resolution").get<size_t>();
+    ao.imageSize = j.at("imageSize").get<size_t>();
 }
 
 void to_json(nlohmann::json &j, const AOConfig &ao)
@@ -71,7 +71,7 @@ void to_json(nlohmann::json &j, const AOConfig &ao)
          {"targetPosition", ao.targetPosition},
          {"observerPosition", ao.observerPosition},
          {"lightPosition", ao.lightPosition},
-         {"resolution", ao.resolution}};
+         {"imageSize", ao.imageSize}};
 }
 
 void from_json(const nlohmann::json &j, AOSeriesConfig &ao)
@@ -93,7 +93,7 @@ void from_json(const nlohmann::json &j, RadarConfig &r)
     r.jd = j.at("jd").get<JulianDay>();
     r.targetPosition = j.at("targetPosition").get<glm::vec3>();
     r.observerPosition = j.at("observerPosition").get<glm::vec3>();
-    r.resolution = j.at("resolution").get<size_t>();
+    r.imageSize = j.at("imageSize").get<size_t>();
 }
 
 void to_json(nlohmann::json &j, const RadarConfig &r)

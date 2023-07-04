@@ -40,7 +40,7 @@ struct AOConfig
     glm::vec3 observerPosition;
     glm::vec3 targetPosition;
     glm::vec3 lightPosition;
-    size_t resolution;
+    size_t imageSize;
 };
 
 
@@ -58,7 +58,7 @@ struct RadarConfig
     JulianDay jd;
     glm::vec3 observerPosition;
     glm::vec3 targetPosition;
-    size_t resolution;
+    size_t imageSize;
 };
 
 struct RadarSeriesConfig

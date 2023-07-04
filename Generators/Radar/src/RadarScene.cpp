@@ -25,7 +25,7 @@ void RadarScene::render()
                         radarImageConfig.observerPosition);
 
         renderSceneWithShadows();
-        saveImage(idx++, radarImageConfig.resolution, radarImageConfig.resolution);
+        saveImage(idx++, radarImageConfig.imageSize, radarImageConfig.imageSize);
     }
 }
 

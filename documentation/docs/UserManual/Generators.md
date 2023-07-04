@@ -108,14 +108,14 @@ Config file example:
             "observerPosition": [2, 0, 0],
             "lightPosition": [0, 0, 0],
             "jd": 2458009.0334,
-            "resolution": 512
+            "imageSize": 512
         },
         {
             "targetPosition": [0,4,0],
             "observerPosition": [2, 2, 1],
             "lightPosition": [0, 0, 0],
             "jd": 2458011.0334,
-            "resolution": 100
+            "imageSize": 100
         }
 
     ],
