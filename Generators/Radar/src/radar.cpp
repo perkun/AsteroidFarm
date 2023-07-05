@@ -63,22 +63,22 @@ int main(int argc, char *argv[])
 
     if (config.outputPath.has_value())
     {
-        SaveToJson(scene.radarImages, config.outputPath.value());
+        SaveToJson(scene.storage, config.outputPath.value());
 
         // TODO store data in binary file
         auto binDataPath = config.outputPath.value().replace_extension("bin");
         // ...
     }
 
-    if (config.exportImages)
+    if (config.exportDelayDoppler)
     {
         int idx = 0;
-        for (auto &image : scene.radarImages.images)
+        for (auto &image : scene.storage.images)
         {
             auto filename = fmt::format("{}_{}.png", config.imagePrefix.value(), idx);
             auto filePath = config.exportFolderPath.value() / filename;
 
-            image.saveImage(filePath,
+            image.exportDelayDoppler(filePath,
                             config.radarImages[idx].imageSize.value(),
                             config.radarImages[idx].imageSize.value());
             idx++;

@@ -110,7 +110,7 @@ void from_json(const nlohmann::json &j, RadarSeriesConfig &r)
     r.scene = j.at("scene").get<SceneConfig>();
     r.asteroidParams = j.at("asteroidParams").get<AsteroidParams>();
     r.radarImages = j.at("radarImages").get<std::vector<RadarConfig>>();
-    r.exportImages = j.at("exportImages").get<bool>();
+    r.exportDelayDoppler = j.at("exportDelayDoppler").get<bool>();
 
     if (j.find("outputPath") != j.end())
     {

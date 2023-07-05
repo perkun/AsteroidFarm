@@ -66,7 +66,7 @@ struct RadarSeriesConfig
     SceneConfig scene;
     AsteroidParams asteroidParams;
     std::vector<RadarConfig> radarImages;
-    bool exportImages;
+    bool exportDelayDoppler;
     std::optional<std::filesystem::path> outputPath;
     std::optional<std::filesystem::path> exportFolderPath;
     std::optional<std::string> imagePrefix;

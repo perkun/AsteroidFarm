@@ -18,7 +18,7 @@ public:
 
     void render() override;
 
-    RadarStorage radarImages;
+    RadarStorage storage;
 
 private:
     void storeImage();

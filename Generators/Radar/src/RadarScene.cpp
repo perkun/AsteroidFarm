@@ -10,8 +10,8 @@ RadarScene::RadarScene(Renderer &renderer,
                        const RadarSeriesConfig &config)
     : PhotometryScene(renderer, framebufferSize, config)
 {
-    radarImages.asteroidParams = _config.asteroidParams;
-    radarImages.sceneConfig = _config.scene;
+    storage.asteroidParams = _config.asteroidParams;
+    storage.sceneConfig = _config.scene;
 }
 
 void RadarScene::render()
@@ -44,7 +44,7 @@ void RadarScene::storeImage()
     glReadPixels(0, 0, width, height, GL_GREEN, GL_FLOAT, surfaceScatteringBuffer.data());
     glReadPixels(0, 0, width, height, GL_BLUE, GL_FLOAT, depthBuffer.data());
 
-    radarImages.images.push_back({radialVelocityBuffer, surfaceScatteringBuffer, depthBuffer});
+    storage.images.push_back({radialVelocityBuffer, surfaceScatteringBuffer, depthBuffer});
 }
 
 

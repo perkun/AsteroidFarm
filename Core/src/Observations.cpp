@@ -62,7 +62,7 @@ std::vector<float> RadarImage::constructDelayDoppler(std::vector<float> &radialV
     return delayDopplerImage;
 }
 
-void RadarImage::saveImage(std::filesystem::path filePath, int imageWidth, int imageHeight)
+void RadarImage::exportDelayDoppler(std::filesystem::path filePath, int imageWidth, int imageHeight)
 {
     auto delayDoppler = constructDelayDoppler(
         radialVelocityBuffer, surfaceScatteringBuffer, depthBuffer, imageWidth, imageHeight);

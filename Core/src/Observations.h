@@ -56,7 +56,7 @@ struct RadarImage
                                                     std::vector<float> &depth_buffer,
                                                     int buffer_width,
                                                     int buffer_height);
-    void saveImage(std::filesystem::path filePath, int imageWidth, int imageHeight);
+    void exportDelayDoppler(std::filesystem::path filePath, int imageWidth, int imageHeight);
     std::vector<float> radialVelocityBuffer;
     std::vector<float> surfaceScatteringBuffer;
     std::vector<float> depthBuffer;
