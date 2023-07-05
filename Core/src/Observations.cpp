@@ -8,7 +8,7 @@ using namespace nlohmann;
 
 namespace AsteroidFarm {
 
-std::vector<float> RadarImage::constructDelayDoppler(std::vector<float> &radialVelBuffer,
+std::vector<float> RadarImage::ConstructDelayDoppler(std::vector<float> &radialVelBuffer,
                                                      std::vector<float> &surfaceScatteringBuffer,
                                                      std::vector<float> &depthBuffer,
                                                      int delayDopplerWidth,
@@ -64,7 +64,7 @@ std::vector<float> RadarImage::constructDelayDoppler(std::vector<float> &radialV
 
 void RadarImage::exportDelayDoppler(std::filesystem::path filePath, int imageWidth, int imageHeight)
 {
-    auto delayDoppler = constructDelayDoppler(
+    auto delayDoppler = ConstructDelayDoppler(
         radialVelocityBuffer, surfaceScatteringBuffer, depthBuffer, imageWidth, imageHeight);
 
     Image::SavePng(filePath, imageWidth, imageHeight, delayDoppler, true);
@@ -118,5 +118,63 @@ void to_json(nlohmann::json &j, const RadarImage &r)
     j = {{"radialVelocityBuffer", r.radialVelocityBuffer},
          {"surfaceScatteringBuffer", r.surfaceScatteringBuffer},
          {"depthBuffer", r.depthBuffer}};
+}
+
+void RadarImage::SaveToBinary(const std::vector<RadarImage> &images, std::filesystem::path filePath)
+{
+    if (images.empty())
+    {
+        return;
+    }
+
+    auto file = std::ofstream(filePath, std::ofstream::binary);
+
+    size_t numImages = images.size();
+    file.write(reinterpret_cast<char *>(&numImages), sizeof(numImages));
+
+    size_t bufferSize = images[0].radialVelocityBuffer.size();
+    file.write(reinterpret_cast<char *>(&bufferSize), sizeof(bufferSize));
+
+    for (const auto &image : images)
+    {
+        file.write(reinterpret_cast<const char *>(&image.radialVelocityBuffer[0]),
+                   image.radialVelocityBuffer.size() * sizeof(float));
+        file.write(reinterpret_cast<const char *>(&image.surfaceScatteringBuffer[0]),
+                   image.surfaceScatteringBuffer.size() * sizeof(float));
+        file.write(reinterpret_cast<const char *>(&image.depthBuffer[0]),
+                   image.depthBuffer.size() * sizeof(float));
+    }
+}
+std::vector<RadarImage> RadarImage::LoadFromBinary(std::filesystem::path filePath)
+{
+    auto file = std::ifstream(filePath, std::ifstream::binary);
+    if (not file.is_open())
+    {
+        fmt::print("Could not open file {}.\n", filePath.string());
+        return {};
+    }
+
+    size_t numImages{0};
+    file.read(reinterpret_cast<char *>(&numImages), sizeof(numImages));
+
+    size_t bufferSize{0};
+    file.read(reinterpret_cast<char *>(&bufferSize), sizeof(bufferSize));
+
+    std::vector<RadarImage> images;
+    for (auto i = 0; i < numImages; i++)
+    {
+        auto &image = images.emplace_back();
+        image.radialVelocityBuffer.resize(bufferSize);
+        image.surfaceScatteringBuffer.resize(bufferSize);
+        image.depthBuffer.resize(bufferSize);
+
+        file.read(reinterpret_cast<char *>(&image.radialVelocityBuffer[0]),
+                  image.radialVelocityBuffer.size() * sizeof(float));
+        file.read(reinterpret_cast<char *>(&image.surfaceScatteringBuffer[0]),
+                  image.surfaceScatteringBuffer.size() * sizeof(float));
+        file.read(reinterpret_cast<char *>(&image.depthBuffer[0]),
+                  image.depthBuffer.size() * sizeof(float));
+    }
+    return images;
 }
 }  // namespace AsteroidFarm

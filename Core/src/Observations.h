@@ -51,11 +51,15 @@ struct AOStorage
 
 struct RadarImage
 {
-    static std::vector<float> constructDelayDoppler(std::vector<float> &radial_vel_buffer,
-                                                    std::vector<float> &normal_buffer,
-                                                    std::vector<float> &depth_buffer,
+    static std::vector<float> ConstructDelayDoppler(std::vector<float> &radialVelocityBuffer,
+                                                    std::vector<float> &surfaceScatteringBuffer,
+                                                    std::vector<float> &depthBuffer,
                                                     int buffer_width,
                                                     int buffer_height);
+
+    static void SaveToBinary(const std::vector<RadarImage> &images, std::filesystem::path filePath);
+    static std::vector<RadarImage> LoadFromBinary(std::filesystem::path filePath);
+
     void exportDelayDoppler(std::filesystem::path filePath, int imageWidth, int imageHeight);
     std::vector<float> radialVelocityBuffer;
     std::vector<float> surfaceScatteringBuffer;

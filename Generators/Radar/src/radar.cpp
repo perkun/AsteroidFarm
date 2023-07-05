@@ -64,10 +64,7 @@ int main(int argc, char *argv[])
     if (config.outputPath.has_value())
     {
         SaveToJson(scene.storage, config.outputPath.value());
-
-        // TODO store data in binary file
-        auto binDataPath = config.outputPath.value().replace_extension("bin");
-        // ...
+        RadarImage::SaveToBinary(scene.storage.images, config.outputPath.value().replace_extension("bin"));
     }
 
     if (config.exportDelayDoppler)
@@ -79,8 +76,8 @@ int main(int argc, char *argv[])
             auto filePath = config.exportFolderPath.value() / filename;
 
             image.exportDelayDoppler(filePath,
-                            config.radarImages[idx].imageSize.value(),
-                            config.radarImages[idx].imageSize.value());
+                                     config.radarImages[idx].imageSize.value(),
+                                     config.radarImages[idx].imageSize.value());
             idx++;
         }
     }
