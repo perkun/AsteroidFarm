@@ -14,17 +14,17 @@ class GraphicsEngine
 {
 public:
     GraphicsEngine(const WindowConfig &windowConfig);
-    ~GraphicsEngine();
 
     Window &getWindow();
 
     void renderScenes();
-    template <typename T, typename... Args>
-    T &pushScene(Args &&...args)
+
+    template <typename SceneType, typename... Args>
+    SceneType &pushScene(Args &&...args)
     {
-        auto s = new T(_renderer, std::forward<Args>(args)...);
-        _scenes.emplace_back(s);
-        return *s;
+        std::unique_ptr<Scene> &scene = _scenes.emplace_back(
+            std::make_unique<SceneType>(_renderer, std::forward<Args>(args)...));
+        return *dynamic_cast<SceneType *>(scene.get());
     }
 
     void updateWindow()
@@ -36,6 +36,6 @@ private:
     Window _window;
     Renderer _renderer;
 
-    std::vector<Scene *> _scenes;
+    std::vector<std::unique_ptr<Scene>> _scenes;
 };
 }  // namespace AsteroidFarm

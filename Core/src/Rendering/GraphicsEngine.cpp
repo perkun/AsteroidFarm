@@ -24,14 +24,6 @@ GraphicsEngine::GraphicsEngine(const WindowConfig &windowConfig)
     glFrontFace(GL_CCW);
 }
 
-GraphicsEngine::~GraphicsEngine()
-{
-    for (auto s : _scenes)
-    {
-        delete s;
-    }
-}
-
 Window &GraphicsEngine::getWindow()
 {
     return _window;
